@@ -97,20 +97,20 @@ footer a{color:var(--sub)}
       <a href="#install">설치</a>
       <a href="#license">라이선스</a>
     </div>
-    <a class="btn main" href="https://github.com/Dawnilove/Madang/releases">받기</a>
+    <a class="btn main" data-dl href="https://github.com/Dawnilove/Madang/releases/download/v1.0.0-beta.1/madang-windows-setup.exe">받기</a>
   </div>
 </nav>
 
 <header class="hero" id="top">
   <div class="wrap">
-    <span class="ver">베타 1.0.0-beta.1</span>
+    <span class="ver" data-ver>베타 1.0.0-beta.1</span>
     <h1>AI 에이전트와 터미널,<br>한 <em>마당</em>에서</h1>
     <p class="lead">프로젝트 · 작업 공간 · 터미널 · 스킬을 <b>한국어 화면 하나</b>에 모았어요. <b>Orca(MIT)</b>를 기반으로 만든 Windows 데스크톱 앱이에요.</p>
     <div class="cta">
-      <a class="btn main" href="https://github.com/Dawnilove/Madang/releases">Windows용 받기</a>
+      <a class="btn main" data-dl href="https://github.com/Dawnilove/Madang/releases/download/v1.0.0-beta.1/madang-windows-setup.exe">Windows용 받기</a>
       <a class="btn" href="#features">기능 보기</a>
     </div>
-    <p class="others">Windows 10 · 11 &nbsp;·&nbsp; 코드 서명이 없는 베타예요 (설치 안내는 <a href="#install">아래</a>)</p>
+    <p class="others">Windows 10 · 11 &nbsp;·&nbsp; 코드 서명이 없는 베타예요 (설치 안내는 <a href="#install">아래</a>) &nbsp;·&nbsp; <a href="https://github.com/Dawnilove/Madang/releases">모든 버전</a></p>
     <ul class="facts">
       <li><b>한국어</b>화면·안내·오류</li>
       <li><b>서랍 터미널</b>Ctrl + `</li>
@@ -160,7 +160,7 @@ footer a{color:var(--sub)}
     <h2>3단계면 끝나요</h2>
     <p class="sec-lead">Windows 10 · 11 에서 쓸 수 있어요.</p>
     <ol class="steps">
-      <li><b>받기</b><br><a href="https://github.com/Dawnilove/Madang/releases">Releases</a>에서 <code>madang-windows-setup.exe</code>를 받아요.</li>
+      <li><b>받기</b><br><a data-dl href="https://github.com/Dawnilove/Madang/releases/download/v1.0.0-beta.1/madang-windows-setup.exe">madang-windows-setup.exe</a>를 받아요. 다른 버전은 <a href="https://github.com/Dawnilove/Madang/releases">Releases</a>에 있어요.</li>
       <li><b>실행</b><br>파일을 실행하면 설치가 끝나요. "PC 보호" 창이 뜨면 <b>추가 정보 → 실행</b>을 눌러 주세요.</li>
       <li><b>시작</b><br>Madang을 열고 <b>프로젝트 추가</b>를 눌러 폴더를 고르면 시작해요.</li>
     </ol>
@@ -188,5 +188,20 @@ footer a{color:var(--sub)}
   </div>
 </footer>
 
+<script>
+// 가장 최근 릴리스(베타 포함)의 설치 파일로 바로 받게 한다. 실패하면 위에 적어 둔 고정 주소가 그대로 쓰인다.
+fetch('https://api.github.com/repos/Dawnilove/Madang/releases?per_page=1', { headers: { Accept: 'application/vnd.github+json' } })
+  .then(function (r) { return r.ok ? r.json() : Promise.reject() })
+  .then(function (list) {
+    var rel = list && list[0]
+    var asset = rel && rel.assets.find(function (a) { return a.name === 'madang-windows-setup.exe' })
+    if (!asset) return
+    document.querySelectorAll('[data-dl]').forEach(function (el) { el.href = asset.browser_download_url })
+    document.querySelectorAll('[data-ver]').forEach(function (el) {
+      el.textContent = (rel.prerelease ? '베타 ' : '') + rel.tag_name.replace(/^v/, '')
+    })
+  })
+  .catch(function () {})
+</script>
 </body>
 </html>
