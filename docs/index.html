@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Madang — AI 에이전트와 터미널을 한 마당에서</title>
+<meta name="description" content="프로젝트·작업 공간·터미널·스킬을 한국어 화면 하나에 모은 Windows 데스크톱 앱. Orca(MIT) 기반.">
+<meta property="og:title" content="Madang — AI 에이전트와 터미널을 한 마당에서">
+<meta property="og:description" content="AI 코딩 에이전트와 터미널, 한 마당에서 다뤄요.">
+<meta property="og:image" content="banner.png">
+<link rel="icon" href="icon.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{--bg:#f7f2ec;--bg2:#efe8df;--panel:#fcfaf6;--line:#ddd3c7;--text:#3f3a34;--sub:#6b6157;--accent:#b44c2d;--accent-ink:#fff;--green:#3b7339;--soft:color-mix(in srgb,var(--accent) 12%,transparent)}
+@media (prefers-color-scheme:dark){:root{--bg:#2b2723;--bg2:#302b26;--panel:#332e29;--line:#4a423a;--text:#f4ede1;--sub:#b9ad9e;--accent:#e08a6b;--accent-ink:#2b2723;--green:#8fcb8b}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:68px}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.7 "Pretendard Variable","Pretendard","Segoe UI","Malgun Gothic",system-ui,sans-serif;word-break:keep-all}
+a{color:var(--accent)}
+img{max-width:100%}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+
+/* 상단 메뉴 */
+nav{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;gap:20px;height:56px}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800;color:var(--text);text-decoration:none;flex:none}
+.brand img{width:26px;height:26px;border-radius:7px}
+.links{display:flex;gap:18px;overflow-x:auto;white-space:nowrap;font-size:14px;flex:1;scrollbar-width:none}
+.links a{color:var(--sub);text-decoration:none}
+.links a:hover{color:var(--accent)}
+nav .btn{padding:7px 14px;font-size:14px;flex:none}
+
+/* 버튼 */
+.btn{display:inline-block;padding:12px 22px;border-radius:10px;font-weight:700;text-decoration:none;border:1px solid var(--line);color:var(--text);background:var(--panel);transition:transform .15s,filter .15s}
+.btn:hover{filter:brightness(1.04);transform:translateY(-1px)}
+.btn.main{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* 히어로 */
+.hero{text-align:center;padding:56px 0 8px;background:radial-gradient(ellipse 50% 40% at 50% 0,var(--soft),transparent 70%)}
+.ver{display:inline-block;color:var(--accent);font-size:13px;font-weight:700;padding:3px 12px;border:1px solid var(--accent);border-radius:999px}
+h1{font-size:clamp(32px,6.2vw,58px);margin:18px 0 14px;line-height:1.2;letter-spacing:-.02em}
+h1 em{font-style:normal;color:var(--accent)}
+.lead{color:var(--sub);font-size:clamp(16px,2.2vw,19px);max-width:620px;margin:0 auto 28px}
+.lead b{color:var(--text)}
+.cta{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.cta .btn.main{font-size:18px;padding:15px 32px}
+.cta .btn{font-size:17px;padding:15px 24px}
+.others{margin:14px 0 0;font-size:14px;color:var(--sub)}
+.facts{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:10px 28px;padding:0;margin:30px 0 0;color:var(--sub);font-size:14px}
+.facts li{margin:0}
+.facts b{display:block;color:var(--text);font-size:20px;line-height:1.3}
+img.shot{display:block;width:100%;height:auto;border-radius:12px;border:1px solid var(--line)}
+.hero .shot{margin-top:40px;box-shadow:0 24px 60px rgba(63,58,52,.22)}
+
+/* 공통 섹션 */
+section{padding:64px 0 0}
+.band{background:var(--bg2);padding:56px 0;margin-top:64px}
+.eyebrow{display:block;color:var(--accent);font-size:13px;font-weight:700;letter-spacing:.06em;margin-bottom:6px}
+h2{font-size:clamp(24px,4vw,34px);margin:0 0 10px;line-height:1.3}
+.sec-lead{color:var(--sub);margin:0 0 26px;max-width:640px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}
+.card h3{margin:0 0 6px;font-size:18px}
+.card p{margin:0;color:var(--sub);font-size:15px}
+.card .ic{font-size:26px;display:block;margin-bottom:8px}
+
+/* 화면 */
+.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px}
+figure{margin:0}
+figcaption{color:var(--sub);font-size:14px;margin-top:6px}
+figcaption b{color:var(--text)}
+
+/* 설치 단계 */
+.steps{list-style:none;counter-reset:s;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;padding:0;margin:0}
+.steps > li{counter-increment:s;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;margin:0;color:var(--sub);font-size:15px}
+.steps > li::before{content:counter(s);display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-weight:800;margin-bottom:10px}
+.steps b{color:var(--text)}
+.note{margin-top:22px;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:14px 18px;color:var(--sub);font-size:15px}
+.note li{margin:2px 0}
+.note ul{margin:0;padding-left:18px}
+.check li{list-style:none;position:relative;padding-left:22px}
+.check li::before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:700}
+
+footer{margin-top:72px;border-top:1px solid var(--line);padding:28px 0 44px;color:var(--sub);font-size:14px}
+footer a{color:var(--sub)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="icon.png" alt="">Madang</a>
+    <div class="links">
+      <a href="#features">기능</a>
+      <a href="#screens">화면</a>
+      <a href="#install">설치</a>
+      <a href="#license">라이선스</a>
+    </div>
+    <a class="btn main" href="https://github.com/Dawnilove/Madang/releases">받기</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <span class="ver">베타 1.0.0-beta.1</span>
+    <h1>AI 에이전트와 터미널,<br>한 <em>마당</em>에서</h1>
+    <p class="lead">프로젝트 · 작업 공간 · 터미널 · 스킬을 <b>한국어 화면 하나</b>에 모았어요. <b>Orca(MIT)</b>를 기반으로 만든 Windows 데스크톱 앱이에요.</p>
+    <div class="cta">
+      <a class="btn main" href="https://github.com/Dawnilove/Madang/releases">Windows용 받기</a>
+      <a class="btn" href="#features">기능 보기</a>
+    </div>
+    <p class="others">Windows 10 · 11 &nbsp;·&nbsp; 코드 서명이 없는 베타예요 (설치 안내는 <a href="#install">아래</a>)</p>
+    <ul class="facts">
+      <li><b>한국어</b>화면·안내·오류</li>
+      <li><b>서랍 터미널</b>Ctrl + `</li>
+      <li><b>스킬 공유</b>파일 · GitHub · Orca 링크</li>
+    </ul>
+    <img class="shot" src="images/workspace.png" alt="Madang 작업 화면: 왼쪽 프로젝트 목록, 가운데 터미널, 오른쪽 파일 패널">
+  </div>
+</header>
+
+<section id="features">
+  <div class="wrap">
+    <span class="eyebrow">주요 기능</span>
+    <h2>필요한 것만, 한 창에</h2>
+    <p class="sec-lead">창을 여러 개 띄우지 않고, 일하는 흐름 그대로 이어서 쓸 수 있어요.</p>
+    <div class="cards">
+      <div class="card"><span class="ic">💬</span><h3>한국어 화면</h3><p>메뉴·안내·오류 문구를 한국어로 보여 줘요.</p></div>
+      <div class="card"><span class="ic">📁</span><h3>프로젝트와 작업 공간</h3><p>프로젝트 폴더를 추가하고, 작업 공간을 만들어 나눠서 일해요.</p></div>
+      <div class="card"><span class="ic">⌨️</span><h3>터미널 서랍</h3><p>아래에서 열고 접는 터미널이에요. 접었다 열어도 같은 터미널이 그대로 있어요.</p></div>
+      <div class="card"><span class="ic">🤖</span><h3>AI 에이전트</h3><p>작업 공간마다 터미널을 열어 Claude·Codex 같은 에이전트를 실행해요.</p></div>
+      <div class="card"><span class="ic">🧩</span><h3>스킬 공유</h3><p>파일(.tar.gz)로 내보내고 가져오고, GitHub 주소나 Orca 공유 링크로 설치해요. 설치 전에 내용을 확인하는 창이 항상 떠요.</p></div>
+      <div class="card"><span class="ic">🆕</span><h3>새로운 점</h3><p>업데이트하면 바뀐 점을 앱에서 바로 보여 줘요.</p></div>
+      <div class="card"><span class="ic">🎨</span><h3>마당 테마</h3><p>크림색 바탕에 한옥 지붕색 포인트. 회색빛 테마도 고를 수 있어요.</p></div>
+      <div class="card"><span class="ic">📜</span><h3>오픈소스 라이선스</h3><p>도움말 메뉴에서 사용한 오픈소스의 전체 고지를 볼 수 있어요.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="band" id="screens">
+  <div class="wrap">
+    <span class="eyebrow">화면</span>
+    <h2>이렇게 생겼어요</h2>
+    <p class="sec-lead">실제 Madang 화면이에요.</p>
+    <div class="gallery">
+      <figure><img class="shot" src="images/drawer.png" alt="터미널 서랍을 연 화면" loading="lazy"><figcaption><b>터미널 서랍</b> · 아래에서 열고 접어도 같은 터미널</figcaption></figure>
+      <figure><img class="shot" src="images/skills-share.png" alt="스킬 공유 메뉴" loading="lazy"><figcaption><b>스킬 공유</b> · 내보내기·가져오기·GitHub·Orca 링크</figcaption></figure>
+      <figure><img class="shot" src="images/skills-github.png" alt="GitHub 주소로 스킬 설치 창" loading="lazy"><figcaption><b>GitHub 주소로 설치</b> · 주소만 넣으면 스킬을 찾아 줘요</figcaption></figure>
+      <figure><img class="shot" src="images/whats-new.png" alt="새로운 점 창" loading="lazy"><figcaption><b>새로운 점</b> · 업데이트 뒤 첫 실행에 보여 줘요</figcaption></figure>
+      <figure><img class="shot" src="images/first-screen.png" alt="프로젝트가 없는 첫 화면" loading="lazy"><figcaption><b>첫 화면</b> · 프로젝트를 추가하면 시작해요</figcaption></figure>
+      <figure><img class="shot" src="images/license.png" alt="오픈소스 라이선스 창" loading="lazy"><figcaption><b>오픈소스 라이선스</b> · 도움말 메뉴에서 열어요</figcaption></figure>
+    </div>
+  </div>
+</div>
+
+<section id="install">
+  <div class="wrap">
+    <span class="eyebrow">설치</span>
+    <h2>3단계면 끝나요</h2>
+    <p class="sec-lead">Windows 10 · 11 에서 쓸 수 있어요.</p>
+    <ol class="steps">
+      <li><b>받기</b><br><a href="https://github.com/Dawnilove/Madang/releases">Releases</a>에서 <code>madang-windows-setup.exe</code>를 받아요.</li>
+      <li><b>실행</b><br>파일을 실행하면 설치가 끝나요. "PC 보호" 창이 뜨면 <b>추가 정보 → 실행</b>을 눌러 주세요.</li>
+      <li><b>시작</b><br>Madang을 열고 <b>프로젝트 추가</b>를 눌러 폴더를 고르면 시작해요.</li>
+    </ol>
+    <div class="note">
+      <ul class="check">
+        <li>이 베타는 <b>코드 서명이 없어서</b> Windows가 경고를 보여요.</li>
+        <li>베타는 <b>자동 업데이트로 오지 않아요.</b> 새 베타가 나오면 Releases에서 직접 받아 주세요.</li>
+        <li>지금은 <b>Windows용 설치 파일만</b> 있어요.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="license">
+  <div class="wrap">
+    <span class="eyebrow">라이선스와 출처</span>
+    <h2>Orca를 기반으로 만들었어요</h2>
+    <p class="sec-lead">Madang은 <a href="https://github.com/stablyai/orca">Orca</a>(MIT 라이선스, Copyright (c) 2026 Lovecast Inc.)를 기반으로 만들었어요. 전체 고지는 앱의 도움말 → "오픈소스 라이선스"에서 볼 수 있어요. 이 저장소는 배포 전용이라 설치 파일과 안내만 있어요.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Madang · <a href="https://github.com/Dawnilove/Madang">GitHub</a> · <a href="https://github.com/Dawnilove/Madang/releases">Releases</a> · <a href="https://github.com/Dawnilove/Madang/issues">문제 알리기</a>
+  </div>
+</footer>
+
+</body>
+</html>
