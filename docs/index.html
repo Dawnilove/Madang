@@ -82,6 +82,16 @@ figcaption b{color:var(--text)}
 .check li{list-style:none;position:relative;padding-left:22px}
 .check li::before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:700}
 
+/* 이전 버전 */
+#vlist{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+#vlist li{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px}
+#vlist b{font-size:16px}
+#vlist .vmeta{color:var(--sub);font-size:14px}
+#vlist .pre{font-size:12px;font-weight:700;color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:0 9px}
+#vlist a{font-weight:700;text-decoration:none}
+#vlist a:hover{text-decoration:underline}
+#vlist .grow{flex:1}
+
 footer{margin-top:72px;border-top:1px solid var(--line);padding:28px 0 44px;color:var(--sub);font-size:14px}
 footer a{color:var(--sub)}
 </style>
@@ -95,6 +105,7 @@ footer a{color:var(--sub)}
       <a href="#features">기능</a>
       <a href="#screens">화면</a>
       <a href="#install">설치</a>
+      <a href="#versions">이전 버전</a>
       <a href="#license">라이선스</a>
     </div>
     <a class="btn main" data-dl href="https://github.com/Dawnilove/Madang/releases/download/v1.0.0-beta.1/madang-windows-setup.exe">받기</a>
@@ -110,7 +121,7 @@ footer a{color:var(--sub)}
       <a class="btn main" data-dl href="https://github.com/Dawnilove/Madang/releases/download/v1.0.0-beta.1/madang-windows-setup.exe">Windows용 받기</a>
       <a class="btn" href="#features">기능 보기</a>
     </div>
-    <p class="others">Windows 10 · 11 &nbsp;·&nbsp; 코드 서명이 없는 베타예요 (설치 안내는 <a href="#install">아래</a>) &nbsp;·&nbsp; <a href="https://github.com/Dawnilove/Madang/releases">모든 버전</a></p>
+    <p class="others">Windows 10 · 11 &nbsp;·&nbsp; 코드 서명이 없는 베타예요 (설치 안내는 <a href="#install">아래</a>) &nbsp;·&nbsp; <a href="#versions">이전 버전</a></p>
     <ul class="facts">
       <li><b>한국어</b>화면·안내·오류</li>
       <li><b>서랍 터미널</b>Ctrl + `</li>
@@ -160,17 +171,28 @@ footer a{color:var(--sub)}
     <h2>3단계면 끝나요</h2>
     <p class="sec-lead">Windows 10 · 11 에서 쓸 수 있어요.</p>
     <ol class="steps">
-      <li><b>받기</b><br><a data-dl href="https://github.com/Dawnilove/Madang/releases/download/v1.0.0-beta.1/madang-windows-setup.exe">madang-windows-setup.exe</a>를 받아요. 다른 버전은 <a href="https://github.com/Dawnilove/Madang/releases">Releases</a>에 있어요.</li>
+      <li><b>받기</b><br><a data-dl href="https://github.com/Dawnilove/Madang/releases/download/v1.0.0-beta.1/madang-windows-setup.exe">madang-windows-setup.exe</a>를 받아요. 다른 버전은 <a href="#versions">이전 버전</a>에서 받을 수 있어요.</li>
       <li><b>실행</b><br>파일을 실행하면 설치가 끝나요. "PC 보호" 창이 뜨면 <b>추가 정보 → 실행</b>을 눌러 주세요.</li>
       <li><b>시작</b><br>Madang을 열고 <b>프로젝트 추가</b>를 눌러 폴더를 고르면 시작해요.</li>
     </ol>
     <div class="note">
       <ul class="check">
         <li>이 베타는 <b>코드 서명이 없어서</b> Windows가 경고를 보여요.</li>
-        <li>베타는 <b>자동 업데이트로 오지 않아요.</b> 새 베타가 나오면 Releases에서 직접 받아 주세요.</li>
+        <li>베타는 <b>자동 업데이트로 오지 않아요.</b> 새 베타가 나오면 이 사이트에서 직접 받아 주세요.</li>
         <li>지금은 <b>Windows용 설치 파일만</b> 있어요.</li>
       </ul>
     </div>
+  </div>
+</section>
+
+<section id="versions">
+  <div class="wrap">
+    <span class="eyebrow">이전 버전</span>
+    <h2>예전 버전 받기</h2>
+    <p class="sec-lead">예전 버전이 필요할 때 받으세요. 최신 버전을 권장해요. 누르면 바로 받아져요.</p>
+    <ul id="vlist">
+      <li><b>v1.0.0-beta.1</b><span class="pre">베타</span><span class="vmeta">2026-10-29</span><span class="grow"></span><a data-dl href="https://github.com/Dawnilove/Madang/releases/download/v1.0.0-beta.1/madang-windows-setup.exe">설치 파일 받기</a><a href="https://github.com/Dawnilove/Madang/releases/tag/v1.0.0-beta.1">릴리스 노트</a></li>
+    </ul>
   </div>
 </section>
 
@@ -189,16 +211,31 @@ footer a{color:var(--sub)}
 </footer>
 
 <script>
-// 가장 최근 릴리스(베타 포함)의 설치 파일로 바로 받게 한다. 실패하면 위에 적어 둔 고정 주소가 그대로 쓰인다.
-fetch('https://api.github.com/repos/Dawnilove/Madang/releases?per_page=1', { headers: { Accept: 'application/vnd.github+json' } })
+// GitHub 릴리스 목록으로 받기 버튼(가장 최근 것)과 이전 버전 목록을 채운다. 실패하면 위에 적어 둔 고정 주소와 기본 목록이 그대로 쓰인다.
+var ASSET = 'madang-windows-setup.exe'
+function pick(rel) { return rel.assets.find(function (x) { return x.name === ASSET }) }
+function el(tag, text, cls) { var e = document.createElement(tag); if (text) e.textContent = text; if (cls) e.className = cls; return e }
+function link(text, href) { var a = el('a', text); a.href = href; return a }
+
+fetch('https://api.github.com/repos/Dawnilove/Madang/releases?per_page=100', { headers: { Accept: 'application/vnd.github+json' } })
   .then(function (r) { return r.ok ? r.json() : Promise.reject() })
-  .then(function (list) {
-    var rel = list && list[0]
-    var asset = rel && rel.assets.find(function (a) { return a.name === 'madang-windows-setup.exe' })
-    if (!asset) return
-    document.querySelectorAll('[data-dl]').forEach(function (el) { el.href = asset.browser_download_url })
-    document.querySelectorAll('[data-ver]').forEach(function (el) {
-      el.textContent = (rel.prerelease ? '베타 ' : '') + rel.tag_name.replace(/^v/, '')
+  .then(function (rels) {
+    rels = rels.filter(function (r) { return !r.draft && pick(r) })
+    if (!rels.length) return
+    var latest = rels[0]
+    document.querySelectorAll('[data-dl]').forEach(function (x) { x.href = pick(latest).browser_download_url })
+    document.querySelectorAll('[data-ver]').forEach(function (x) {
+      x.textContent = (latest.prerelease ? '베타 ' : '') + latest.tag_name.replace(/^v/, '')
+    })
+    var ul = document.getElementById('vlist')
+    ul.textContent = ''
+    rels.forEach(function (rel) {
+      var li = el('li')
+      li.append(el('b', rel.tag_name))
+      if (rel.prerelease) li.append(el('span', '베타', 'pre'))
+      li.append(el('span', rel.published_at.slice(0, 10), 'vmeta'), el('span', '', 'grow'))
+      li.append(link('설치 파일 받기', pick(rel).browser_download_url), link('릴리스 노트', rel.html_url))
+      ul.append(li)
     })
   })
   .catch(function () {})
