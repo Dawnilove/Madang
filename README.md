@@ -10,9 +10,9 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Dawnilove/Madang/releases/latest/download/madang-windows-setup.exe"><img src="https://img.shields.io/github/v/release/Dawnilove/Madang?include_prereleases&label=%EC%B5%9C%EC%8B%A0%20%EB%B2%84%EC%A0%84&color=B44C2D&labelColor=3F3A34&style=for-the-badge" alt="최신 버전"></a>
+  <a href="https://github.com/Dawnilove/Madang/releases/latest/download/madang-windows-setup.exe"><img src="https://img.shields.io/github/v/release/Dawnilove/Madang?label=%EC%B5%9C%EC%8B%A0%20%EB%B2%84%EC%A0%84&color=B44C2D&labelColor=3F3A34&style=for-the-badge" alt="최신 버전"></a>
   <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-4C8C4A?labelColor=3F3A34&style=for-the-badge" alt="Windows 10, 11">
-  <img src="https://img.shields.io/badge/%EB%B2%A0%ED%83%80-%EC%84%9C%EB%AA%85%20%EC%97%86%EC%9D%8C-C65D3B?labelColor=3F3A34&style=for-the-badge" alt="베타, 서명 없음">
+  <img src="https://img.shields.io/badge/%EC%A0%95%EC%8B%9D-%EC%84%9C%EB%AA%85%20%EC%97%86%EC%9D%8C-C65D3B?labelColor=3F3A34&style=for-the-badge" alt="정식, 서명 없음">
 </p>
 
 ## ✨ 주요 기능
