@@ -52,7 +52,7 @@
 **[madang-windows-setup.exe 바로 받기](https://github.com/Dawnilove/Madang/releases/latest/download/madang-windows-setup.exe)** — 다른 버전은 사이트의 **[이전 버전](https://dawnilove.github.io/Madang/#versions)** 에서 바로 받을 수 있어요.
 
 - **Windows 10 / 11** — 설치 파일을 실행하면 끝나요. "PC 보호" 창이 뜨면 **추가 정보 → 실행**을 눌러 주세요. 이 프로그램은 코드 서명이 없어서 경고가 떠요
-- **업데이트** — 베타는 자동 업데이트로 오지 않아요. 새 베타가 나오면 이 사이트에서 직접 받아 주세요
+- **업데이트** — 1.0 이상 정식 버전은 앱이 새 버전을 확인해 알려 줘요. 베타(1.0.0-beta.*)는 이 사이트에서 직접 받아 주세요
 - **지원 환경** — 지금은 Windows용 설치 파일만 있어요
 
 ## 🐞 문제가 있나요?
