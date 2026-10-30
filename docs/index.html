@@ -94,6 +94,16 @@ figcaption b{color:var(--text)}
 
 footer{margin-top:72px;border-top:1px solid var(--line);padding:28px 0 44px;color:var(--sub);font-size:14px}
 footer a{color:var(--sub)}
+
+.cl{list-style:none;padding:0;margin:0;display:grid;gap:14px}
+.cl>li{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 20px}
+.cl h3{margin:0 0 8px;font-size:17px;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
+.cl h3 small{color:var(--sub);font-weight:400;font-size:14px}
+.cl ul{margin:0;padding-left:20px}
+.cl li li{margin:3px 0}
+.steps{margin:0 0 18px;padding-left:22px}
+.steps li{margin:6px 0}
+.note{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 18px;color:var(--sub);font-size:15px}
 </style>
 </head>
 <body>
@@ -103,8 +113,10 @@ footer a{color:var(--sub)}
     <a class="brand" href="#top"><img src="icon.png" alt="">Madang</a>
     <div class="links">
       <a href="#features">기능</a>
+      <a href="#collab">협업</a>
       <a href="#screens">화면</a>
       <a href="#install">설치</a>
+      <a href="#changelog">변경점</a>
       <a href="#versions">이전 버전</a>
       <a href="#license">라이선스</a>
     </div>
@@ -114,7 +126,7 @@ footer a{color:var(--sub)}
 
 <header class="hero" id="top">
   <div class="wrap">
-    <span class="ver" data-ver>1.0.0</span>
+    <span class="ver" data-ver>1.0.1</span>
     <h1>AI 에이전트와 터미널,<br>한 <em>마당</em>에서</h1>
     <p class="lead">프로젝트 · 작업 공간 · 터미널 · 스킬을 <b>한국어 화면 하나</b>에 모았어요. <b>Orca(MIT)</b>를 기반으로 만든 Windows 데스크톱 앱이에요.</p>
     <div class="cta">
@@ -142,10 +154,30 @@ footer a{color:var(--sub)}
       <div class="card"><span class="ic">⌨️</span><h3>터미널 서랍</h3><p>아래에서 열고 접는 터미널이에요. 접었다 열어도 같은 터미널이 그대로 있어요.</p></div>
       <div class="card"><span class="ic">🤖</span><h3>AI 에이전트</h3><p>작업 공간마다 터미널을 열어 Claude·Codex 같은 에이전트를 실행해요.</p></div>
       <div class="card"><span class="ic">🧩</span><h3>스킬 공유</h3><p>파일(.tar.gz)로 내보내고 가져오고, GitHub 주소나 Orca 공유 링크로 설치해요. 설치 전에 내용을 확인하는 창이 항상 떠요.</p></div>
+      <div class="card"><span class="ic">👥</span><h3>에이전트 협업 (실험)</h3><p>첫 입력을 "협업:"으로 시작하면 그 세션이 총괄이 되어 일을 나눠요. <a href="#collab">자세히</a></p></div>
       <div class="card"><span class="ic">🆕</span><h3>새로운 점</h3><p>업데이트하면 바뀐 점을 앱에서 바로 보여 줘요.</p></div>
       <div class="card"><span class="ic">🎨</span><h3>마당 테마</h3><p>크림색 바탕에 한옥 지붕색 포인트. 회색빛 테마도 고를 수 있어요.</p></div>
       <div class="card"><span class="ic">📜</span><h3>오픈소스 라이선스</h3><p>도움말 메뉴에서 사용한 오픈소스의 전체 고지를 볼 수 있어요.</p></div>
     </div>
+  </div>
+</section>
+
+<section id="collab">
+  <div class="wrap">
+    <span class="eyebrow">실험 기능</span>
+    <h2>에이전트끼리 협업하기</h2>
+    <p class="sec-lead">에이전트 하나가 총괄이 되어 일을 나누고, 다른 에이전트가 일한 결과를 하나로 모아 줘요. 기본은 꺼져 있어요.</p>
+    <ol class="steps">
+      <li><b>스위치를 켜요.</b> 설정 → 실험 기능 → <b>협업 규칙</b>을 켜면 사용법 안내 창이 떠요.</li>
+      <li><b>첫 입력을 "협업:"으로 시작해요.</b> 예: <code>협업: 로그인 화면을 만들어 줘</code></li>
+      <li><b>그 세션이 총괄이 돼요.</b> 총괄은 역할을 나누고, 계획을 보여 주고, 일하는 에이전트(워커) 세션에 작업 지시서를 보내요. 끝나면 결과를 하나로 모아 알려 줘요.</li>
+    </ol>
+    <div class="cards">
+      <div class="card"><span class="ic">🧭</span><h3>역할 나누기</h3><p>연결된 에이전트(Claude·Codex 등)에 맞게 총괄이 역할을 정해요.</p></div>
+      <div class="card"><span class="ic">📝</span><h3>작업 지시서</h3><p>워커 세션은 지시서만 받으면 일할 수 있어요.</p></div>
+      <div class="card"><span class="ic">📋</span><h3>결과 한 번에</h3><p>워커가 끝낸 일을 총괄이 모아서 한 번에 보고해요.</p></div>
+    </div>
+    <p class="note">세션의 <b>첫 입력</b>만 봐요. 대화 중간에 "협업"이라는 말이 나와도 규칙은 켜지지 않아요. 스위치가 꺼져 있으면 평소처럼 동작하고, "협업 규칙이 꺼져 있다"고 한 줄로 알려 줘요. 협업 규칙은 <b>1.0.1부터</b> 정상 동작해요 (1.0.0에서는 켜도 적용되지 않았어요).</p>
   </div>
 </section>
 
@@ -182,6 +214,35 @@ footer a{color:var(--sub)}
         <li>지금은 <b>Windows용 설치 파일만</b> 있어요.</li>
       </ul>
     </div>
+  </div>
+</section>
+
+<section id="changelog">
+  <div class="wrap">
+    <span class="eyebrow">변경점</span>
+    <h2>버전별로 바뀐 점</h2>
+    <p class="sec-lead">최신 버전부터 보여 줘요.</p>
+    <ul class="cl">
+      <li><h3>1.0.1 <small>2026-10-30</small></h3><ul>
+        <li>협업 규칙 스위치를 켜도 규칙이 적용되지 않던 문제를 고쳤어요.</li>
+        <li>협업 규칙을 켤 때 사용법 안내 창이 떠요.</li></ul></li>
+      <li><h3>1.0.0 <small>2026-10-30 · 첫 정식 버전</small></h3><ul>
+        <li>처음 실행할 때 8단계 둘러보기가 나와요. 도움말 메뉴에서 다시 볼 수 있어요.</li>
+        <li>시작 마법사에서 알림 단계를 뺐어요.</li>
+        <li>협업 규칙 스위치(실험 기능)를 넣었어요. 이 버전에서는 켜도 적용되지 않아요. 1.0.1을 받으세요.</li>
+        <li>한글 글꼴에서 글자가 비어 보이던 문제를 고쳤어요.</li>
+        <li>베타에서 열리지 않던 Claude Chat이 열려요.</li></ul></li>
+      <li><h3>1.0.0-beta.2 <small>2026-10-29 · 베타</small></h3><ul>
+        <li>Claude 데스크톱 세션을 프로젝트 줄의 Chat 탭으로 열 수 있어요. 제목도 맞춰 줘요.</li>
+        <li>대화 목록에서 이름이 브랜치와 같으면 연결된 이슈·PR 제목으로 보여 줘요.</li>
+        <li>Claude·Codex 사용량 조회를 켜고 끄는 설정을 넣었어요. 기본은 꺼짐이에요.</li>
+        <li>중복된 프로젝트 묶음을 불러올 때 합치고, 작업표시줄 아이콘 크기를 고쳤어요.</li></ul></li>
+      <li><h3>1.0.0-beta.1 <small>2026-10-29 · 첫 베타</small></h3><ul>
+        <li>한국어 화면과 채팅 중심 작업 화면.</li>
+        <li>터미널 서랍: 아래에서 열고 접는 터미널 (Ctrl+`).</li>
+        <li>스킬 공유: 파일(.tar.gz) 내보내기·가져오기, GitHub 주소로 설치, Orca 공유 링크 가져오기.</li>
+        <li>"새로운 점" 창과 오픈소스 라이선스 화면.</li></ul></li>
+    </ul>
   </div>
 </section>
 
