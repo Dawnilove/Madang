@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Dawnilove/Madang/releases/download/v1.0.0-beta.1/madang-windows-setup.exe"><img src="https://img.shields.io/github/v/release/Dawnilove/Madang?include_prereleases&label=%EC%B5%9C%EC%8B%A0%20%EB%B2%84%EC%A0%84&color=B44C2D&labelColor=3F3A34&style=for-the-badge" alt="최신 버전"></a>
+  <a href="https://github.com/Dawnilove/Madang/releases/latest/download/madang-windows-setup.exe"><img src="https://img.shields.io/github/v/release/Dawnilove/Madang?include_prereleases&label=%EC%B5%9C%EC%8B%A0%20%EB%B2%84%EC%A0%84&color=B44C2D&labelColor=3F3A34&style=for-the-badge" alt="최신 버전"></a>
   <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-4C8C4A?labelColor=3F3A34&style=for-the-badge" alt="Windows 10, 11">
   <img src="https://img.shields.io/badge/%EB%B2%A0%ED%83%80-%EC%84%9C%EB%AA%85%20%EC%97%86%EC%9D%8C-C65D3B?labelColor=3F3A34&style=for-the-badge" alt="베타, 서명 없음">
 </p>
@@ -49,9 +49,9 @@
 
 ## ⬇ 다운로드
 
-**[madang-windows-setup.exe 바로 받기](https://github.com/Dawnilove/Madang/releases/download/v1.0.0-beta.1/madang-windows-setup.exe)** — 다른 버전은 사이트의 **[이전 버전](https://dawnilove.github.io/Madang/#versions)** 에서 바로 받을 수 있어요.
+**[madang-windows-setup.exe 바로 받기](https://github.com/Dawnilove/Madang/releases/latest/download/madang-windows-setup.exe)** — 다른 버전은 사이트의 **[이전 버전](https://dawnilove.github.io/Madang/#versions)** 에서 바로 받을 수 있어요.
 
-- **Windows 10 / 11** — 설치 파일을 실행하면 끝나요. "PC 보호" 창이 뜨면 **추가 정보 → 실행**을 눌러 주세요. 이 베타는 코드 서명이 없어서 경고가 떠요
+- **Windows 10 / 11** — 설치 파일을 실행하면 끝나요. "PC 보호" 창이 뜨면 **추가 정보 → 실행**을 눌러 주세요. 이 프로그램은 코드 서명이 없어서 경고가 떠요
 - **업데이트** — 베타는 자동 업데이트로 오지 않아요. 새 베타가 나오면 이 사이트에서 직접 받아 주세요
 - **지원 환경** — 지금은 Windows용 설치 파일만 있어요
 
