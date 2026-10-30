@@ -97,10 +97,9 @@ footer a{color:var(--sub)}
 
 .cl{list-style:none;padding:0;margin:0;display:grid;gap:14px}
 .cl>li{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 20px}
-.cl h3{margin:0 0 8px;font-size:17px;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
+.cl h3{margin:0 0 6px;font-size:17px;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
 .cl h3 small{color:var(--sub);font-weight:400;font-size:14px}
-.cl ul{margin:0;padding-left:20px}
-.cl li li{margin:3px 0}
+.cl p{margin:0;color:var(--sub)}
 .steps{margin:0 0 18px;padding-left:22px}
 .steps li{margin:6px 0}
 .note{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 18px;color:var(--sub);font-size:15px}
@@ -223,25 +222,10 @@ footer a{color:var(--sub)}
     <h2>버전별로 바뀐 점</h2>
     <p class="sec-lead">최신 버전부터 보여 줘요.</p>
     <ul class="cl">
-      <li><h3>1.0.1 <small>2026-10-30</small></h3><ul>
-        <li>협업 규칙 스위치를 켜도 규칙이 적용되지 않던 문제를 고쳤어요.</li>
-        <li>협업 규칙을 켤 때 사용법 안내 창이 떠요.</li></ul></li>
-      <li><h3>1.0.0 <small>2026-10-30 · 첫 정식 버전</small></h3><ul>
-        <li>처음 실행할 때 8단계 둘러보기가 나와요. 도움말 메뉴에서 다시 볼 수 있어요.</li>
-        <li>시작 마법사에서 알림 단계를 뺐어요.</li>
-        <li>협업 규칙 스위치(실험 기능)를 넣었어요. 이 버전에서는 켜도 적용되지 않아요. 1.0.1을 받으세요.</li>
-        <li>한글 글꼴에서 글자가 비어 보이던 문제를 고쳤어요.</li>
-        <li>베타에서 열리지 않던 Claude Chat이 열려요.</li></ul></li>
-      <li><h3>1.0.0-beta.2 <small>2026-10-29 · 베타</small></h3><ul>
-        <li>Claude 데스크톱 세션을 프로젝트 줄의 Chat 탭으로 열 수 있어요. 제목도 맞춰 줘요.</li>
-        <li>대화 목록에서 이름이 브랜치와 같으면 연결된 이슈·PR 제목으로 보여 줘요.</li>
-        <li>Claude·Codex 사용량 조회를 켜고 끄는 설정을 넣었어요. 기본은 꺼짐이에요.</li>
-        <li>중복된 프로젝트 묶음을 불러올 때 합치고, 작업표시줄 아이콘 크기를 고쳤어요.</li></ul></li>
-      <li><h3>1.0.0-beta.1 <small>2026-10-29 · 첫 베타</small></h3><ul>
-        <li>한국어 화면과 채팅 중심 작업 화면.</li>
-        <li>터미널 서랍: 아래에서 열고 접는 터미널 (Ctrl+`).</li>
-        <li>스킬 공유: 파일(.tar.gz) 내보내기·가져오기, GitHub 주소로 설치, Orca 공유 링크 가져오기.</li>
-        <li>"새로운 점" 창과 오픈소스 라이선스 화면.</li></ul></li>
+      <li><h3>1.0.1 <small>2026-10-30</small></h3><p>협업 규칙 스위치가 적용되지 않던 문제를 고치고, 켤 때 사용법 안내 창을 넣었어요.</p></li>
+      <li><h3>1.0.0 <small>2026-10-30 · 첫 정식 버전</small></h3><p>8단계 둘러보기, 한글 글꼴 빈칸 수정, Chat 정상 동작, 협업 스위치 추가(이 버전에서는 미동작).</p></li>
+      <li><h3>1.0.0-beta.2 <small>2026-10-29 · 베타</small></h3><p>Claude 데스크톱 세션을 Chat 탭으로 열기, 대화 목록에 이슈·PR 제목 표시, 사용량 조회 켜기/끄기.</p></li>
+      <li><h3>1.0.0-beta.1 <small>2026-10-29 · 첫 베타</small></h3><p>한국어 화면, 터미널 서랍, 스킬 공유, "새로운 점" 창, 오픈소스 라이선스 화면.</p></li>
     </ul>
   </div>
 </section>
