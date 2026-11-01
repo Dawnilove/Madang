@@ -142,7 +142,7 @@ export class StructuredAgentSessionIdleSweep {
   }
 
   /** Without a child, leftover turns/prompts are history and cannot retain the handle. */
-  private owesWork(sessionId: string, session: StructuredAgentSessionHostSession): boolean {
+  owesWork(sessionId: string, session: StructuredAgentSessionHostSession): boolean {
     return (
       this.queuedOrDelivering(sessionId, session) ||
       structuredAgentSessionChildHasOpenWork({

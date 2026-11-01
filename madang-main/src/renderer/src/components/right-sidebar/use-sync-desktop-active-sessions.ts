@@ -3,7 +3,7 @@ import { toast } from 'sonner'
 import { translate } from '@/i18n/i18n'
 import { useAppStore } from '@/store'
 import { selectFolderWorkspaces, selectWorktreesByRepo } from '@/store/workspace-record-selectors'
-import type { AiVaultSession } from '../../../../shared/ai-vault-types'
+import type { AiVaultSession, ClaudeDesktopActiveSession } from '../../../../shared/ai-vault-types'
 import {
   desktopSyncGroupLabel,
   desktopSyncTarget,
@@ -87,6 +87,26 @@ async function folderWorkspaceFor(folderPath: string, originCwd: string): Promis
   // 만든 직후에는 호스트가 아직 작업 공간을 못 찾아 채팅을 거부한다. 찾을 때까지 기다린다.
   await waitUntilHostResolves(worktreeId)
   return worktreeId
+}
+
+// 열린 Chat 탭은 처음 한 번만 대화를 복사해 두므로, 데스크톱에서 쌓인 대화를 호스트가 다시 읽게 한다. 응답 중인 탭은 건너뛴다.
+async function refreshOpenChats(
+  active: readonly ClaudeDesktopActiveSession[],
+  sessions: readonly AiVaultSession[]
+): Promise<{ refreshed: number; busy: number }> {
+  let refreshed = 0
+  let busy = 0
+  for (const entry of active) {
+    if (liveChatTabsFor(entry.sessionId, sessions).length === 0) {
+      continue
+    }
+    const result = await window.api.aiVault
+      .refreshDesktopChat({ sessionId: entry.sessionId })
+      .catch(() => 'unreadable' as const)
+    refreshed += result === 'refreshed' ? 1 : 0
+    busy += result === 'busy' ? 1 : 0
+  }
+  return { refreshed, busy }
 }
 
 /**
@@ -220,6 +240,16 @@ export function useSyncDesktopActiveSessions(args: {
         }
       }
       await syncOpenChatNames(desktopIds.active, sessions)
+      const reread = await refreshOpenChats(desktopIds.active, sessions)
+      if (reread.refreshed + reread.busy > 0) {
+        toast(
+          translate(
+            'madang.aiVault.openDesktopActive.refreshed',
+            '{{refreshed}} open chats re-read with the latest conversation · {{busy}} skipped because they are responding',
+            reread
+          )
+        )
+      }
       const plan = planDesktopSync({
         active: desktopIds.active,
         isOpen: (sessionId) => {

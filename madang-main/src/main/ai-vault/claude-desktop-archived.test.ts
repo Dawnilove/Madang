@@ -39,6 +39,23 @@ describe('readClaudeDesktopSessionIds', () => {
       join(orgDir, 'local_btw.json'),
       JSON.stringify({ cliSessionId: 'cli-btw', btwLoweredFrom: 'x', cwd: 'C:\\Users\\me\\work' })
     )
+    // effort를 낮추지 않은 btw(btwLoweredFrom 없음)와 예약 작업 실행 기록도 뺀다.
+    await writeFile(
+      join(orgDir, 'local_btw2.json'),
+      JSON.stringify({
+        cliSessionId: 'cli-btw2',
+        spawnedFrom: { sessionId: 'local_x', btw: true },
+        cwd: 'C:\\Users\\me\\work'
+      })
+    )
+    await writeFile(
+      join(orgDir, 'local_sched.json'),
+      JSON.stringify({
+        cliSessionId: 'cli-sched',
+        scheduledTaskId: 'e2e-after-analysis',
+        cwd: 'C:\\Users\\me\\work'
+      })
+    )
     await writeFile(join(orgDir, 'local_broken.json'), '{ not json')
     await writeFile(join(orgDir, 'local_null.json'), 'null')
     await writeFile(join(orgDir, 'archived-sessions.idx'), '{"v":1}')

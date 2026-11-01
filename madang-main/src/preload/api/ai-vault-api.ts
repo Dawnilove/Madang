@@ -13,6 +13,8 @@ import type {
   AiVaultListArgs,
   AiVaultListResult,
   ClaudeDesktopSessionIds,
+  RefreshDesktopChatArgs,
+  RefreshDesktopChatResult,
   AiVaultSubagentListArgs,
   AiVaultSubagentListResult
 } from '../../shared/ai-vault-types'
@@ -61,5 +63,7 @@ export type AiVaultApi = {
   getScanProgress: (scanKey: string) => Promise<AiVaultScanProgress | null>
   /** Session ids known to / archived in the Claude desktop app on this computer; read-only, empty when unavailable. */
   listClaudeDesktopSessionIds: () => Promise<ClaudeDesktopSessionIds>
+  /** Re-reads an open Madang chat from the Claude transcript at rest; local only. */
+  refreshDesktopChat: (args: RefreshDesktopChatArgs) => Promise<RefreshDesktopChatResult>
   onScanProgress: (callback: (update: AiVaultScanProgressUpdate) => void) => () => void
 }

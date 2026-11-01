@@ -27,6 +27,10 @@ import {
 import { flushStructuredAgentSessionHost } from './structured-agent-session-host-teardown'
 import type * as HostTypes from './structured-agent-session-host-types'
 import { StructuredAgentSessionEventRecovery } from './structured-agent-session-event-recovery'
+import {
+  refreshAdoptedStructuredAgentSession,
+  type AdoptedTranscriptRefresh
+} from './structured-agent-session-adopted-refresh'
 import { StructuredAgentSessionBackgroundTaskChannel } from './structured-agent-session-background-task-channel'
 import { StructuredAgentSessionClientDelivery } from './structured-agent-session-client-delivery'
 import { StructuredAgentSessionConversations } from './structured-agent-session-conversations'
@@ -239,6 +243,24 @@ export class StructuredAgentSessionHost {
   /** Includes unreadable chat records. */
   holdsSessions = (): boolean => this.deps.store.holdsRecords()
   onSessionsHeld = (listener: () => void): (() => void) => this.deps.store.onFirstRecord(listener)
+
+  /** Re-read an adopted chat's transcript at rest after another app appended to it. */
+  refreshAdoptedTranscript = (
+    sessionId: string,
+    source: { providerSessionId: string; transcriptPath: string }
+  ): Promise<AdoptedTranscriptRefresh> =>
+    refreshAdoptedStructuredAgentSession(
+      {
+        store: this.deps.store,
+        sessions: this.sessions,
+        serialize: (id, task) => this.serialize(id, task),
+        conversation: this.lifetime.conversation,
+        owesWork: (id, session) => this.lifetime.idleSweep.owesWork(id, session),
+        stopAgent: (id) => this.lifetime.stopAgent(id, { cause: 'evict', resting: true })
+      },
+      sessionId,
+      source
+    )
 
   reconcileRestartLeases = (): Promise<void> => this.restore.reconcileRestartLeases()
 

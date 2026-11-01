@@ -21664,6 +21664,8 @@
     "aiVault": {
       "openDesktopActive": {
         "label": "Claude 데스크톱의 활성 세션 열기",
+        "hint": "이미 열린 Chat은 최신 대화로 다시 읽습니다. 데스크톱에서 그 세션을 멈춘 뒤 누르세요.",
+        "refreshed": "열린 Chat {{refreshed}}개를 최신 대화로 다시 읽었음 · {{busy}}개는 응답 중이라 건너뜀",
         "unavailable": "Claude 데스크톱 앱의 세션을 읽지 못했습니다.",
         "result": "{{opened}}개 열었음 · {{alreadyOpen}}개 이미 열림 · {{skipped}}개 프로젝트 밖",
         "remaining": "{{count}}개가 남았습니다. 다시 누르면 이어서 엽니다."

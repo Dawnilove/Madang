@@ -231,7 +231,9 @@ export function startAgentStateRulesLiveUpdates(
   const updater = new AgentStateRulesLiveUpdater({
     userDataPath: environment.getPath('userData'),
     appVersion: environment.getVersion(),
-    isPackaged: environment.isPackaged(),
+    // Madang publishes no rules release (the download URL answers 404), so bundled rules are the only source.
+    // shortcut: false disables the download; restore environment.isPackaged() once a release is published.
+    isPackaged: false,
     fetch: (url, init) => getMainHttpClient().fetch(url, init),
     readSettings: () => store.getSettings(),
     onActivated

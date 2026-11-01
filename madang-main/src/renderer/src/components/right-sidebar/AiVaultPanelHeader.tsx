@@ -165,10 +165,14 @@ export function AiVaultPanelHeader({
                 'madang.aiVault.openDesktopActive.label',
                 'Open active Claude desktop sessions'
               )}
-              title={translate(
+              title={`${translate(
                 'madang.aiVault.openDesktopActive.label',
                 'Open active Claude desktop sessions'
               )}
+${translate(
+  'madang.aiVault.openDesktopActive.hint',
+  'Chats already open are re-read with the latest conversation. Stop the session in the desktop app first.'
+)}`}
               onClick={onOpenDesktopActive}
               className="size-6"
             >

@@ -58,7 +58,8 @@ function cliIds(raw: string): FileIds {
     btwLoweredFrom,
     sessionId,
     forkedFromSessionId,
-    spawnedFrom
+    spawnedFrom,
+    scheduledTaskId
   } = record as Record<string, unknown>
   // 이어하기 전 CLI 세션도 Orca에는 따로 보이므로 보관 때는 함께 숨긴다.
   const ids = [
@@ -67,10 +68,14 @@ function cliIds(raw: string): FileIds {
   ].filter((id): id is string => typeof id === 'string' && id !== '')
   // known에는 현재 ID만 넣는다. 이전 ID까지 넣으면 활성 세션의 옛 기록이 "데스크톱 세션"으로 남는다.
   // btw는 본 대화 곁의 사이드 채팅이라 데스크톱 사이드바에 따로 나오지 않는다. known에서도 빼서 목록에 중복 줄로 뜨지 않게 한다.
+  // btwLoweredFrom은 effort를 낮춘 btw에만 있다. 낮출 게 없던 btw는 spawnedFrom.btw로 알아본다.
+  // 예약 작업 실행 기록(scheduledTaskId)은 데스크톱 세션 목록에 나오지 않는다.
+  const hidden =
+    btwLoweredFrom !== undefined ||
+    scheduledTaskId !== undefined ||
+    (isObject(spawnedFrom) && spawnedFrom.btw === true)
   const known =
-    btwLoweredFrom === undefined && typeof cliSessionId === 'string' && cliSessionId !== ''
-      ? [cliSessionId]
-      : []
+    !hidden && typeof cliSessionId === 'string' && cliSessionId !== '' ? [cliSessionId] : []
   const cwds = known.length > 0 && typeof cwd === 'string' && cwd !== '' ? { [known[0]]: cwd } : {}
   const active =
     isArchived !== true && known.length > 0 && typeof cwd === 'string' && cwd !== ''

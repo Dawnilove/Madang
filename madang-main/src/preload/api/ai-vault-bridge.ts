@@ -10,6 +10,8 @@ import type {
   AiVaultFirstUserPromptArgs,
   AiVaultListArgs,
   ClaudeDesktopSessionIds,
+  RefreshDesktopChatArgs,
+  RefreshDesktopChatResult,
   AiVaultSubagentListArgs
 } from '../../shared/ai-vault-types'
 import type { AiVaultSessionTitlesArgs } from '../../shared/ai-vault-session-title'
@@ -67,6 +69,8 @@ export const aiVaultApi = {
     ipcRenderer.invoke('aiVault:getScanProgress', scanKey),
   listClaudeDesktopSessionIds: (): Promise<ClaudeDesktopSessionIds> =>
     ipcRenderer.invoke('aiVault:listClaudeDesktopSessionIds'),
+  refreshDesktopChat: (args: RefreshDesktopChatArgs): Promise<RefreshDesktopChatResult> =>
+    ipcRenderer.invoke('aiVault:refreshDesktopChat', args),
   onScanProgress: (callback: (update: AiVaultScanProgressUpdate) => void): (() => void) => {
     const listener = (_event: Electron.IpcRendererEvent, update: AiVaultScanProgressUpdate) =>
       callback(update)

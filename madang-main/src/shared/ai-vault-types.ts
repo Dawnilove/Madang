@@ -158,6 +158,10 @@ export type ClaudeDesktopSessionIds = {
   active?: ClaudeDesktopActiveSession[]
 }
 
+/** 이미 열린 Madang Chat을 데스크톱이 쌓은 최신 대화로 다시 읽는 요청과 결과. */
+export type RefreshDesktopChatArgs = { sessionId: string }
+export type RefreshDesktopChatResult = 'refreshed' | 'busy' | 'unreadable' | 'not-chat'
+
 export type ClaudeDesktopActiveSession = {
   sessionId: string
   title: string
