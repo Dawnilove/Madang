@@ -1,0 +1,53 @@
+import type { MadangdTerminalCensus } from '../../shared/madangd-terminal-census'
+import type { WslHostConnectIntent, WslHostDeferredUpdate } from '../../shared/wsl-host-types'
+import type { WslLivenessUnverifiableReason } from './wsl-madangd-liveness-verdict'
+
+/** C7 publishes terminal verdicts proven by the distro; null leaves ownership to madangd, whose reconnect census reports surviving daemon sessions. */
+export type WslMadangdConnectionStatus =
+  | { state: 'connecting' }
+  | { state: 'ready'; census: MadangdTerminalCensus | null }
+  | {
+      state: 'reconnecting'
+      reason: 'madangd-exited' | 'distro-restarted' | 'distro-stopped' | 'census'
+      attempt: number
+      /** Until the next try; null while one runs. */
+      retryInMs: number | null
+      terminals: 'exited' | 'unverifiable'
+    }
+  | {
+      state: 'distro-stopped'
+      terminals: 'exited'
+      /** False: nothing user-visible needs it, so it is not booted; it reconnects once running. */
+      recovering: boolean
+    }
+  | {
+      state: 'unverifiable'
+      reason: WslLivenessUnverifiableReason
+      terminals: 'unverifiable'
+    }
+  /** madangd stopped (crash or managed idle exit) with nothing user-visible on it; not relaunched. */
+  | { state: 'idle'; terminals: 'unverifiable' }
+  | {
+      state: 'failed'
+      reason: string
+      terminals: 'exited' | 'unverifiable'
+      /** A connect the host deferred: what Update or Force would retry, since nothing serves. */
+      deferredUpdate?: WslHostDeferredUpdate
+    }
+  | { state: 'closed' }
+
+/** What a user-initiated connect asks of the host's update. */
+export type WslMadangdConnectIntent = { intent?: WslHostConnectIntent }
+
+/** Retain failed-connect deferrals so Update/Force remains available when nothing serves. */
+export function wslConnectFailedStatus(
+  reason: string,
+  deferral: WslHostDeferredUpdate | null
+): WslMadangdConnectionStatus {
+  if (!deferral) {
+    return { state: 'failed', reason, terminals: 'unverifiable' }
+  }
+  const { candidateVersion, code, reason: why, forceable } = deferral
+  const deferredUpdate = { candidateVersion, code, reason: why, forceable }
+  return { state: 'failed', reason, terminals: 'unverifiable', deferredUpdate }
+}

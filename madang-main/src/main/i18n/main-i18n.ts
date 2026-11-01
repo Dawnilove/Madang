@@ -1,0 +1,126 @@
+import { getSystemLanguageDetection } from './system-language'
+import i18next, {
+  type BackendModule,
+  type i18n as I18nInstance,
+  type ReadCallback,
+  type TOptions
+} from 'i18next'
+
+import { isPseudoLocalizationLocale, pseudoLocalizeString } from '../../shared/pseudo-localization'
+import { DEFAULT_UI_LOCALE, resolveUiLocale, type SupportedUiLocale } from '../../shared/ui-locale'
+import { UI_LANGUAGE_SYSTEM, type UiLanguage } from '../../shared/ui-language'
+import type { PluginLanguagePackRegistration } from '../../shared/plugins/plugin-language-pack-artifact'
+
+export const mainI18n: I18nInstance = i18next.createInstance()
+
+let initialized = false
+let languageGeneration = 0
+let pluginLanguagePacks: readonly PluginLanguagePackRegistration[] = []
+const registeredPluginLanguages = new Set<string>()
+
+// English uses caller fallbacks; load only the selected non-English catalog after startup.
+const LAZY_LOCALE_LOADERS: Record<
+  Exclude<SupportedUiLocale, 'en'>,
+  () => Promise<{ default: Record<string, unknown> }>
+> = {
+  es: () => import('../../renderer/src/i18n/locales/es.json'),
+  fr: () => import('../../renderer/src/i18n/locales/fr.json'),
+  ja: () => import('../../renderer/src/i18n/locales/ja.json'),
+  ko: () => import('../../renderer/src/i18n/locales/ko.json'),
+  pt: () => import('../../renderer/src/i18n/locales/pt.json'),
+  zh: () => import('../../renderer/src/i18n/locales/zh.json')
+}
+
+const lazyLocaleBackend: BackendModule = {
+  type: 'backend',
+  init: () => {},
+  read: (language: string, _namespace: string, callback: ReadCallback) => {
+    const loader = LAZY_LOCALE_LOADERS[language as Exclude<SupportedUiLocale, 'en'>]
+    if (!loader) {
+      // English comes from translateMain defaultValue fallbacks.
+      callback(null, false)
+      return
+    }
+    loader().then(
+      (mod) => callback(null, mod.default),
+      (error) => callback(error instanceof Error ? error : new Error(String(error)), false)
+    )
+  }
+}
+
+export function getMainSystemLocale(): string {
+  return getSystemLanguageDetection()?.locale ?? DEFAULT_UI_LOCALE
+}
+
+export async function ensureMainI18n(): Promise<I18nInstance> {
+  if (!initialized) {
+    await mainI18n.use(lazyLocaleBackend).init({
+      fallbackLng: DEFAULT_UI_LOCALE,
+      lng: DEFAULT_UI_LOCALE,
+      // Seed English as loaded; partialBundledLanguages allows lazy non-English catalogs.
+      partialBundledLanguages: true,
+      resources: {
+        en: {
+          translation: {}
+        }
+      },
+      interpolation: {
+        escapeValue: false
+      }
+    })
+    initialized = true
+    applyMainPluginLanguagePacks()
+  }
+  return mainI18n
+}
+
+export async function setMainUiLanguage(language: UiLanguage): Promise<string> {
+  const request = ++languageGeneration
+  await ensureMainI18n()
+  const selectedLocale = resolveUiLocale(
+    language,
+    language === UI_LANGUAGE_SYSTEM ? getMainSystemLocale() : DEFAULT_UI_LOCALE
+  )
+  const locale =
+    pluginLanguagePacks.find((pack) => pack.id === selectedLocale)?.resourceLanguage ??
+    (selectedLocale.startsWith('plugin:') ? DEFAULT_UI_LOCALE : selectedLocale)
+  if (mainI18n.language !== locale) {
+    await mainI18n.loadLanguages(locale)
+    if (request !== languageGeneration) {
+      return mainI18n.language
+    }
+    await mainI18n.changeLanguage(locale)
+  }
+  return locale
+}
+
+function applyMainPluginLanguagePacks(): void {
+  for (const language of registeredPluginLanguages) {
+    mainI18n.removeResourceBundle(language, 'translation')
+  }
+  registeredPluginLanguages.clear()
+  for (const pack of pluginLanguagePacks) {
+    mainI18n.addResourceBundle(pack.resourceLanguage, 'translation', pack.catalog, true, true)
+    registeredPluginLanguages.add(pack.resourceLanguage)
+  }
+}
+
+export function setMainPluginLanguagePacks(
+  packs: readonly PluginLanguagePackRegistration[]
+): boolean {
+  if (pluginLanguagePacks === packs) {
+    return false
+  }
+  pluginLanguagePacks = packs
+  if (initialized) {
+    applyMainPluginLanguagePacks()
+  }
+  return true
+}
+
+export function translateMain(key: string, fallback: string, options?: TOptions): string {
+  // Menu registration can precede async initialization; use the English fallback then.
+  const raw = initialized ? mainI18n.t(key, { defaultValue: fallback, ...options }) : fallback
+  const value = typeof raw === 'string' && raw.length > 0 ? raw : fallback
+  return isPseudoLocalizationLocale(mainI18n.language) ? pseudoLocalizeString(value) : value
+}

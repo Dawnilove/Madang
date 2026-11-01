@@ -1,0 +1,226 @@
+/*
+ * Madang theme layer over Orca's tokens. Three palettes, chosen by `data-madang-theme` on <html>
+ * (set from GlobalSettings.colorTheme) and the existing `.dark` class (light/dark mode):
+ *   - Madang (default, attribute absent or "madang"): light cream and dark brown, from the logo colors.
+ *   - lime-dark: JetDeck "lime-dark" (themes/lime-dark.json, Apache-2.0, same author); dark mode only.
+ * Why `:root...`: it outranks Orca's `:root` and `.dark` token blocks in main.css without editing them,
+ * so upstream merges keep main.css untouched apart from the import line.
+ * Logo colors #4C8C4A and #C65D3B miss 4.5:1 on cream, so text and buttons use darker shades of them.
+ */
+:root:not([data-madang-theme='lime-dark']):not(.dark) {
+  --background: #f7f2ec;
+  --foreground: #3f3a34;
+  --card: #fcfaf6;
+  --card-foreground: #3f3a34;
+  --popover: #fcfaf6;
+  --popover-foreground: #3f3a34;
+  --secondary: #eee7de;
+  --secondary-foreground: #3f3a34;
+  --muted: #eee7de;
+  --muted-foreground: #6b645a;
+  --bg-titlebar: #efe8df;
+  --editor-surface: #fcfaf6;
+  --accent: #ede5da;
+  --accent-foreground: #3f3a34;
+  --primary: #b44c2d;
+  --primary-foreground: #ffffff;
+  --ring: #b44c2d;
+  --border: #ddd3c7;
+  --input: #8a8276;
+  --sidebar: #efe8df;
+  --sidebar-foreground: #3f3a34;
+  --sidebar-primary: #b44c2d;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e6ddd0;
+  --sidebar-accent-foreground: #3f3a34;
+  --sidebar-border: #ddd3c7;
+  --sidebar-ring: #b44c2d;
+  --worktree-sidebar: #efe8df;
+  --worktree-sidebar-foreground: #3f3a34;
+  --worktree-sidebar-accent: #e6ddd0;
+  --worktree-sidebar-accent-foreground: #3f3a34;
+  --worktree-sidebar-border: #ddd3c7;
+  --worktree-sidebar-ring: #b44c2d;
+  --chart-1: #b44c2d;
+  --chart-2: #3b7339;
+  --status-success: #3b7339;
+  --status-warning: #8a5d00;
+  --destructive: #b3261e;
+  --radius: 0.5rem;
+}
+
+/* madang-neutral: the Madang light palette with less yellow, greyer surfaces. Same specificity as the block above, so it comes after it. */
+:root[data-madang-theme='madang-neutral']:not(.dark) {
+  --background: #f5f1ec;
+  --card: #fbf9f6;
+  --popover: #fbf9f6;
+  --secondary: #ece6dd;
+  --muted: #ece6dd;
+  --bg-titlebar: #ede8e1;
+  --editor-surface: #fbf9f6;
+  --accent: #eae4da;
+  --border: #dcd5cb;
+  --sidebar: #ede8e1;
+  --sidebar-accent: #e4ddd3;
+  --sidebar-border: #dcd5cb;
+  --worktree-sidebar: #ede8e1;
+  --worktree-sidebar-accent: #e4ddd3;
+  --worktree-sidebar-border: #dcd5cb;
+}
+
+:root:not([data-madang-theme='lime-dark']).dark {
+  --background: #2b2723;
+  --foreground: #f7f2ec;
+  --card: #332e29;
+  --card-foreground: #f7f2ec;
+  --popover: #332e29;
+  --popover-foreground: #f7f2ec;
+  --secondary: #3a342e;
+  --secondary-foreground: #f7f2ec;
+  --muted: #3a342e;
+  --muted-foreground: #b9ae9c;
+  --bg-titlebar: #26221e;
+  --editor-surface: #2b2723;
+  --accent: #453e36;
+  --accent-foreground: #f7f2ec;
+  --primary: #e08a6b;
+  --primary-foreground: #1f1c18;
+  --ring: #e08a6b;
+  --border: #4a423a;
+  --input: #7a7064;
+  --sidebar: #332e29;
+  --sidebar-foreground: #f7f2ec;
+  --sidebar-primary: #e08a6b;
+  --sidebar-primary-foreground: #1f1c18;
+  --sidebar-accent: #453e36;
+  --sidebar-accent-foreground: #f7f2ec;
+  --sidebar-border: #4a423a;
+  --sidebar-ring: #e08a6b;
+  --worktree-sidebar: #332e29;
+  --worktree-sidebar-foreground: #f7f2ec;
+  --worktree-sidebar-accent: #453e36;
+  --worktree-sidebar-accent-foreground: #f7f2ec;
+  --worktree-sidebar-border: #4a423a;
+  --worktree-sidebar-ring: #e08a6b;
+  --chart-1: #e08a6b;
+  --chart-2: #8fcb8b;
+  --status-success: #8fcb8b;
+  --status-warning: #e6b85c;
+  --destructive: #ff8a7a;
+  --radius: 0.5rem;
+}
+
+:root[data-madang-theme='lime-dark'].dark {
+  /* Surfaces (JetDeck ui.bg / ui.panel / ui.panel2 / ui.header) */
+  --background: #0e1014;
+  --foreground: #e7e9ee;
+  --card: #151820;
+  --card-foreground: #e7e9ee;
+  --popover: #151820;
+  --popover-foreground: #e7e9ee;
+  --secondary: #1b1f29;
+  --secondary-foreground: #e7e9ee;
+  --muted: #1b1f29;
+  --muted-foreground: #a0a8b8;
+  --bg-titlebar: #12151b;
+  --editor-surface: #0e1014;
+
+  /* Selection / hover surface (JetDeck ui.selection; shadcn "accent" means hover/selected background) */
+  --accent: #2a303c;
+  --accent-foreground: #e7e9ee;
+
+  /* Primary accent (JetDeck ui.accentFill / ui.accentFillText) */
+  --primary: #a3e06b;
+  --primary-foreground: #0e1014;
+  --ring: #a3e06b;
+
+  /* Lines (JetDeck ui.border / ui.inputBorder) */
+  --border: #2a303c;
+  --input: #646b79;
+
+  /* Sidebars follow JetDeck panels */
+  --sidebar: #151820;
+  --sidebar-foreground: #e7e9ee;
+  --sidebar-primary: #a3e06b;
+  --sidebar-primary-foreground: #0e1014;
+  --sidebar-accent: #2a303c;
+  --sidebar-accent-foreground: #e7e9ee;
+  --sidebar-border: #2a303c;
+  --sidebar-ring: #a3e06b;
+  --worktree-sidebar: #151820;
+  --worktree-sidebar-foreground: #e7e9ee;
+  --worktree-sidebar-accent: #2a303c;
+  --worktree-sidebar-accent-foreground: #e7e9ee;
+  --worktree-sidebar-border: #2a303c;
+  --worktree-sidebar-ring: #a3e06b;
+
+  /* Charts (JetDeck ui.chartPrimary / ui.chartSecondary) */
+  --chart-1: #a3e06b;
+  --chart-2: #6cb6ff;
+
+  /* Status (JetDeck status.connected / connecting / disconnected) */
+  --status-success: #a3e06b;
+  --status-warning: #f0b44c;
+  --destructive: #ff7b72;
+
+  /* Shape (JetDeck shape.radiusButton = 8px) */
+  --radius: 0.5rem;
+}
+
+/*
+ * Korean typography: tracked uppercase labels (e.g. settings group titles) read as
+ * spaced-out syllables in Hangul, so drop the tracking when the UI language is Korean.
+ */
+:lang(ko) .uppercase {
+  letter-spacing: normal;
+}
+
+/*
+ * Madang UI font: NanumSquareRound (OFL-1.1, NAVER), bundled so it works offline.
+ * Why these weight ranges: the font ships only Regular/Bold/ExtraBold, and its Regular is thin.
+ * Normal text (400-500) uses Bold and headings (600+) use ExtraBold for a soft, heavier look;
+ * Regular stays for explicit light text (100-300).
+ * The family name is used by MADANG_UX.roundedUiFont (src/renderer/src/lib/app-font-family.ts).
+ */
+@font-face {
+  font-family: 'NanumSquareRound';
+  src: url('./fonts/NanumSquareRoundR.woff2') format('woff2');
+  font-weight: 100 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'NanumSquareRound';
+  src: url('./fonts/NanumSquareRoundB.woff2') format('woff2');
+  font-weight: 400 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'NanumSquareRound';
+  src: url('./fonts/NanumSquareRoundEB.woff2') format('woff2');
+  font-weight: 600 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/*
+ * Korean text reads smaller than Latin at the same px size, so lift the tiny utility sizes by one
+ * step (9→10, 10→11, 11→12). Tight spots can opt out by adding the `ko-compact` class.
+ */
+:lang(ko) .text-\[9px\]:not(.ko-compact),
+:lang(ko) .text-\[9\.5px\]:not(.ko-compact) {
+  font-size: 10px;
+}
+
+:lang(ko) .text-\[10px\]:not(.ko-compact),
+:lang(ko) .text-\[10\.5px\]:not(.ko-compact) {
+  font-size: 11px;
+}
+
+:lang(ko) .text-\[11px\]:not(.ko-compact),
+:lang(ko) .text-\[11\.5px\]:not(.ko-compact) {
+  font-size: 12px;
+}

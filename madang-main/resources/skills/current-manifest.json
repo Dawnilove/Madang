@@ -1,0 +1,181 @@
+{
+  "schemaVersion": 3,
+  "skills": [
+    {
+      "name": "collaboration",
+      "sourcePath": "skills/collaboration",
+      "packageDigest": "098ff284400e00ceaa39d3c56db37c072684d5528a4f0083817d643d0813f179",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "size": 3066,
+          "executable": false,
+          "classification": "text",
+          "exactSha256": "06e257558765f28ce757676710025bcdb3c3ec5111f2e684066458a7847d185a",
+          "textNormalizedSha256": "06e257558765f28ce757676710025bcdb3c3ec5111f2e684066458a7847d185a",
+          "identitySha256": "06e257558765f28ce757676710025bcdb3c3ec5111f2e684066458a7847d185a"
+        }
+      ]
+    },
+    {
+      "name": "computer-use",
+      "sourcePath": "skills/computer-use",
+      "packageDigest": "1143ab36c70e8c364b278b1f47da0b8fe37ac3cff42b393625a2069ef82d8598",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "size": 2247,
+          "executable": false,
+          "classification": "text",
+          "exactSha256": "30542e16920d7cc604001eae7082054b0986cf69495a00b7c1391f5418783b7f",
+          "textNormalizedSha256": "30542e16920d7cc604001eae7082054b0986cf69495a00b7c1391f5418783b7f",
+          "identitySha256": "30542e16920d7cc604001eae7082054b0986cf69495a00b7c1391f5418783b7f"
+        }
+      ]
+    },
+    {
+      "name": "jira-tickets",
+      "sourcePath": "skills/jira-tickets",
+      "packageDigest": "f0ef76b671f8248bc9bf7e7a52d9defd761623d2965e481949ba8cfed7255427",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "size": 2159,
+          "executable": false,
+          "classification": "text",
+          "exactSha256": "643279e148fefc345d7850889e6d140fc964ce3d358119e827bb382f5358dba9",
+          "textNormalizedSha256": "643279e148fefc345d7850889e6d140fc964ce3d358119e827bb382f5358dba9",
+          "identitySha256": "643279e148fefc345d7850889e6d140fc964ce3d358119e827bb382f5358dba9"
+        }
+      ]
+    },
+    {
+      "name": "linear-tickets",
+      "sourcePath": "skills/linear-tickets",
+      "packageDigest": "73ac832ab20489ae40545d6053cf5b18b6309ea1421d512343cba0ae443d61c8",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "size": 2265,
+          "executable": false,
+          "classification": "text",
+          "exactSha256": "b2157195cccf3cccc9ea12302c36b5474d611caad6fadd9ea4c1b1b837fb14cb",
+          "textNormalizedSha256": "b2157195cccf3cccc9ea12302c36b5474d611caad6fadd9ea4c1b1b837fb14cb",
+          "identitySha256": "b2157195cccf3cccc9ea12302c36b5474d611caad6fadd9ea4c1b1b837fb14cb"
+        }
+      ]
+    },
+    {
+      "name": "madang-cli",
+      "sourcePath": "skills/madang-cli",
+      "packageDigest": "5500eab1bdd5bb41f558b3052c93d7915fd290f031ae2df3933120936dc8afd7",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "size": 2426,
+          "executable": false,
+          "classification": "text",
+          "exactSha256": "6e624d69aa247e8a4daeca46a3e945c51c202a127d5a51e30338ce4f0997e088",
+          "textNormalizedSha256": "6e624d69aa247e8a4daeca46a3e945c51c202a127d5a51e30338ce4f0997e088",
+          "identitySha256": "6e624d69aa247e8a4daeca46a3e945c51c202a127d5a51e30338ce4f0997e088"
+        }
+      ]
+    },
+    {
+      "name": "madang-emulator",
+      "sourcePath": "skills/madang-emulator",
+      "packageDigest": "dfc98a1b953efc21795e2131b0427b415d865f72ed9f9d3ba49b3f534823974f",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "size": 2381,
+          "executable": false,
+          "classification": "text",
+          "exactSha256": "c932efc9f10ed385daf071ab36ff2022aded80a89dbd42db045fd4a7981291e3",
+          "textNormalizedSha256": "c932efc9f10ed385daf071ab36ff2022aded80a89dbd42db045fd4a7981291e3",
+          "identitySha256": "c932efc9f10ed385daf071ab36ff2022aded80a89dbd42db045fd4a7981291e3"
+        }
+      ]
+    },
+    {
+      "name": "madang-emulator-android",
+      "sourcePath": "skills/madang-emulator-android",
+      "packageDigest": "414851ad5ac39e43c66ee359d1b18dc1e7f3f11df93fbe0edfd8eef2e05adf3d",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "size": 2274,
+          "executable": false,
+          "classification": "text",
+          "exactSha256": "4c6f7e334f57d0197959a6096042caf4388ccf90270c042d9e6a3332c8c782b7",
+          "textNormalizedSha256": "4c6f7e334f57d0197959a6096042caf4388ccf90270c042d9e6a3332c8c782b7",
+          "identitySha256": "4c6f7e334f57d0197959a6096042caf4388ccf90270c042d9e6a3332c8c782b7"
+        }
+      ]
+    },
+    {
+      "name": "madang-jira",
+      "sourcePath": "skills/madang-jira",
+      "packageDigest": "44b58226cd43eba7b7f2959a81655354796cd228da5f964c9eb3862c11d23a30",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "size": 2118,
+          "executable": false,
+          "classification": "text",
+          "exactSha256": "420f4e252e57247c25112216eb6a777bff01aebc9e5c4f94fda346a7d8769a60",
+          "textNormalizedSha256": "420f4e252e57247c25112216eb6a777bff01aebc9e5c4f94fda346a7d8769a60",
+          "identitySha256": "420f4e252e57247c25112216eb6a777bff01aebc9e5c4f94fda346a7d8769a60"
+        }
+      ]
+    },
+    {
+      "name": "madang-linear",
+      "sourcePath": "skills/madang-linear",
+      "packageDigest": "39926f29e332293d87f02a9250f16e0d55217a5027c5576ada5ffc33096f8f62",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "size": 2126,
+          "executable": false,
+          "classification": "text",
+          "exactSha256": "63b5701a12661d4d2597fe07c57b5ea207ee5f2ef8e124dca4c43a9d3d320f46",
+          "textNormalizedSha256": "63b5701a12661d4d2597fe07c57b5ea207ee5f2ef8e124dca4c43a9d3d320f46",
+          "identitySha256": "63b5701a12661d4d2597fe07c57b5ea207ee5f2ef8e124dca4c43a9d3d320f46"
+        }
+      ]
+    },
+    {
+      "name": "madang-per-workspace-env",
+      "sourcePath": "skills/madang-per-workspace-env",
+      "packageDigest": "f1ade95c3579432141408b8fb07117c855931a4cb886ac85f335519f1df03596",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "size": 2301,
+          "executable": false,
+          "classification": "text",
+          "exactSha256": "5fa3cd320964602cb2d2b11f4084629cfe32406b5e8fc02e38922730ba4feb2f",
+          "textNormalizedSha256": "5fa3cd320964602cb2d2b11f4084629cfe32406b5e8fc02e38922730ba4feb2f",
+          "identitySha256": "5fa3cd320964602cb2d2b11f4084629cfe32406b5e8fc02e38922730ba4feb2f"
+        }
+      ]
+    },
+    {
+      "name": "orchestration",
+      "sourcePath": "skills/orchestration",
+      "packageDigest": "0c60e8b0bad445e87f62fa3e34275eaa9b0f60b4766e3d0120c73414ee97467f",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "size": 4047,
+          "executable": false,
+          "classification": "text",
+          "exactSha256": "d394495dbb93d3934b11fc58965e8cedc7d4525cac7ad0c5012bba0bc48c8764",
+          "textNormalizedSha256": "d394495dbb93d3934b11fc58965e8cedc7d4525cac7ad0c5012bba0bc48c8764",
+          "identitySha256": "d394495dbb93d3934b11fc58965e8cedc7d4525cac7ad0c5012bba0bc48c8764"
+        }
+      ]
+    }
+  ]
+}

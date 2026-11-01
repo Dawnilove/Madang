@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="20 44 216 152" role="img" aria-label="Madang">
+  <!-- Madang mark, single color white: used in-app where Orca's white logo.svg was (light theme inverts it). -->
+  <g>
+    <path d="M32 96 C60 106 98 86 128 58 C158 86 196 106 224 96" fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M84 132 L112 156 L84 180" fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="124" y="168" width="48" height="16" rx="8" fill="#ffffff"/>
+  </g>
+</svg>

@@ -1,0 +1,197 @@
+import { app, BrowserWindow } from 'electron'
+import { performance } from 'node:perf_hooks'
+import { PluginService } from '../plugins/plugin-service'
+import { join } from 'node:path'
+import { fetchPluginKillList, PluginKillListService } from '../plugins/plugin-kill-list-service'
+import {
+  ORCA_COMPAT_ENGINE_VERSION,
+  ORCA_COMPAT_KILL_LIST_URL
+} from '../../shared/plugins/orca-compat'
+import type { PluginKillListEntry } from '../../shared/plugins/plugin-kill-list'
+import { PluginMarketplaceService } from '../plugins/plugin-marketplace-service'
+import { PluginMarketplaceInstaller } from '../plugins/plugin-marketplace-installer'
+import { PluginBundledBootstrapCoordinator } from '../plugins/plugin-bundled-bootstrap-coordinator'
+import { getPluginsDataDir } from '../plugins/plugin-discovery'
+import { resolveBundledPluginRoot } from '../plugins/plugin-bundled-bootstrap'
+import { resolvePluginHostEntryPath } from '../plugins/plugin-host-process'
+import { applyPluginConsent, applyPluginEnablement } from '../plugins/plugin-enablement'
+import { setPluginServiceForRpc } from '../runtime/rpc/methods/plugins'
+import {
+  normalizePluginConsents,
+  normalizePluginIdList
+} from '../../shared/plugins/plugin-consent-state'
+import { projectPluginAgentStatusChangedPayload } from '../plugins/plugin-agent-status-event'
+import { setMainPluginLanguagePacks, setMainUiLanguage } from '../i18n/main-i18n'
+import { rebuildAppMenu } from '../menu/register-app-menu'
+import { rebuildSystemTrayMenu } from '../tray/system-tray'
+import { logStartupMilestone } from './startup-diagnostics'
+import { agentHookServer } from '../agent-hooks/server'
+import { emitPluginWorktreeLifecycle } from './main-process-pty-startup'
+import { mainProcessState as state } from './main-process-state'
+import type { OrcaRuntimeService } from '../runtime/madang-runtime'
+
+export async function initializeMainProcessPlugins(runtime: OrcaRuntimeService): Promise<void> {
+  const store = state.store
+  const keybindings = state.keybindings
+  if (!store || !keybindings) {
+    throw new Error('Store and keybindings must be initialized before plugins')
+  }
+  const pluginSystemStartupStartedAt = performance.now()
+  state.pluginKillListService = new PluginKillListService({
+    pluginsDataDir: getPluginsDataDir(app.getPath('userData'))
+  })
+  await state.pluginKillListService.initialize()
+  state.pluginOrcaKillListService = new PluginKillListService({
+    pluginsDataDir: join(getPluginsDataDir(app.getPath('userData')), 'orca-compat'),
+    fetcher: () => fetchPluginKillList(fetch, ORCA_COMPAT_KILL_LIST_URL)
+  })
+  await state.pluginOrcaKillListService.initialize()
+  const killListEntry = (pluginKey: string): PluginKillListEntry | null =>
+    state.pluginKillListService?.find(pluginKey) ??
+    state.pluginOrcaKillListService?.find(pluginKey) ??
+    null
+  const refreshOrcaKillList = async (): Promise<void> => {
+    if (!app.isPackaged || state.store?.getSettings().pluginSystemEnabled !== true) {
+      return
+    }
+    // No Orca request until the user adds the Orca-compatible plugin index.
+    if (!(await state.pluginMarketplaceService?.hasOrcaCompatSource())) {
+      return
+    }
+    await state.pluginOrcaKillListService?.refresh()
+  }
+  const requestOrcaKillListRefresh = (): void => {
+    void refreshOrcaKillList().catch((error) =>
+      console.warn('[plugins] failed to refresh the Orca plugin safety list; using cache:', error)
+    )
+  }
+  state.pluginMarketplaceService = new PluginMarketplaceService({
+    pluginsDataDir: getPluginsDataDir(app.getPath('userData')),
+    getKillListEntry: killListEntry,
+    onSourcesChanged: requestOrcaKillListRefresh
+  })
+  const requestOfficialMarketplaceSeed = (): void => {
+    if (store.getSettings().pluginSystemEnabled !== true) {
+      return
+    }
+    void state.pluginMarketplaceService
+      ?.seedOfficialSource()
+      .catch((error) =>
+        console.warn('[plugins] failed to configure the official marketplace:', error)
+      )
+  }
+  state.pluginMarketplaceInstaller = new PluginMarketplaceInstaller({
+    marketplace: state.pluginMarketplaceService,
+    userDataPath: app.getPath('userData'),
+    hostVersion: ORCA_COMPAT_ENGINE_VERSION,
+    blockedPluginReason: (pluginKey) => killListEntry(pluginKey)?.reason ?? null
+  })
+  state.pluginService = new PluginService({
+    userDataPath: app.getPath('userData'),
+    hostVersion: ORCA_COMPAT_ENGINE_VERSION,
+    // Disabled discovery must run no plugin code.
+    isPluginSystemEnabled: () => state.store?.getSettings().pluginSystemEnabled === true,
+    getDisabledPlugins: () => normalizePluginIdList(state.store?.getSettings().disabledPlugins),
+    getPluginConsents: () => normalizePluginConsents(state.store?.getSettings().pluginConsents),
+    getDevPluginPaths: () => normalizePluginIdList(state.store?.getSettings().devPluginPaths),
+    getKeybindings: () => state.keybindings?.getOverrides() ?? {},
+    getPluginKillListEntry: killListEntry,
+    hostEntryPath: resolvePluginHostEntryPath(app.getAppPath(), app.isPackaged)
+  })
+  const bundledPluginBootstrap = new PluginBundledBootstrapCoordinator({
+    root: resolveBundledPluginRoot({
+      isPackaged: app.isPackaged,
+      resourcesPath: process.resourcesPath,
+      appPath: app.getAppPath()
+    }),
+    userDataPath: app.getPath('userData'),
+    hostVersion: ORCA_COMPAT_ENGINE_VERSION,
+    isEnabled: () => state.store?.getSettings().pluginSystemEnabled === true,
+    blockedPluginReason: (pluginKey) => killListEntry(pluginKey)?.reason ?? null,
+    refreshPlugins: () => state.pluginService?.refresh() ?? Promise.resolve()
+  })
+  const requestBundledPluginBootstrap = (): void => {
+    void bundledPluginBootstrap
+      .request()
+      .then((result) => {
+        for (const failure of result?.errors ?? []) {
+          console.warn(`[plugins] failed to publish bundled ${failure.pluginKey}:`, failure.error)
+        }
+      })
+      .catch((error) => console.warn('[plugins] failed to bootstrap bundled plugins:', error))
+  }
+  const reconcileAfterKillListChange = (): void => {
+    void state.pluginService
+      ?.reconcileActivationState()
+      .catch((error) =>
+        console.warn('[plugins] failed to apply plugin safety-list refresh:', error)
+      )
+  }
+  state.pluginKillListService.onChanged(reconcileAfterKillListChange)
+  state.pluginOrcaKillListService.onChanged(reconcileAfterKillListChange)
+  store.onSettingsChanged((updates) => {
+    if (updates.pluginSystemEnabled === true) {
+      requestBundledPluginBootstrap()
+      requestOfficialMarketplaceSeed()
+    }
+    if (app.isPackaged && updates.pluginSystemEnabled === true) {
+      void state.pluginKillListService
+        ?.refresh()
+        .catch((error) =>
+          console.warn('[plugins] failed to refresh plugin safety list; using cached state:', error)
+        )
+      requestOrcaKillListRefresh()
+    }
+  })
+  // Headless RPC resolves this service too; consent shares the desktop hash-keyed write path.
+  setPluginServiceForRpc(state.pluginService, {
+    applyConsent: (request) =>
+      applyPluginConsent({ store, pluginService: state.pluginService!, ...request }),
+    applyEnablement: (pluginKey, enabled) =>
+      applyPluginEnablement({ store, pluginService: state.pluginService!, pluginKey, enabled })
+  })
+  // Initialization discovers manifests only; workers/panel reads wait for explicit triggers.
+  void state.pluginService
+    .initialize()
+    .then(() => {
+      logStartupMilestone('plugin-system-initialized', {
+        durationMs: Number((performance.now() - pluginSystemStartupStartedAt).toFixed(2)),
+        installedPlugins: state.pluginService?.getDiscovered().length ?? 0
+      })
+    })
+    .catch((error) => console.warn('[plugins] failed to initialize plugin service:', error))
+  if (app.isPackaged && store.getSettings().pluginSystemEnabled === true) {
+    void state.pluginKillListService
+      .refresh()
+      .catch((error) =>
+        console.warn('[plugins] failed to refresh plugin safety list; using cached state:', error)
+      )
+    requestOrcaKillListRefresh()
+  }
+  state.pluginService.onChanged((event) => {
+    if (
+      event.contentPacksChanged &&
+      setMainPluginLanguagePacks(state.pluginService?.contentPacks.languagePacks.list() ?? [])
+    ) {
+      void setMainUiLanguage(store.getSettings().uiLanguage).then(() => {
+        rebuildAppMenu()
+        rebuildSystemTrayMenu()
+      })
+    }
+    for (const window of BrowserWindow.getAllWindows()) {
+      if (!window.isDestroyed()) {
+        window.webContents.send('plugins:changed', event)
+      }
+    }
+  })
+  requestBundledPluginBootstrap()
+  requestOfficialMarketplaceSeed()
+  // Filter hook/worktree events server-side by each plugin subscription.
+  agentHookServer.subscribeEnrichedStatus((enriched) => {
+    const payload = projectPluginAgentStatusChangedPayload(enriched)
+    if (payload) {
+      state.pluginService?.emitEvent('agent.status.changed', payload)
+    }
+  })
+  runtime.onWorktreeLifecycle(emitPluginWorktreeLifecycle)
+}

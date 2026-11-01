@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "excludeGlobs": [
+    "LICENSE",
+    "mobile/**",
+    "native/**",
+    "docs/**",
+    "src/renderer/src/i18n/locales/**",
+    "config/scripts/madang-rename-map.json",
+    "config/scripts/rename-from-upstream.*",
+    "**/*orca-compat*",
+    "**/legacy-skill-cleanup.test.ts",
+    "resources/skills/released-digests.json"
+  ],
+  "pathExcludeGlobs": [
+    "skill-guides/**",
+    "skills/**",
+    "examples/**",
+    "**/orca.yaml",
+    "**/orca-plugin.json",
+    "**/orca-marketplace.json",
+    "**/orca-recipe.json",
+    "resources/native-chat-visuals/skills/orca-chat-visuals/**",
+    "**/__fixtures__/*-orca.*",
+    "skill-stubs/**"
+  ],
+  "pathRules": [
+    {
+      "from": "orcad",
+      "to": "madangd"
+    },
+    {
+      "from": "(?<![A-Za-z])orca(?![A-Za-z])(?!-compat)",
+      "to": "madang"
+    }
+  ],
+  "contentRules": [
+    {
+      "type": "import-specifiers",
+      "forceInclude": [
+        "mobile/**"
+      ],
+      "onlyMatching": "^(?:../)+src/"
+    },
+    {
+      "type": "path-references"
+    },
+    {
+      "type": "file-name-references"
+    },
+    {
+      "pattern": "(?<![A-Za-z0-9_])orca-(?!compat)",
+      "replacement": "madang-",
+      "include": [
+        "config/scripts/pr-e2e-source-routing.mjs",
+        "config/scripts/pr-code-change-scope*.mjs"
+      ]
+    },
+    {
+      "pattern": "orcad",
+      "replacement": "madangd",
+      "forceInclude": [
+        "mobile/**"
+      ]
+    },
+    {
+      "pattern": "Orcad",
+      "replacement": "Madangd",
+      "forceInclude": [
+        "mobile/**"
+      ]
+    },
+    {
+      "pattern": "ORCAD",
+      "replacement": "MADANGD",
+      "forceInclude": [
+        "mobile/**"
+      ]
+    },
+    {
+      "type": "env-names",
+      "from": "ORCA_",
+      "to": "MADANG_",
+      "forceInclude": [
+        "src/renderer/src/i18n/locales/**"
+      ]
+    }
+  ]
+}
