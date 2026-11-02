@@ -294,7 +294,8 @@ function installWindowAllClosedHandler(): void {
       shouldQuitWhenAllWindowsClosed({
         platform: process.platform,
         isQuitting: state.isQuitting,
-        isServeMode: state.isServeMode
+        isServeMode: state.isServeMode,
+        hasOpenedMainWindow: state.hasOpenedMainWindow
       })
     ) {
       app.quit()

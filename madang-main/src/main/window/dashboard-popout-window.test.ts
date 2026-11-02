@@ -29,6 +29,7 @@ const {
       id: created.length + 1,
       send: vi.fn(),
       isDestroyed: () => this.destroyed,
+      isCrashed: () => false,
       session: {
         setPermissionRequestHandler: vi.fn(),
         setPermissionCheckHandler: vi.fn()

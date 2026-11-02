@@ -31,6 +31,9 @@ export function zoomWorkspaceSpaceWindowIfFocused(direction: UIZoomDirection): b
 export function createOrFocusWorkspaceSpaceWindow(store: Store): BrowserWindow {
   const existing = getWorkspaceSpaceWindow()
   if (existing) {
+    if (existing.webContents.isCrashed()) {
+      existing.webContents.reload()
+    }
     if (existing.isMinimized()) {
       existing.restore()
     }

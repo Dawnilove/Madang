@@ -225,8 +225,8 @@ importers:
         specifier: 0.8.3
         version: 0.8.3
       i18next:
-        specifier: ^26.4.2
-        version: 26.4.2(typescript@7.0.2)
+        specifier: ^26.5.11
+        version: 26.5.11(typescript@7.0.2)
       jsonc-parser:
         specifier: ^3.3.1
         version: 3.3.1
@@ -243,8 +243,8 @@ importers:
         specifier: ^1.5.4
         version: 1.5.4
       react-i18next:
-        specifier: 17.0.15
-        version: 17.0.15(@types/react@19.2.18)(i18next@26.4.2(typescript@7.0.2))(react-dom@19.2.8(@types/react@19.2.18)(react@19.2.8))(react@19.2.8)(typescript@7.0.2)
+        specifier: 17.0.19
+        version: 17.0.19(@types/react@19.2.18)(i18next@26.5.11(typescript@7.0.2))(react-dom@19.2.8(@types/react@19.2.18)(react@19.2.8))(react@19.2.8)(typescript@7.0.2)
       serve-sim:
         specifier: 0.1.47
         version: 0.1.47(@types/react-dom@19.2.7(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(@types/react@19.2.18)(react@19.2.8))(react@19.2.8)(typescript@7.0.2)
@@ -5699,8 +5699,8 @@ packages:
     resolution: {integrity: sha512-Xhz8S8dtNIPawzeWdmssnsII1JYsbvPWOLmstJakNcgKSFLCneA+xN7qajj/zlk5nf9sx1KGDTx8RNZ73h68tw==}
     hasBin: true
 
-  i18next@26.4.2:
-    resolution: {integrity: sha512-RX+R0VLg13IbvRuJSxnqykUFS9vQZTl8wYpWPCIUDWVrSGjsQywB5Y+pjzrkboxGAuYfJZVH1InFTdgBdxq6ug==}
+  i18next@26.5.11:
+    resolution: {integrity: sha512-Wc0klBPKxqZ2tL2qdAnF8xvvnWgr1IMGSY2ikTiAvaFVbz7xiFARtkoU4RidBDw1SyziGROp0qxu6qnJ7l2Wug==}
     peerDependencies:
       '@types/typescript': '*'
       typescript: ^5 || ^6 || ^7
@@ -6997,8 +6997,8 @@ packages:
       react:
         optional: true
 
-  react-i18next@17.0.15:
-    resolution: {integrity: sha512-7uYpx/oBkesLto7cOzOmfITlUBaXHCAcFahmgETMfWr8nbbWRRnVGvz8wsH/xpbNcyoH+NpCcnOQEqWPMO6/hw==}
+  react-i18next@17.0.19:
+    resolution: {integrity: sha512-BRHqiqOfW4J/LBVtbBFHoBoZm/Ez2/tkHPitYtn0CSpkYhEaEAsZMPsg7hZlomu30UJYQ6ZKiP3pwa3QnxGvQw==}
     peerDependencies:
       '@types/i18next': '*'
       '@types/react': '*'
@@ -12667,7 +12667,7 @@ snapshots:
       commander: 15.0.0
       execa: 10.0.1
       glob: 13.0.6
-      i18next: 26.4.2(typescript@7.0.2)
+      i18next: 26.5.11(typescript@7.0.2)
       i18next-resources-for-ts: 2.1.1
       inquirer: 14.2.2(@types/node@24.19.2)
       jiti: 2.7.0
@@ -12675,7 +12675,7 @@ snapshots:
       magic-string: 1.4.2
       minimatch: 10.2.6
       ora: 9.4.1
-      react-i18next: 17.0.15(@types/react@19.2.18)(i18next@26.4.2(typescript@7.0.2))(react-dom@19.2.8(@types/react@19.2.18)(react@19.2.8))(react@19.2.8)(typescript@7.0.2)
+      react-i18next: 17.0.19(@types/react@19.2.18)(i18next@26.5.11(typescript@7.0.2))(react-dom@19.2.8(@types/react@19.2.18)(react@19.2.8))(react@19.2.8)(typescript@7.0.2)
       yaml: 2.9.1
     transitivePeerDependencies:
       - '@swc/helpers'
@@ -12699,7 +12699,7 @@ snapshots:
       - '@swc/helpers'
       - '@types/swc__helpers'
 
-  i18next@26.4.2(typescript@7.0.2):
+  i18next@26.5.11(typescript@7.0.2):
     optionalDependencies:
       typescript: 7.0.2
 
@@ -14268,11 +14268,11 @@ snapshots:
       '@types/react': 19.2.18
       react: 19.2.8
 
-  react-i18next@17.0.15(@types/react@19.2.18)(i18next@26.4.2(typescript@7.0.2))(react-dom@19.2.8(@types/react@19.2.18)(react@19.2.8))(react@19.2.8)(typescript@7.0.2):
+  react-i18next@17.0.19(@types/react@19.2.18)(i18next@26.5.11(typescript@7.0.2))(react-dom@19.2.8(@types/react@19.2.18)(react@19.2.8))(react@19.2.8)(typescript@7.0.2):
     dependencies:
       '@babel/runtime': 7.29.7
       html-parse-stringify: 4.0.1
-      i18next: 26.4.2(typescript@7.0.2)
+      i18next: 26.5.11(typescript@7.0.2)
       react: 19.2.8
       use-sync-external-store: 1.6.0(@types/react@19.2.18)(react@19.2.8)
     optionalDependencies:
