@@ -1,4 +1,4 @@
-import { ArrowUp, CircleAlert, Mic, Plus, Square } from 'lucide-react'
+import { ArrowUp, CircleAlert, Mic, Plus, Square, Users } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { translate } from '@/i18n/i18n'
@@ -42,6 +42,8 @@ export type NativeChatComposerActionsProps = {
   contextUsage?: NativeChatContextUsageSummary | null
   /** The chat's agent, whose permission modes the picker describes. */
   agent?: string
+  /** Present while the collaboration switch is on and this session is not yet a lead session. */
+  collaboration?: { armed: boolean; onToggle: () => void }
 }
 
 export function NativeChatComposerActions({
@@ -66,7 +68,8 @@ export function NativeChatComposerActions({
   onExitGoalMode,
   contextUsage,
   focusComposer,
-  agent
+  agent,
+  collaboration
 }: NativeChatComposerActionsProps): React.JSX.Element {
   const stops = isWorking
   const handleCriticalAction = (event: React.MouseEvent<HTMLButtonElement>): void => {
@@ -133,6 +136,20 @@ export function NativeChatComposerActions({
           snapshot={sessionOptionsSnapshot}
           {...(agent ? { agent } : {})}
         />
+        {collaboration ? (
+          <Button
+            type="button"
+            variant={collaboration.armed ? 'secondary' : 'ghost'}
+            size="icon-sm"
+            aria-pressed={collaboration.armed}
+            aria-label={translate('components.native-chat.composer.collaboration', 'Collaboration')}
+            title={translate('components.native-chat.composer.collaboration', 'Collaboration')}
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={collaboration.onToggle}
+          >
+            <Users className="size-4" />
+          </Button>
+        ) : null}
         {onExitGoalMode ? <NativeChatComposerGoalChip onExit={onExitGoalMode} /> : null}
       </div>
       <div className="ml-auto flex items-center gap-1.5">

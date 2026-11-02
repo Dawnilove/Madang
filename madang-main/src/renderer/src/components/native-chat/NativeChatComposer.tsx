@@ -29,6 +29,13 @@ import { useNativeChatStructuredComposerSend } from './use-native-chat-structure
 import { useImeEnterGestureOwnership } from '@/lib/ime-composition-keyboard-event'
 import { useNativeChatComposerAppMenuSelection } from './use-native-chat-composer-app-menu-selection'
 import { useNativeChatComposerSubmit } from './use-native-chat-composer-submit'
+import { useNativeChatBangCommand } from './use-native-chat-bang-command'
+import {
+  COLLABORATION_MARKER,
+  markCollaborationTab,
+  useIsCollaborationTab
+} from '@/lib/collaboration-sessions'
+import { useAppStore } from '@/store'
 import { useNativeChatComposerCommandPicker } from './use-native-chat-composer-command-picker'
 
 export type {
@@ -120,6 +127,12 @@ const NativeChatComposerPane = forwardRef<NativeChatComposerHandle, NativeChatCo
       isComposing: imeEnterGesture.isComposing,
       structuredTransport,
       editor: { textareaRef, setDraft, setCaret, setActiveSuggestion },
+      setNotice
+    })
+    const bang = useNativeChatBangCommand({
+      worktreeId: structuredTransport?.worktreeId,
+      setDraft,
+      setCaret,
       setNotice
     })
     const {
@@ -291,10 +304,39 @@ const NativeChatComposerPane = forwardRef<NativeChatComposerHandle, NativeChatCo
       disabled,
       sendPty,
       sendStructured,
-      consumeOrcaCommand: resume.consume,
+      consumeOrcaCommand: (value: string) => bang.consume(value) || resume.consume(value),
       setDraft,
       setCaret
     })
+
+    // Collaboration is opt-in per session: the switch puts a visible marker in the first input, and the skill keys off that marker.
+    const collaborationRulesOn = useAppStore((s) => s.settings?.experimentalCollaboration === true)
+    const isLeadSession = useIsCollaborationTab(terminalTabId)
+    const collaborationArmed = draft.startsWith(COLLABORATION_MARKER)
+    const collaboration =
+      collaborationRulesOn && !isLeadSession
+        ? {
+            armed: collaborationArmed,
+            onToggle: () => {
+              setDraft(
+                collaborationArmed
+                  ? draft.slice(COLLABORATION_MARKER.length)
+                  : COLLABORATION_MARKER + draft
+              )
+              setCaret((current) =>
+                collaborationArmed
+                  ? Math.max(0, current - COLLABORATION_MARKER.length)
+                  : current + COLLABORATION_MARKER.length
+              )
+            }
+          }
+        : undefined
+    const sendWithCollaboration = (): void => {
+      if (collaboration && collaborationArmed) {
+        markCollaborationTab(terminalTabId)
+      }
+      send()
+    }
 
     const interrupt = useNativeChatComposerInterrupt({
       inert: inputOwnedByCard,
@@ -403,13 +445,14 @@ const NativeChatComposerPane = forwardRef<NativeChatComposerHandle, NativeChatCo
         onDictationToggle={dictation.toggleDictation}
         onDictationHoldStart={dictation.startHoldDictation}
         onDictationHoldEnd={dictation.stopHoldDictation}
-        onSend={send}
+        onSend={sendWithCollaboration}
         onStop={interrupt}
         sessionOptionsSurface={sessionOptionsSurface}
         sessionOptionsSnapshot={sessionOptionsSnapshot}
         contextUsage={contextUsageSummary}
         sessionOptionsPickerRequest={structuredTransport?.optionPickerRequest ?? null}
         agent={agent}
+        collaboration={collaboration}
       />
     )
   }

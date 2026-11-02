@@ -1,3 +1,4 @@
+import { localizeWorkspaceStatusLabel } from '@/lib/localize-workspace-status-label'
 import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
@@ -37,7 +38,7 @@ export function WorktreeStatusMenuItems(props: {
                 onSelect={() => props.onAssignWorkspaceStatus(status.id)}
               >
                 <meta.icon className={cn('size-3.5', meta.tone)} />
-                {status.label}
+                {localizeWorkspaceStatusLabel(status)}
               </DropdownMenuRadioItem>
             )
           })}

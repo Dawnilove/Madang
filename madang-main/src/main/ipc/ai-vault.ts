@@ -25,11 +25,13 @@ import {
   type AiVaultListArgs,
   type AiVaultListResult,
   type RefreshDesktopChatArgs,
+  type RunChatCommandArgs,
   type AiVaultSubagentListArgs,
   type AiVaultSubagentListResult
 } from '../../shared/ai-vault-types'
 import { handleAiVaultGetFirstUserPrompt } from '../ai-vault/session-first-user-prompt-handler'
 import { refreshStructuredChatFromTranscript } from '../ai-vault/structured-chat-transcript-refresh'
+import { runChatCommand } from '../ai-vault/run-chat-command'
 import { readClaudeDesktopSessionIds } from '../ai-vault/claude-desktop-archived'
 import { registerAiVaultResumeHandler, type AiVaultResumeHandlerOptions } from './ai-vault-resume'
 import {
@@ -277,6 +279,9 @@ export function registerAiVaultHandlers(options: AiVaultHandlerOptions = {}): vo
   ipcMain.handle('aiVault:listClaudeDesktopSessionIds', () => readClaudeDesktopSessionIds())
   ipcMain.handle('aiVault:refreshDesktopChat', (_event, args?: RefreshDesktopChatArgs) =>
     refreshStructuredChatFromTranscript(args)
+  )
+  ipcMain.handle('aiVault:runChatCommand', (_event, args?: RunChatCommandArgs) =>
+    runChatCommand(args)
   )
   registerAiVaultDeleteHandler(aiVaultDeleteDeps)
   registerAiVaultScanProgressBroadcast()

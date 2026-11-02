@@ -1,3 +1,4 @@
+import { localizeWorkspaceStatusLabel } from '@/lib/localize-workspace-status-label'
 import type { AppState } from '@/store/types'
 import type { DashboardFilterOptions } from '../../../../shared/dashboard-snapshot'
 import { DEFAULT_WORKSPACE_STATUSES } from '../../../../shared/workspace-statuses'
@@ -20,7 +21,7 @@ export function buildDashboardSnapshotFilterOptions(
       : DEFAULT_WORKSPACE_STATUSES
   ).map((status) => ({
     id: status.id,
-    label: status.label,
+    label: localizeWorkspaceStatusLabel(status),
     color: status.color
   }))
   return { projects, workspaceStatuses }

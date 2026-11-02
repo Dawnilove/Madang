@@ -13259,12 +13259,14 @@
         "collaborationExperimental": {
           "toggleLabel": "Toggle collaboration rules",
           "title": "Collaboration rules",
-          "description": "When on, an agent session whose first message starts with \"협업\" follows the multi-agent collaboration rules: it becomes the lead, assigns roles to the connected agents, and sends work orders to worker sessions.",
+          "description": "When on, a collaboration switch appears beside the input box. A session whose first message is sent with the switch on follows the multi-agent collaboration rules: it becomes the lead, assigns roles to the connected agents, and sends work orders to worker sessions.",
           "keywordCollaboration": "collaboration",
           "keywordOrchestration": "orchestration",
           "keywordRoles": "roles",
           "guideTitle": "How to use collaboration rules",
-          "guideBody": "Start the first message of a session with \"협업:\". Example: \"협업: 로그인 화면을 만들어 줘\". That session becomes the lead and splits the work among agents.",
+          "guideBody": "Turn on the collaboration switch beside the input box and send the first message. Without the switch, collaboration rules do not apply. That session becomes the lead and splits the work among agents.",
+          "guideNewSession": "The collaboration skill is installed when you turn this on. It applies from the next new session.",
+          "installFailed": "Skill install failed: {{value0}}",
           "guideConfirm": "OK"
         },
         "wslHostsExperimental": {
@@ -19359,6 +19361,7 @@
         "attach": "Attach file",
         "startDictation": "Start dictation",
         "stopDictation": "Stop dictation",
+        "collaboration": "Collaboration",
         "noSkills": "No matching skills",
         "noCommandsOrSkills": "No matching commands or skills",
         "noCommands": "No matching commands",
@@ -19837,6 +19840,14 @@
         "orcaSessionIdTooltip": "Madang's ID for this chat, separate from the agent CLI's own session ID. Agents use it to refer to each other through Madang."
       },
       "dismissDeliveryNotice": "Dismiss",
+      "bang": {
+        "running": "Running… {{command}}",
+        "failed": "Could not run the command: {{error}}",
+        "timedOut": "stopped after 60 seconds",
+        "truncated": "only the last part is shown",
+        "exitCode": "exit code {{code}}"
+      },
+      "replyToMessage": "Reply",
       "addSelectionToChat": "Add to chat",
       "messageNotSent": "Message not sent",
       "deliveryUnconfirmed": "Delivery unconfirmed — check chat before retrying",
@@ -21223,6 +21234,9 @@
       "updateRuntimeSafely": "Update the remote runtime to safely change workspace links"
     }
   },
+  "tabBar": {
+    "collaborationBadge": "협업"
+  },
   "tabHoverCard": {
     "browser": "Browser",
     "editor": "Editor",
@@ -21588,6 +21602,12 @@
     "terminalDrawer": {
       "toggle": "Terminal drawer (Ctrl+`)"
     },
+    "workspaceStatus": {
+      "todo": "Todo",
+      "inProgress": "In progress",
+      "inReview": "In review",
+      "done": "Done"
+    },
     "terminal": {
       "defaultTitle": "Terminal {{value0}}"
     },
@@ -21692,7 +21712,8 @@
       "openDesktopActive": {
         "label": "Open active Claude desktop sessions",
         "hint": "Chats already open are re-read with the latest conversation. Stop the session in the desktop app first.",
-        "newActivity": "{{count}} open chats have newer conversation in the desktop app. Use \"Open active Claude desktop sessions\" to re-read.",
+        "newActivity": "{{count}} open chats have newer conversation in the desktop app. Stop the session in the desktop app, then re-read.",
+        "reread": "Re-read",
         "refreshed": "{{refreshed}} open chats re-read with the latest conversation · {{busy}} skipped because they are responding",
         "unavailable": "Could not read the Claude desktop app sessions.",
         "result": "{{opened}} opened · {{alreadyOpen}} already open · {{skipped}} outside open projects",

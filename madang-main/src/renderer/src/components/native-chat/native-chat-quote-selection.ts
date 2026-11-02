@@ -70,3 +70,13 @@ export function formatNativeChatQuote(text: string): string {
   const lines = text.trim().split(/\r?\n/)
   return `${lines.map((line) => (line.trim() ? `> ${line}` : '>')).join('\n')}\n\n`
 }
+
+const REPLY_QUOTE_MAX_CHARS = 1200
+
+/** Quotes a whole message for a reply; a long one is cut so the quote does not bury the answer. */
+export function formatNativeChatReply(messageText: string): string {
+  const text = messageText.trim()
+  const cut =
+    text.length > REPLY_QUOTE_MAX_CHARS ? `${text.slice(0, REPLY_QUOTE_MAX_CHARS)}…` : text
+  return formatNativeChatQuote(cut)
+}

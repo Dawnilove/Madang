@@ -145,12 +145,29 @@ export function useSyncDesktopActiveSessions(args: {
       (sessionId) => liveChatTabsFor(sessionId, sessions).length > 0
     )
     if (changed.length > 0) {
+      const changedEntries = desktopIds.active.filter((entry) => changed.includes(entry.sessionId))
       toast(
         translate(
           'madang.aiVault.openDesktopActive.newActivity',
-          '{{count}} open chats have newer conversation in the desktop app. Use "Open active Claude desktop sessions" to re-read.',
+          '{{count}} open chats have newer conversation in the desktop app. Stop the session in the desktop app, then re-read.',
           { count: changed.length }
-        )
+        ),
+        {
+          action: {
+            label: translate('madang.aiVault.openDesktopActive.reread', 'Re-read'),
+            onClick: () => {
+              void refreshOpenChats(changedEntries, sessions).then((reread) =>
+                toast(
+                  translate(
+                    'madang.aiVault.openDesktopActive.refreshed',
+                    '{{refreshed}} open chats re-read with the latest conversation · {{busy}} skipped because they are responding',
+                    reread
+                  )
+                )
+              )
+            }
+          }
+        }
       )
     }
   }, [desktopIds, sessions])

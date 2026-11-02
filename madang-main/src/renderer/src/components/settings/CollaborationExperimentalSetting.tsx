@@ -15,6 +15,15 @@ import { SearchableSetting } from './SearchableSetting'
 import { SettingsSwitch } from './SettingsFormControls'
 import { getCollaborationExperimentalSearchEntry } from './collaboration-experimental-search'
 
+const COLLABORATION_SKILL = ['collaboration']
+
+// Why: the rules are served by a bundled skill stub; the switch alone never installs it, so an agent could not discover them.
+async function installCollaborationSkill(): Promise<void> {
+  const request = { names: COLLABORATION_SKILL }
+  const plan = await window.api.skills.bundledPlan(request)
+  await window.api.skills.bundledExecute({ planDigest: plan.planDigest, request })
+}
+
 export function CollaborationExperimentalSetting({
   settings,
   updateSettings
@@ -25,6 +34,7 @@ export function CollaborationExperimentalSetting({
   const entry = getCollaborationExperimentalSearchEntry()
   const enabled = settings.experimentalCollaboration === true
   const [guideOpen, setGuideOpen] = useState(false)
+  const [installError, setInstallError] = useState<string | null>(null)
   return (
     <SearchableSetting
       title={entry.title}
@@ -47,7 +57,11 @@ export function CollaborationExperimentalSetting({
           updateSettings({ experimentalCollaboration: !enabled })
           // Show how to start a collaboration session each time the switch turns on.
           if (!enabled) {
+            setInstallError(null)
             setGuideOpen(true)
+            installCollaborationSkill().catch((error: unknown) =>
+              setInstallError(error instanceof Error ? error.message : String(error))
+            )
           }
         }}
       />
@@ -66,6 +80,21 @@ export function CollaborationExperimentalSetting({
                 'Start the first message of a session with "협업:". Example: "협업: 로그인 화면을 만들어 줘". That session becomes the lead and splits the work among agents.'
               )}
             </DialogDescription>
+            <p className="text-xs text-muted-foreground">
+              {translate(
+                'auto.components.settings.collaborationExperimental.guideNewSession',
+                'The collaboration skill is installed when you turn this on. It applies from the next new session.'
+              )}
+            </p>
+            {installError ? (
+              <p role="alert" className="text-xs text-destructive">
+                {translate(
+                  'auto.components.settings.collaborationExperimental.installFailed',
+                  'Skill install failed: {{value0}}',
+                  { value0: installError }
+                )}
+              </p>
+            ) : null}
           </DialogHeader>
           <DialogFooter>
             <Button onClick={() => setGuideOpen(false)}>

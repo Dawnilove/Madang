@@ -25,6 +25,7 @@ import { useTabRenameReturnFocus } from './use-tab-rename-return-focus'
 import { SortableTabContextMenu } from './SortableTabContextMenu'
 import { useSortableTabContextMenu } from './use-sortable-tab-context-menu'
 import { translate } from '@/i18n/i18n'
+import { useIsCollaborationTab } from '@/lib/collaboration-sessions'
 import { TAB_LABEL_WIDTH_CLASSES } from './tab-width-rules'
 import { useTabStripSlotProps } from './use-tab-strip-slot-props'
 import { useTabStripPointerActivation } from './tab-strip-pointer-activation'
@@ -127,6 +128,7 @@ export default function SortableTab({
   const shellForIcon = tab.shellOverride
 
   // Why: with a provider icon shown, strip the agent's own leading glyph so the tab doesn't show two icons for one agent.
+  const isCollaboration = useIsCollaborationTab(tab.id)
   const displayTitle =
     tab.customTitle ?? (tabAgent ? stripLeadingAgentTitleDecoration(tab.title) : tab.title)
 
@@ -293,6 +295,11 @@ export default function SortableTab({
         />
       ) : (
         <span className={`${TAB_LABEL_WIDTH_CLASSES} mr-1`}>
+          {isCollaboration ? (
+            <span className="mr-1 rounded bg-accent px-1 text-[10px] font-medium">
+              {translate('tabBar.collaborationBadge', '협업')}
+            </span>
+          ) : null}
           {localizeDefaultTerminalTitle(displayTitle)}
         </span>
       )}

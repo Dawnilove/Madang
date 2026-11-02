@@ -32,8 +32,9 @@ function trackDatabases(): void {
   }
   const Base = sqlite.DatabaseSync
   sqlite.DatabaseSync = class extends Base {
-    constructor(path: unknown, options?: unknown) {
-      super(path, options)
+    constructor(path: unknown, ...rest: [options?: unknown]) {
+      // Why: forward only the arguments the caller passed; an explicit `undefined` options fails node:sqlite's validation.
+      super(path, ...rest)
       if (typeof path === 'string' && path !== ':memory:') {
         opened.add({ path: resolve(path), db: this })
       }

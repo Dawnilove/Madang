@@ -14,6 +14,8 @@ import type {
   AiVaultListResult,
   ClaudeDesktopSessionIds,
   RefreshDesktopChatArgs,
+  RunChatCommandArgs,
+  RunChatCommandResult,
   RefreshDesktopChatResult,
   AiVaultSubagentListArgs,
   AiVaultSubagentListResult
@@ -65,5 +67,6 @@ export type AiVaultApi = {
   listClaudeDesktopSessionIds: () => Promise<ClaudeDesktopSessionIds>
   /** Re-reads an open Madang chat from the Claude transcript at rest; local only. */
   refreshDesktopChat: (args: RefreshDesktopChatArgs) => Promise<RefreshDesktopChatResult>
+  runChatCommand: (args: RunChatCommandArgs) => Promise<RunChatCommandResult>
   onScanProgress: (callback: (update: AiVaultScanProgressUpdate) => void) => () => void
 }

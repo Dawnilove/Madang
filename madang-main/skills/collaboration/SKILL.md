@@ -2,8 +2,10 @@
 name: collaboration
 description: >-
   Multi-agent collaboration rules for Madang. Use only when the user's FIRST
-  input of the session starts with the word "협업" (for example "협업: 로그인 화면을 만들어 줘").
-  Do not use for the word "협업" appearing later in a conversation. The session
+  input of the session starts with the marker "[협업]" (for example "[협업] 로그인 화면을 만들어 줘").
+  Madang inserts this marker when the user turns on the collaboration switch beside
+  the input box. Do not use it when the user only types the word "협업", and do not
+  use it for the marker appearing later in a conversation. The session
   becomes the lead (총괄) session: it assigns roles, shows a plan, sends work
   orders to worker sessions, and reports one combined result. The rules are
   served only when the "협업 규칙" switch in Madang Settings > Experimental is ON.
@@ -15,9 +17,10 @@ This file is a discovery stub, not the rules. The full, version-matched collabor
 are served by the `madang` binary itself — kept out of this file on purpose so they can
 never drift from the binary that will actually run your commands.
 
-Engage this skill only when the user's first input of the session starts with the word
-"협업" (for example "협업: 로그인 화면을 만들어 줘"). Do not engage it for the word "협업"
-appearing later in a conversation. The rules are served only when the user has turned on the
+Engage this skill only when the user's first input of the session starts with the marker
+"[협업]" (for example "[협업] 로그인 화면을 만들어 줘"); Madang inserts it when the user
+turns on the collaboration switch beside the input box. Do not engage it for the bare word
+"협업", or for the marker appearing later in a conversation. The rules are served only when the user has turned on the
 "협업 규칙" switch in Madang Settings > Experimental; otherwise the command below says the
 rules are off, and you carry on as usual without them.
 

@@ -11,6 +11,8 @@ import type {
   AiVaultListArgs,
   ClaudeDesktopSessionIds,
   RefreshDesktopChatArgs,
+  RunChatCommandArgs,
+  RunChatCommandResult,
   RefreshDesktopChatResult,
   AiVaultSubagentListArgs
 } from '../../shared/ai-vault-types'
@@ -71,6 +73,8 @@ export const aiVaultApi = {
     ipcRenderer.invoke('aiVault:listClaudeDesktopSessionIds'),
   refreshDesktopChat: (args: RefreshDesktopChatArgs): Promise<RefreshDesktopChatResult> =>
     ipcRenderer.invoke('aiVault:refreshDesktopChat', args),
+  runChatCommand: (args: RunChatCommandArgs): Promise<RunChatCommandResult> =>
+    ipcRenderer.invoke('aiVault:runChatCommand', args),
   onScanProgress: (callback: (update: AiVaultScanProgressUpdate) => void): (() => void) => {
     const listener = (_event: Electron.IpcRendererEvent, update: AiVaultScanProgressUpdate) =>
       callback(update)

@@ -162,6 +162,17 @@ export type ClaudeDesktopSessionIds = {
 export type RefreshDesktopChatArgs = { sessionId: string }
 export type RefreshDesktopChatResult = 'refreshed' | 'busy' | 'unreadable' | 'not-chat'
 
+/** `!command` typed in a chat: run in the chat's workspace folder; the output comes back as text. */
+export type RunChatCommandArgs = { cwd: string; command: string }
+export type RunChatCommandResult = {
+  output: string
+  exitCode: number | null
+  timedOut: boolean
+  /** The output is only its last part. */
+  truncated: boolean
+  error?: string
+}
+
 export type ClaudeDesktopActiveSession = {
   sessionId: string
   title: string

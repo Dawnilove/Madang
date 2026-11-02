@@ -19,6 +19,9 @@ import { createBrowserUuid } from '@/lib/browser-uuid'
 import { isGitRepoKind } from '../../../../../shared/repo-kind'
 import type { TuiAgent } from '../../../../../shared/tui-agent'
 import { startFirstConversation } from './first-conversation'
+import { buildFirstConversationChatRequest } from './first-conversation-chat-request'
+import { resolveAgentSessionLaunchRoute } from '@/lib/agent-session-launch-plan'
+import { runBackgroundWorktreeCreation } from '@/lib/worktree-creation-flow'
 
 const AGENT_CHOICES: readonly TuiAgent[] = ['claude', 'codex']
 
@@ -50,6 +53,27 @@ export function LandingFirstPrompt(): React.JSX.Element | null {
     }
     setBusy(true)
     try {
+      // Chat route: let the creation flow open the chat as the first tab. Creating first and launching
+      // afterwards put an idle shell terminal in front of the chat.
+      const route = resolveAgentSessionLaunchRoute(useAppStore.getState(), {
+        agent,
+        workspace: { kind: 'git-worktree', repoId },
+        prompt: text.trim(),
+        promptDelivery: 'auto-submit'
+      })
+      if (route === 'structured-native-chat') {
+        runBackgroundWorktreeCreation(
+          buildFirstConversationChatRequest({
+            repoId,
+            agent,
+            text,
+            now: new Date(),
+            suffix: createBrowserUuid().slice(0, 4)
+          })
+        )
+        setText('')
+        return
+      }
       const result = await startFirstConversation(
         { repoId, agent, text },
         {

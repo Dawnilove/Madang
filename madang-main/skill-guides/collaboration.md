@@ -2,8 +2,10 @@
 name: collaboration
 description: >-
   Multi-agent collaboration rules for Madang. Use only when the user's FIRST
-  input of the session starts with the word "협업" (for example "협업: 로그인 화면을 만들어 줘").
-  Do not use for the word "협업" appearing later in a conversation. The session
+  input of the session starts with the marker "[협업]" (for example "[협업] 로그인 화면을 만들어 줘").
+  Madang inserts this marker when the user turns on the collaboration switch beside
+  the input box. Do not use it when the user only types the word "협업", and do not
+  use it for the marker appearing later in a conversation. The session
   becomes the lead (총괄) session: it assigns roles, shows a plan, sends work
   orders to worker sessions, and reports one combined result. The rules are
   served only when the "협업 규칙" switch in Madang Settings > Experimental is ON.
@@ -29,8 +31,8 @@ description: >-
 
 ## 시작과 종료
 
-- 세션의 첫 입력이 "협업"으로 시작할 때만 이 규칙을 적용한다.
-- 대화 중간에 나온 "협업" 단어는 시작 신호가 아니다.
+- 세션의 첫 입력이 "[협업]" 표식으로 시작할 때만 이 규칙을 적용한다. 입력칸 옆의 협업 토글이 이 표식을 넣는다.
+- 사용자가 "협업"이라는 단어만 입력했거나, 대화 중간에 표식이 나온 경우는 시작 신호가 아니다.
 - 현재 세션이 총괄 세션이다. 총괄 권장 모델은 Claude Sonnet이다. 현재 세션이 그 모델이 아니면 사용자에게 한 줄로 알린다.
 - 사용자가 "협업 종료"를 입력하면 끝낸다. 열린 워커는 닫을지 사용자에게 묻는다. 기본은 유지한다.
 

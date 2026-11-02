@@ -79,6 +79,7 @@ export type NativeChatComposerFieldProps = {
   sessionOptionsPickerRequest?: NativeChatOptionPickerRequest | null
   goalMode?: NativeChatComposerGoalMode
   agent?: string
+  collaboration?: { armed: boolean; onToggle: () => void }
 }
 
 export type NativeChatComposerImageAttachment = {
@@ -159,7 +160,8 @@ export function NativeChatComposerField({
   contextUsage,
   sessionOptionsPickerRequest,
   goalMode,
-  agent
+  agent,
+  collaboration
 }: NativeChatComposerFieldProps): React.JSX.Element {
   const draftNotSaved = useNativeChatComposerDraftUnsaved(draftScopeKey)
   const optionCount =
@@ -352,6 +354,7 @@ export function NativeChatComposerField({
                 focusComposer={focusComposer}
                 onExitGoalMode={goalMode?.active ? goalMode.exit : undefined}
                 {...(agent ? { agent } : {})}
+                {...(collaboration ? { collaboration } : {})}
               />
             </div>
           </div>

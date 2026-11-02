@@ -1,5 +1,5 @@
 import type { RefObject } from 'react'
-import { Copy, ExternalLink, FileText, Globe, Quote, Search, Undo2 } from 'lucide-react'
+import { Copy, ExternalLink, FileText, Globe, Quote, Reply, Search, Undo2 } from 'lucide-react'
 import { DropdownMenuItem, DropdownMenuShortcut } from '@/components/ui/dropdown-menu'
 import { formatOptionalPrimaryShortcutLabel } from '@/hooks/useShortcutLabel'
 import { useAppStore } from '@/store'
@@ -8,7 +8,7 @@ import type { LinkAction } from '@/components/link-actions/link-action-request'
 import { translate } from '@/i18n/i18n'
 import type { NativeChatComposerHandle } from './native-chat-composer-types'
 import type { NativeChatContextMenuTarget } from './native-chat-context-menu-target'
-import { formatNativeChatQuote } from './native-chat-quote-selection'
+import { formatNativeChatQuote, formatNativeChatReply } from './native-chat-quote-selection'
 import type { NativeChatRewindSurface } from './use-native-chat-rewind'
 
 function copyText(text: string): void {
@@ -61,6 +61,14 @@ export function NativeChatContextMenuTargetItems({
         <DropdownMenuItem onSelect={() => copyText(codeText)}>
           <Copy />
           {translate('components.native-chat.copyCode', 'Copy code')}
+        </DropdownMenuItem>
+      ) : null}
+      {messageText ? (
+        <DropdownMenuItem
+          onSelect={() => composerRef.current?.appendText(formatNativeChatReply(messageText))}
+        >
+          <Reply />
+          {translate('components.native-chat.replyToMessage', 'Reply')}
         </DropdownMenuItem>
       ) : null}
       {messageText ? (

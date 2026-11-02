@@ -1,3 +1,4 @@
+import { localizeDefaultTerminalTitle } from './localize-default-terminal-title'
 import {
   resolveTerminalTabTitle,
   resolveUnifiedTabLabel
@@ -218,15 +219,17 @@ export function buildSearchableWorkspaceTabEntries({
         const terminalTitle = terminalTab
           ? resolveTerminalTabTitle(terminalTab, generatedTitlesEnabled, 'Terminal')
           : 'Terminal'
-        const title = resolveUnifiedTabLabel(
-          {
-            ...tab,
-            customLabel: tab.customLabel ?? terminalTab?.customTitle ?? null,
-            quickCommandLabel: tab.quickCommandLabel ?? terminalTab?.quickCommandLabel,
-            generatedLabel: tab.generatedLabel ?? terminalTab?.generatedTitle
-          },
-          generatedTitlesEnabled,
-          terminalTitle
+        const title = localizeDefaultTerminalTitle(
+          resolveUnifiedTabLabel(
+            {
+              ...tab,
+              customLabel: tab.customLabel ?? terminalTab?.customTitle ?? null,
+              quickCommandLabel: tab.quickCommandLabel ?? terminalTab?.quickCommandLabel,
+              generatedLabel: tab.generatedLabel ?? terminalTab?.generatedTitle
+            },
+            generatedTitlesEnabled,
+            terminalTitle
+          )
         )
         seenTabIdentities.add(tabIdentity)
         entries.push({

@@ -98,6 +98,14 @@ export function createWebAiVaultApi(): NonNullable<Partial<PreloadApi>['aiVault'
     // The desktop app's files live on the desktop machine, not on this runtime.
     listClaudeDesktopSessionIds: () => Promise.resolve({ archived: [], known: [] }),
     refreshDesktopChat: () => Promise.resolve('not-chat'),
+    runChatCommand: () =>
+      Promise.resolve({
+        output: '',
+        exitCode: null,
+        timedOut: false,
+        truncated: false,
+        error: 'unsupported'
+      }),
     onScanProgress: () => noopUnsubscribe
   }
 }

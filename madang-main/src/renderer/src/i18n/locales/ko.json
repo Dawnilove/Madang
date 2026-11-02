@@ -4340,7 +4340,7 @@
             "body": "남은 양 표시를 원하시나요? 설정에서 변경할 수 있습니다.",
             "dismiss": "닫기",
             "openSettings": "설정 열기",
-            "gotIt": "Got it"
+            "gotIt": "알겠어요"
           },
           "UsageRosterPanel": {
             "title": "사용량",
@@ -6617,7 +6617,7 @@
           "saving": "저장 중...",
           "save": "저장",
           "label": "레이블",
-          "sshLabelPlaceholder": "Dev box",
+          "sshLabelPlaceholder": "개발 서버",
           "sshHost": "호스트 또는 별칭",
           "sshHostPlaceholder": "deploy@server:22",
           "username": "사용자 이름",
@@ -6626,7 +6626,7 @@
           "identityFile": "신원 파일",
           "identityFilePlaceholder": "~/.ssh/id_ed25519 (선택 사항)",
           "serverName": "서버 이름",
-          "serverNamePlaceholder": "Dev box",
+          "serverNamePlaceholder": "개발 서버",
           "pairingCode": "페어링 코드",
           "pairingCodePlaceholder": "madang://pair?code=...",
           "pairingHelpPrefix": "서버에서 실행",
@@ -12973,12 +12973,14 @@
         "collaborationExperimental": {
           "toggleLabel": "협업 규칙 켜기/끄기",
           "title": "협업 규칙",
-          "description": "켜면 첫 입력이 \"협업\"으로 시작하는 에이전트 세션이 협업 규칙을 따릅니다. 그 세션이 총괄이 되어 연결된 에이전트에 역할을 나누고 워커 세션에 작업 지시서를 보냅니다.",
+          "description": "켜면 입력칸 옆에 협업 토글이 나타납니다. 토글을 켜고 보낸 첫 입력의 세션이 협업 규칙을 따릅니다. 그 세션이 총괄이 되어 연결된 에이전트에 역할을 나누고 워커 세션에 작업 지시서를 보냅니다.",
           "keywordCollaboration": "협업",
           "keywordOrchestration": "오케스트레이션",
           "keywordRoles": "역할",
           "guideTitle": "협업 규칙 사용법",
-          "guideBody": "세션의 첫 입력을 \"협업:\"으로 시작하세요. 예: \"협업: 로그인 화면을 만들어 줘\". 그 세션이 총괄이 되어 에이전트에게 일을 나눕니다.",
+          "guideBody": "세션 입력칸 옆의 협업 토글을 켜고 첫 입력을 보내세요. 토글을 켜지 않으면 협업 규칙은 적용되지 않습니다. 그 세션이 총괄이 되어 에이전트에게 일을 나눕니다.",
+          "guideNewSession": "켜면 협업 스킬이 설치됩니다. 새 세션부터 적용됩니다.",
+          "installFailed": "스킬 설치 실패: {{value0}}",
           "guideConfirm": "확인"
         },
         "wslHostsExperimental": {
@@ -19078,6 +19080,7 @@
         "attach": "파일첨부",
         "startDictation": "받아쓰기 시작",
         "stopDictation": "받아쓰기 중지",
+        "collaboration": "협업",
         "noSkills": "어울리는 스킬 없음",
         "localAttachmentUnsupported": "원격 세션에는 로컬 첨부 파일을 사용할 수 없습니다.",
         "attachFailed": "{{files}}을(를) 첨부할 수 없습니다.",
@@ -19579,6 +19582,14 @@
         "estimated": "마지막 응답 기준 추정치입니다."
       },
       "dismissDeliveryNotice": "닫기",
+      "bang": {
+        "running": "실행 중… {{command}}",
+        "failed": "명령을 실행하지 못했습니다: {{error}}",
+        "timedOut": "60초 뒤 멈춤",
+        "truncated": "끝부분만 표시",
+        "exitCode": "종료 코드 {{code}}"
+      },
+      "replyToMessage": "답글",
       "addSelectionToChat": "채팅에 추가",
       "messageNotSent": "메시지가 전송되지 않음",
       "deliveryUnconfirmed": "전달 확인 안 됨 — 다시 시도하기 전에 채팅을 확인하세요",
@@ -21223,6 +21234,9 @@
       "updateRuntimeSafely": "작업 링크를 안전하게 변경하려면 원격 런타임을 업데이트하세요"
     }
   },
+  "tabBar": {
+    "collaborationBadge": "협업"
+  },
   "tabHoverCard": {
     "browser": "브라우저",
     "editor": "편집기",
@@ -21588,6 +21602,12 @@
     "terminalDrawer": {
       "toggle": "터미널 서랍 (Ctrl+`)"
     },
+    "workspaceStatus": {
+      "todo": "할 일",
+      "inProgress": "진행 중",
+      "inReview": "검토 중",
+      "done": "완료"
+    },
     "terminal": {
       "defaultTitle": "터미널 {{value0}}"
     },
@@ -21665,7 +21685,8 @@
       "openDesktopActive": {
         "label": "Claude 데스크톱의 활성 세션 열기",
         "hint": "이미 열린 Chat은 최신 대화로 다시 읽습니다. 데스크톱에서 그 세션을 멈춘 뒤 누르세요.",
-        "newActivity": "열린 Chat {{count}}개에 데스크톱의 새 대화가 있습니다. \"Claude 데스크톱의 활성 세션 열기\"로 다시 읽으세요.",
+        "newActivity": "열린 Chat {{count}}개에 데스크톱의 새 대화가 있습니다. 데스크톱에서 그 세션을 멈춘 뒤 다시 읽으세요.",
+        "reread": "다시 읽기",
         "refreshed": "열린 Chat {{refreshed}}개를 최신 대화로 다시 읽었음 · {{busy}}개는 응답 중이라 건너뜀",
         "unavailable": "Claude 데스크톱 앱의 세션을 읽지 못했습니다.",
         "result": "{{opened}}개 열었음 · {{alreadyOpen}}개 이미 열림 · {{skipped}}개 프로젝트 밖",

@@ -4,16 +4,16 @@
     {
       "name": "collaboration",
       "sourcePath": "skills/collaboration",
-      "packageDigest": "098ff284400e00ceaa39d3c56db37c072684d5528a4f0083817d643d0813f179",
+      "packageDigest": "14227c8593f319db304d8f81d1b0b0adb4ec89c8dda7f8d49ad1900c4e986c53",
       "files": [
         {
           "path": "SKILL.md",
-          "size": 3066,
+          "size": 3347,
           "executable": false,
           "classification": "text",
-          "exactSha256": "06e257558765f28ce757676710025bcdb3c3ec5111f2e684066458a7847d185a",
-          "textNormalizedSha256": "06e257558765f28ce757676710025bcdb3c3ec5111f2e684066458a7847d185a",
-          "identitySha256": "06e257558765f28ce757676710025bcdb3c3ec5111f2e684066458a7847d185a"
+          "exactSha256": "1a022a9a34528457ab425d9c2b5f8b43102d05c2fb1c55e9beb692aa2dd8ea4e",
+          "textNormalizedSha256": "1a022a9a34528457ab425d9c2b5f8b43102d05c2fb1c55e9beb692aa2dd8ea4e",
+          "identitySha256": "1a022a9a34528457ab425d9c2b5f8b43102d05c2fb1c55e9beb692aa2dd8ea4e"
         }
       ]
     },

@@ -64,6 +64,7 @@ vi.mock('react', async () => {
 })
 
 // The menu's session lookup is covered by its own tests; this file only drives rename.
+vi.mock('@/lib/collaboration-sessions', () => ({ useIsCollaborationTab: () => false }))
 vi.mock('./TabSessionSurfaceSwitchMenuItems', () => ({
   TabSessionSurfaceSwitchMenuItems: () => null
 }))

@@ -1,3 +1,4 @@
+import { localizeWorkspaceStatusLabel } from '@/lib/localize-workspace-status-label'
 import React, { useMemo, useRef } from 'react'
 import { Plus } from 'lucide-react'
 import type { Repo } from '../../../../shared/repo-types'
@@ -158,7 +159,7 @@ function WorkspaceKanbanStatusLane({
         <div className="flex min-w-0 flex-1 items-center gap-1.5">
           <meta.icon className={cn('size-3.5 shrink-0', meta.tone)} />
           <div className="min-w-0 truncate text-[12px] font-semibold text-foreground">
-            {status.label}
+            {localizeWorkspaceStatusLabel(status)}
           </div>
           <div className="shrink-0 rounded-full bg-muted px-1.5 py-0.5 text-[9px] font-medium leading-none text-muted-foreground">
             {isFiltered ? `${items.length} / ${laneTotalCount}` : items.length}
