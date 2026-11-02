@@ -59,7 +59,8 @@ function cliIds(raw: string): FileIds {
     sessionId,
     forkedFromSessionId,
     spawnedFrom,
-    scheduledTaskId
+    scheduledTaskId,
+    lastActivityAt
   } = record as Record<string, unknown>
   // 이어하기 전 CLI 세션도 Orca에는 따로 보이므로 보관 때는 함께 숨긴다.
   const ids = [
@@ -87,6 +88,7 @@ function cliIds(raw: string): FileIds {
             originCwd: worktreeProject(
               typeof originCwd === 'string' && originCwd !== '' ? originCwd : cwd
             ),
+            lastActivityAt: typeof lastActivityAt === 'number' ? lastActivityAt : undefined,
             // 데스크톱 ID로 적힌 값이다. 합친 뒤 CLI ID로 바꾼다.
             desktopId: typeof sessionId === 'string' ? sessionId : undefined,
             forkedFrom: typeof forkedFromSessionId === 'string' ? forkedFromSessionId : undefined,

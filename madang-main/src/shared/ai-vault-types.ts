@@ -168,6 +168,8 @@ export type ClaudeDesktopActiveSession = {
   cwd: string
   /** 워크트리 세션도 원래 프로젝트 폴더로 묶기 위한 시작 폴더. */
   originCwd: string
+  /** 데스크톱이 마지막으로 기록한 활동 시각(ms). 열린 Chat에 새 대화가 쌓였는지 알아보는 데 쓴다. */
+  lastActivityAt?: number
   /** fork의 부모 세션(CLI ID). 부모가 활성 목록에 있을 때만 채운다. */
   forkedFrom?: string
   /** 데스크톱 사이드바에서 사용자가 이 세션을 넣은 묶음. 묶음에 넣지 않았으면 없다. */

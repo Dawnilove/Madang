@@ -139,6 +139,54 @@ describe('headless automation agent launch', () => {
     finishDelivery(true)
   })
 
+  it('creates a new-per-run workspace agent-first with the argv prompt', async () => {
+    const runtime = harness()
+
+    const launched = await launch(runtime, {
+      workspaceMode: 'new_per_run',
+      workspaceId: null,
+      extraAgentArgs: '--model opus'
+    })
+
+    expect(runtime.createManagedWorktree).toHaveBeenCalledTimes(1)
+    const args = runtime.createManagedWorktree.mock.calls[0]![0]
+    expect(args).toMatchObject({
+      repoSelector: 'repo-1',
+      activate: false,
+      setupDecision: 'skip',
+      startupAgent: 'claude',
+      startupPrompt: 'fix the flaky test',
+      startupExtraAgentArgs: '--model opus',
+      createdWithAgent: 'claude',
+      telemetrySource: 'unknown'
+    })
+    expect(args).not.toHaveProperty('awaitTerminalProvisioning')
+    expect(args).not.toHaveProperty('observeSetupCompletion')
+    expect(runtime.launchAgentTerminal).not.toHaveBeenCalled()
+    expect(runtime.deliverStartupFollowup).not.toHaveBeenCalled()
+    expect(launched).toEqual({
+      workspaceId: 'repo-1::/wt/auto',
+      workspaceDisplayName: 'auto-nightly',
+      terminalHandle: 'term_new',
+      terminalSessionId: 'tab-new',
+      terminalPaneKey: 'tab-new:leaf-1',
+      terminalPtyId: 'pty-new'
+    })
+  })
+
+  it('creates a new-per-run workspace for a post-start agent and delivers its prompt once', async () => {
+    const runtime = harness()
+
+    await launch(runtime, { agentId: 'goose', workspaceMode: 'new_per_run', workspaceId: null })
+
+    expect(runtime.createManagedWorktree.mock.calls[0]![0]).not.toHaveProperty('startupPrompt')
+    expect(runtime.deliverStartupFollowup).toHaveBeenCalledTimes(1)
+    expect(runtime.deliverStartupFollowup).toHaveBeenCalledWith('term_new', {
+      agent: 'goose',
+      prompt: 'fix the flaky test'
+    })
+  })
+
   it('fails the run with the create warning when no agent terminal started, without a second one', async () => {
     const runtime = harness({ startupTerminal: null })
 

@@ -1,4 +1,4 @@
-import { createElement, useCallback, useRef, useState } from 'react'
+import { createElement, useCallback, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { translate } from '@/i18n/i18n'
 import { useAppStore } from '@/store'
@@ -11,6 +11,7 @@ import {
   planDesktopSync,
   type DesktopSyncPlan
 } from './ai-vault-desktop-sync-plan'
+import { takeNewDesktopActivity } from './desktop-new-activity'
 import { liveChatTabsFor, nameNewChatTab, syncOpenChatNames } from './desktop-session-chat-names'
 import { AiVaultDesktopSyncDialog } from './AiVaultDesktopSyncDialog'
 import type { ClaudeDesktopIdSets } from './use-claude-desktop-session-ids'
@@ -131,6 +132,28 @@ export function useSyncDesktopActiveSessions(args: {
   // A tab opened here is not found by the pane lookup until its agent reports in; remember it briefly.
   // shortcut: a tab closed within the window still reads as open; it can be reopened after it.
   const openedHere = useRef(new Map<string, number>())
+  const seenActivity = useRef(new Map<string, number>())
+
+  // 창이 다시 포커스되어 목록이 새로 읽힐 때, 열린 Chat에 데스크톱의 새 대화가 있으면 알리기만 한다. 다시 읽기는 버튼으로 한다.
+  useEffect(() => {
+    if (!desktopIds) {
+      return
+    }
+    const changed = takeNewDesktopActivity(
+      desktopIds.active,
+      seenActivity.current,
+      (sessionId) => liveChatTabsFor(sessionId, sessions).length > 0
+    )
+    if (changed.length > 0) {
+      toast(
+        translate(
+          'madang.aiVault.openDesktopActive.newActivity',
+          '{{count}} open chats have newer conversation in the desktop app. Use "Open active Claude desktop sessions" to re-read.',
+          { count: changed.length }
+        )
+      )
+    }
+  }, [desktopIds, sessions])
 
   const findSession = useCallback(
     (sessionId: string) =>

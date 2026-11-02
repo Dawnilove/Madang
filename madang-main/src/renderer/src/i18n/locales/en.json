@@ -21692,6 +21692,7 @@
       "openDesktopActive": {
         "label": "Open active Claude desktop sessions",
         "hint": "Chats already open are re-read with the latest conversation. Stop the session in the desktop app first.",
+        "newActivity": "{{count}} open chats have newer conversation in the desktop app. Use \"Open active Claude desktop sessions\" to re-read.",
         "refreshed": "{{refreshed}} open chats re-read with the latest conversation · {{busy}} skipped because they are responding",
         "unavailable": "Could not read the Claude desktop app sessions.",
         "result": "{{opened}} opened · {{alreadyOpen}} already open · {{skipped}} outside open projects",

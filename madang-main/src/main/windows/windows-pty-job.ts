@@ -180,7 +180,11 @@ export function __setConptyJobNativeForTests(loader?: () => ConptyNative | null)
 
 type UnreadyWindowsPty = IPty & { _agent?: { kill?: () => void } }
 
-// Bypass node-pty's output-deferred kill to release silent ConPTY hosts, input pipes and output workers immediately.
+/**
+ * Tears a ConPTY pane down now. node-pty defers its own kill() until the pane's first output, so
+ * a pane discarded before printing would keep its console host, input pipe and output worker.
+ * The agent's kill closes all three; node-pty's later deferred kill finds nothing left to close.
+ */
 export function killConptyNow(proc: IPty): void {
   const pane: UnreadyWindowsPty = proc
   try {
