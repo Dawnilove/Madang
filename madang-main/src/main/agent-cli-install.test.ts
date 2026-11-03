@@ -28,7 +28,7 @@ describe('installAgentCli', () => {
 
   it('refuses agents that are not in the list, other platforms, and the company edition', async () => {
     const { spawn, calls } = fakeSpawn(0)
-    expect(await installAgentCli('aider', { platform: 'win32', spawn })).toEqual({
+    expect(await installAgentCli('zcode', { platform: 'win32', spawn })).toEqual({
       status: 'unsupported'
     })
     expect(await installAgentCli('--evil', { platform: 'win32', spawn })).toEqual({

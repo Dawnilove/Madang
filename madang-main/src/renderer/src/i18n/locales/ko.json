@@ -21604,6 +21604,7 @@
     },
     "agentInstall": {
       "button": "설치",
+      "runningShort": "설치 중…",
       "running": "설치 중… (PowerShell 창을 확인하세요)",
       "finished": "설치 창이 닫혔습니다. 그래도 감지되지 않으면 Madang을 다시 시작하세요.",
       "failed": "설치 창을 열지 못했습니다: {{error}}"

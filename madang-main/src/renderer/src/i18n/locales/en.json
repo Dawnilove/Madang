@@ -21604,6 +21604,7 @@
     },
     "agentInstall": {
       "button": "Install",
+      "runningShort": "Installing…",
       "running": "Installing… (see the PowerShell window)",
       "finished": "The install window closed. If the agent is still not detected, restart Madang.",
       "failed": "Could not start the installer: {{error}}"

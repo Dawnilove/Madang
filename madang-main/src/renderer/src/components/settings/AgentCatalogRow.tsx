@@ -1,3 +1,4 @@
+import { InstallAgentCliButton, canOfferInstall } from '../onboarding/InstallAgentCliButton'
 import { useRef, useState } from 'react'
 import { Check, ChevronDown, ExternalLink } from 'lucide-react'
 import type { TuiAgent } from '../../../../shared/tui-agent'
@@ -207,6 +208,9 @@ export function AgentCatalogRow({
               onSetEnabled={onSetEnabled}
             />
             <div className="flex justify-start">
+              {!isDetected && isEnabled && canOfferInstall(agentId) ? (
+                <InstallAgentCliButton agent={agentId} compact />
+              ) : null}
               {isDetected && isEnabled && (
                 <Button
                   type="button"

@@ -16,7 +16,14 @@ export function canOfferInstall(agent: string): boolean {
   )
 }
 
-export function InstallAgentCliButton({ agent }: { agent: string }): React.JSX.Element {
+export function InstallAgentCliButton({
+  agent,
+  compact = false
+}: {
+  agent: string
+  /** Short labels and a full-width button, for a narrow table cell. */
+  compact?: boolean
+}): React.JSX.Element {
   const [running, setRunning] = useState(false)
   const install = async (): Promise<void> => {
     setRunning(true)
@@ -48,12 +55,14 @@ export function InstallAgentCliButton({ agent }: { agent: string }): React.JSX.E
     <Button
       type="button"
       size="xs"
-      className="shrink-0"
+      className={compact ? 'h-7 w-full justify-center text-xs' : 'shrink-0'}
       disabled={running}
       onClick={() => void install()}
     >
       {running
-        ? translate('madang.agentInstall.running', 'Installing… (see the PowerShell window)')
+        ? compact
+          ? translate('madang.agentInstall.runningShort', 'Installing…')
+          : translate('madang.agentInstall.running', 'Installing… (see the PowerShell window)')
         : translate('madang.agentInstall.button', 'Install')}
     </Button>
   )

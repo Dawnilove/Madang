@@ -1,6 +1,6 @@
 import { spawn as nodeSpawn } from 'node:child_process'
 import {
-  AGENT_CLI_INSTALL_SCRIPTS,
+  AGENT_CLI_INSTALL_COMMANDS,
   isInstallableAgentCli,
   type InstallAgentCliResult
 } from '../shared/agent-cli-install'
@@ -24,7 +24,7 @@ export function installAgentCli(
     return Promise.resolve({ status: 'unsupported' })
   }
   const spawn = options.spawn ?? nodeSpawn
-  const command = `${AGENT_CLI_INSTALL_SCRIPTS[agent]}; Write-Host ''; Read-Host '${PAUSE_PROMPT}' | Out-Null`
+  const command = `${AGENT_CLI_INSTALL_COMMANDS[agent]}; Write-Host ''; Read-Host '${PAUSE_PROMPT}' | Out-Null`
   return new Promise((resolve) => {
     try {
       const child = spawn(
