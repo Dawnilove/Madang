@@ -21602,6 +21602,12 @@
     "terminalDrawer": {
       "toggle": "Terminal drawer (Ctrl+`)"
     },
+    "agentInstall": {
+      "button": "Install",
+      "running": "Installing… (see the PowerShell window)",
+      "finished": "The install window closed. If the agent is still not detected, restart Madang.",
+      "failed": "Could not start the installer: {{error}}"
+    },
     "workspaceStatus": {
       "todo": "Todo",
       "inProgress": "In progress",

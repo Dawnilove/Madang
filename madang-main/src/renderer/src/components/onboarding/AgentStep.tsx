@@ -1,3 +1,4 @@
+import { InstallAgentCliButton, canOfferInstall } from './InstallAgentCliButton'
 import { useId, useState } from 'react'
 import { Check, ExternalLink } from 'lucide-react'
 import { getAgentCatalog, AgentIcon, type AgentCatalogEntry } from '@/lib/agent-catalog'
@@ -77,6 +78,9 @@ export function AgentStep({
               "isn't on your PATH yet. Madang will set it as your default and you can install it any time."
             )}
           </span>
+          {canOfferInstall(selectedEntry.id) ? (
+            <InstallAgentCliButton agent={selectedEntry.id} />
+          ) : null}
           <Button
             type="button"
             variant="outline"

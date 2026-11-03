@@ -1,3 +1,4 @@
+import type { InstallAgentCliResult } from '../../shared/agent-cli-install'
 import { ipcRenderer } from 'electron'
 import type {
   ShellOpenExternalEditorRequest,
@@ -23,6 +24,9 @@ export const shellApi = {
     ipcRenderer.invoke('shell:openInExternalEditor', request),
 
   openUrl: (url: string): Promise<void> => ipcRenderer.invoke('shell:openUrl', url),
+
+  installAgentCli: (agent: string): Promise<InstallAgentCliResult> =>
+    ipcRenderer.invoke('shell:installAgentCli', agent),
 
   openFilePath: (path: string, ownerHostId: ExecutionHostId): Promise<boolean> =>
     ipcRenderer.invoke('shell:openFilePath', path, ownerHostId),

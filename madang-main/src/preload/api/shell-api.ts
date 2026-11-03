@@ -1,3 +1,4 @@
+import type { InstallAgentCliResult } from '../../shared/agent-cli-install'
 import type { ExecutionHostId } from '../../shared/execution-host'
 import type {
   ShellOpenExternalEditorRequest,
@@ -22,6 +23,8 @@ export type ShellApi = {
     request: ShellOpenExternalEditorRequest
   ) => Promise<ShellOpenExternalEditorResult>
   openUrl: (url: string) => Promise<void>
+  /** Opens a visible PowerShell window running the vendor's install command for a supported agent CLI. */
+  installAgentCli: (agent: string) => Promise<InstallAgentCliResult>
   openFilePath: (path: string, ownerHostId: ExecutionHostId) => Promise<boolean>
   openFileUri: (uri: string, ownerHostId: ExecutionHostId) => Promise<void>
   pathsExist?: (paths: string[]) => Promise<boolean[]>

@@ -1,3 +1,4 @@
+import { installAgentCli } from '../agent-cli-install'
 import { validatePathExistenceBatch } from '../../shared/path-existence-batch'
 import { ipcMain, shell, dialog } from 'electron'
 import { constants, copyFile, readFile, stat } from 'node:fs/promises'
@@ -146,6 +147,8 @@ export function registerShellHandlers(
     (_event, request: ShellOpenExternalEditorRequest): Promise<ShellOpenExternalEditorResult> =>
       openInExternalEditor(store, request, listRuntimeEnvironments)
   )
+
+  ipcMain.handle('shell:installAgentCli', (_event, agent: unknown) => installAgentCli(agent))
 
   ipcMain.handle('shell:openUrl', (_event, rawUrl: string) => {
     let parsed: URL
