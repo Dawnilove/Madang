@@ -1,3 +1,4 @@
+import { isCompanyEdition } from './madang-edition'
 import type { GlobalSettings } from './global-settings-types'
 import type { TuiAgent } from './tui-agent'
 import { isTuiAgentEnabled } from './tui-agent-selection'
@@ -11,7 +12,8 @@ export type AgentStatusHooksSettings =
 export function isAgentStatusHooksEnabled(
   settings: Partial<Pick<GlobalSettings, 'agentStatusHooksEnabled'>> | null | undefined
 ): boolean {
-  return settings?.agentStatusHooksEnabled !== false
+  // Company edition never writes hooks into the agent CLIs' own settings.
+  return !isCompanyEdition() && settings?.agentStatusHooksEnabled !== false
 }
 
 // Why: turning an agent off removes its hooks, so any install that reads only the global switch writes them back.

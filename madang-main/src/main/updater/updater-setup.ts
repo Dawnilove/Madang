@@ -1,3 +1,4 @@
+import { COMPANY_UPDATE_FEED_URL, isCompanyEdition } from '../../shared/madang-edition'
 import { app, powerMonitor } from 'electron'
 import type { BrowserWindow } from 'electron'
 import type { ReleaseBuild, ReleaseChannel } from '../../shared/release-channel'
@@ -158,7 +159,9 @@ export class UpdaterSetup extends UpdaterDownloadInstall {
     if (this.activeUpdateSource === 'release') {
       autoUpdater.setFeedURL({
         provider: 'generic',
-        url: 'https://github.com/Dawnilove/Madang/releases/latest/download'
+        url: isCompanyEdition()
+          ? COMPANY_UPDATE_FEED_URL
+          : 'https://github.com/Dawnilove/Madang/releases/latest/download'
       })
     }
     if (this.autoUpdaterInitialized) {

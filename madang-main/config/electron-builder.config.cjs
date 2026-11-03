@@ -104,7 +104,9 @@ const devChannelRepo = isHourlyChannel
     : isAdhocChannel
       ? 'madang-adhoc'
       : null
-const appId = 'io.github.dawnilove.madang'
+// MADANG_EDITION=company builds a separate app (own id, name, data folder, installer) that can sit beside the standard one.
+const isCompanyEdition = process.env.MADANG_EDITION === 'company'
+const appId = isCompanyEdition ? 'io.github.dawnilove.madang.company' : 'io.github.dawnilove.madang'
 const featureWallResources = {
   from: 'resources/onboarding/feature-wall',
   to: 'onboarding/feature-wall'
@@ -221,8 +223,9 @@ const ORCA_MAC_TEAM_ID = '6CX3WHS9HZ'
 /** @type {import('electron-builder').Configuration} */
 module.exports = {
   appId,
-  productName: 'Madang',
-  protocols: [{ name: 'Madang', schemes: ['madang'] }],
+  productName: isCompanyEdition ? 'Madang Company' : 'Madang',
+  // The company edition does not claim madang:// from a standard install on the same PC.
+  protocols: isCompanyEdition ? [] : [{ name: 'Madang', schemes: ['madang'] }],
   toolsets: { appimage: '1.0.3' },
   ...(devChannelBuildVersion
     ? { extraMetadata: { version: devChannelBuildVersion } }
@@ -539,7 +542,9 @@ module.exports = {
     ]
   },
   nsis: {
-    artifactName: 'madang-windows-setup.${ext}',
+    artifactName: isCompanyEdition
+      ? 'madang-company-windows-setup.${ext}'
+      : 'madang-windows-setup.${ext}',
     shortcutName: '${productName}',
     uninstallDisplayName: '${productName}',
     createDesktopShortcut: 'always',

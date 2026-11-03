@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { translate } from '@/i18n/i18n'
+import { isCompanyEdition } from '../../../../shared/madang-edition'
 import { Button } from '../ui/button'
 import {
   Dialog,
@@ -26,8 +27,11 @@ export function UsageOptInSwitch({
   provider: 'Claude' | 'Codex'
   settings: GlobalSettings
   updateSettings: (updates: Partial<GlobalSettings>) => void
-}): React.JSX.Element {
+}): React.JSX.Element | null {
   const [confirmOpen, setConfirmOpen] = useState(false)
+  if (isCompanyEdition()) {
+    return null
+  }
   const label = translate('settings.usageOptIn.label', 'Show {{value0}} usage', {
     value0: provider
   })

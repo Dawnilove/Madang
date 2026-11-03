@@ -1,3 +1,4 @@
+import { isCompanyEdition } from '../../../../shared/madang-edition'
 import {
   getClaudeSubagentNavigationTitle,
   getClaudeSubagentNavigationDescription
@@ -120,6 +121,10 @@ function renderAgentPermissions(props: AgentPermissionsSettingProps): React.Reac
 }
 
 export function AgentStatusHooksSetting({ settings, updateSettings }: AgentSettingProps) {
+  if (isCompanyEdition()) {
+    // Company edition writes no hooks, so the switch would promise something it cannot do.
+    return null
+  }
   const enabled = settings.agentStatusHooksEnabled !== false
   return (
     <section className="space-y-3">

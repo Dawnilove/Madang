@@ -1,3 +1,4 @@
+import { isCompanyEdition } from '../../shared/madang-edition'
 import { app } from 'electron'
 import { quitProcess } from './process-quit-request'
 import { mkdirSync } from 'node:fs'
@@ -196,6 +197,10 @@ export function configureDevUserDataPath(isDev: boolean): void {
   }
 
   if (!isDev) {
+    if (isCompanyEdition()) {
+      // Separate data folder so a company install never mixes with, or reads, a standard install's chats.
+      app.setPath('userData', join(app.getPath('appData'), 'madang-company'))
+    }
     return
   }
   const overrideUserDataPath = process.env.MADANG_DEV_USER_DATA_PATH

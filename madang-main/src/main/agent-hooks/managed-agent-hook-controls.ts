@@ -1,3 +1,4 @@
+import { isCompanyEdition } from '../../shared/madang-edition'
 import type { AgentHookInstallStatus, AgentHookTarget } from '../../shared/agent-hook-types'
 import {
   getManagedAgentHookTarget,
@@ -132,6 +133,10 @@ export async function installManagedAgentHooks(
   settings: ManagedHookSettings = null,
   options: InstallOptions = {}
 ): Promise<AgentHookInstallStatus[]> {
+  if (isCompanyEdition()) {
+    // Company edition never writes into the agent CLIs' settings (or rewrites a standard install's scripts).
+    return getManagedAgentHookStatuses()
+  }
   await refreshExistingManagedScripts(options)
   const installers = selectedInstallers(options)
   const disabled = new Set(normalizeDisabledTuiAgents(settings?.disabledTuiAgents))

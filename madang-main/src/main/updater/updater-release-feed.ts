@@ -1,3 +1,4 @@
+import { COMPANY_UPDATE_FEED_URL, isCompanyEdition } from '../../shared/madang-edition'
 import { app } from 'electron'
 import {
   fetchNewerReleaseTagsWithReadiness,
@@ -115,6 +116,11 @@ export abstract class UpdaterReleaseFeed extends UpdaterInstallExecution {
   ): Promise<'ready' | 'not-available'> {
     const attemptId = this.activeUpdateCheckAttemptId
     const autoUpdater = this.getAutoUpdater()
+    if (isCompanyEdition()) {
+      // Company builds read only their own feed; the standard release tags are never consulted.
+      autoUpdater.setFeedURL({ provider: 'generic', url: COMPANY_UPDATE_FEED_URL })
+      return 'ready'
+    }
     // Pin the concrete tag because latest/download can move between check and download; stable checks exclude prereleases.
     const currentVersion = app.getVersion()
     const isPerfCheck = variant === 'perf'

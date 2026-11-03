@@ -1,4 +1,5 @@
 import type { ProviderRateLimits } from '../../shared/rate-limit-types'
+import { isCompanyEdition } from '../../shared/madang-edition'
 
 // Claude/Codex usage reads stored login tokens, so it runs only after the user opts in.
 // Unset resolvers mean "enabled" so direct fetcher callers and tests keep working; app wiring sets both.
@@ -13,12 +14,13 @@ export function setUsageOptInResolvers(resolvers: {
   codexUsageEnabled = resolvers.codex
 }
 
+// Company edition never reads stored login tokens for usage meters, whatever the setting says.
 export function isClaudeUsageEnabled(): boolean {
-  return claudeUsageEnabled()
+  return !isCompanyEdition() && claudeUsageEnabled()
 }
 
 export function isCodexUsageEnabled(): boolean {
-  return codexUsageEnabled()
+  return !isCompanyEdition() && codexUsageEnabled()
 }
 
 export function usageDisabledResult(provider: 'claude' | 'codex'): ProviderRateLimits {

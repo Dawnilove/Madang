@@ -37,6 +37,10 @@ const ORCA_BUILD_IDENTITY_LITERAL =
   orcaBuildIdentity === 'stable' || orcaBuildIdentity === 'rc'
     ? JSON.stringify(orcaBuildIdentity)
     : 'null'
+// `company` removes token-reading usage meters, agent-settings hooks and the public update feed (src/shared/madang-edition.ts).
+const MADANG_EDITION_LITERAL = JSON.stringify(
+  process.env.MADANG_EDITION === 'company' ? 'company' : 'standard'
+)
 const orcaPostHogWriteKey = process.env.MADANG_POSTHOG_WRITE_KEY
 const ORCA_POSTHOG_WRITE_KEY_LITERAL =
   typeof orcaPostHogWriteKey === 'string' && orcaPostHogWriteKey.length > 0
@@ -246,6 +250,7 @@ export const electronViteConfig: UserConfig = {
     },
     define: {
       MADANG_BUILD_IDENTITY: ORCA_BUILD_IDENTITY_LITERAL,
+      MADANG_EDITION: MADANG_EDITION_LITERAL,
       MADANG_POSTHOG_WRITE_KEY: ORCA_POSTHOG_WRITE_KEY_LITERAL,
       MADANG_DIAGNOSTICS_TOKEN_URL: ORCA_DIAGNOSTICS_TOKEN_URL_LITERAL,
       MADANG_BUILD_COMMIT: ORCA_BUILD_COMMIT_LITERAL,
@@ -282,6 +287,7 @@ export const electronViteConfig: UserConfig = {
     cacheDir: resolve('.cache/vite/renderer'),
     define: {
       MADANG_BUILD_COMMIT: ORCA_BUILD_COMMIT_LITERAL,
+      MADANG_EDITION: MADANG_EDITION_LITERAL,
       ...DARK_BUILD_DEFINES
     },
     resolve: {
