@@ -146,6 +146,7 @@ describe('ProjectAddedDialog', () => {
     expect(markup).toBe('')
     expect(mocks.state.fetchWorktrees).toHaveBeenCalledWith('repo-1')
     expect(mocks.activateAndRevealWorktree).toHaveBeenCalledWith('repo-1::folder', {
+      navigationIntent: 'user-open',
       sidebarRevealBehavior: 'auto'
     })
     expect(mocks.state.closeModal).toHaveBeenCalledTimes(1)

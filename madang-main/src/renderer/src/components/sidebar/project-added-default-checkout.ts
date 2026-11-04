@@ -229,11 +229,13 @@ export async function openProjectDefaultCheckout({
     const initialCwd = resolveInitialCwdForDefaultCheckout(defaultCheckout, selectedPath)
     if (initialCwd || executionHostId) {
       activateAndRevealWorktree(defaultCheckout.id, {
+        // Adding a project is a deliberate open: an empty workspace gets the default chat, not a shell.
+        navigationIntent: 'user-open',
         ...(initialCwd ? { initialCwd } : {}),
         ...(executionHostId ? { executionHostId } : {})
       })
     } else {
-      activateAndRevealWorktree(defaultCheckout.id)
+      activateAndRevealWorktree(defaultCheckout.id, { navigationIntent: 'user-open' })
     }
     return
   }

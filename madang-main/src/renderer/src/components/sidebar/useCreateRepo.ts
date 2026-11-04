@@ -163,6 +163,7 @@ export function useCreateRepo(
         if (folderWorktree) {
           activateAndRevealWorktree(folderWorktree.id, {
             sidebarRevealBehavior: 'auto',
+            navigationIntent: 'user-open',
             ...(ownerOptions.executionHostId
               ? { executionHostId: ownerOptions.executionHostId }
               : {})
