@@ -143,12 +143,13 @@ it('refuses to resume a chat whose transcript is in another account instead of s
   expect(resumed.resumeLeafUuid).toBe('leaf-1')
 })
 
-it('resumes a chat with a stored leaf whose transcript is in no known folder', async () => {
+it('starts fresh under the same id when a stored leaf has no transcript in any known folder', async () => {
   const { launch } = routedResumeFixture()
 
-  const resumed = await launch()
-  expect(resumed.options).toMatchObject({ resume: 'ran-under-b' })
-  expect(resumed.resumeLeafUuid).toBe('leaf-1')
+  const started = await launch()
+  expect(started.options).toMatchObject({ sessionId: 'ran-under-b' })
+  expect(started.options.resume).toBeUndefined()
+  expect(started.resumeLeafUuid).toBeNull()
 })
 
 it('refuses a rewound chat whose kept conversation is in another account', async () => {

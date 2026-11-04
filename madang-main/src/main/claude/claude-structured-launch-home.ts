@@ -47,9 +47,6 @@ export async function claudeLaunchResumesTranscript(input: {
   hasTranscript?: typeof claudeTranscriptExists
 }): Promise<boolean> {
   const { router, providerSessionId, claudeConfigDir } = input
-  if (!router && input.leafUuid !== null) {
-    return true
-  }
   const hasTranscript = input.hasTranscript ?? claudeTranscriptExists
   if (await hasTranscript({ providerSessionId, claudeConfigDir })) {
     return true
@@ -66,6 +63,7 @@ export async function claudeLaunchResumesTranscript(input: {
       )
     }
   }
-  // A stored leaf still requires resume when its transcript folder is no longer known.
-  return true
+  // No transcript in any known home: `--resume` would exit "No conversation found" on every send.
+  // Start fresh under the same id (the id is free, so --session-id cannot collide).
+  return false
 }
