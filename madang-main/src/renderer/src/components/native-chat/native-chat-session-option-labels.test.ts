@@ -3,6 +3,7 @@ import { translate } from '@/i18n/i18n'
 import {
   nativeChatModelPillLabel,
   nativeChatOptionValuesLabel,
+  nativeChatSessionChoiceDescription,
   nativeChatSessionChoiceLabel
 } from './native-chat-session-option-labels'
 import type { SessionOptionDescriptor } from '../../../../shared/native-chat-session-options'
@@ -96,5 +97,27 @@ describe('nativeChatOptionValuesLabel', () => {
   it('names a faster tier and leaves Standard out, as Fast off was', () => {
     expect(nativeChatOptionValuesLabel([speedDescriptor('ultrafast')])).toBe('Ultrafast')
     expect(nativeChatOptionValuesLabel([speedDescriptor('default')])).toBe('')
+  })
+})
+
+describe('nativeChatSessionChoiceDescription', () => {
+  it('translates a known catalog description and leaves host text alone', () => {
+    vi.mocked(translate).mockImplementation((key: string, fallback: string) =>
+      key.endsWith('.sonnet') ? '반복적인 작업에 효율적임' : fallback
+    )
+    expect(nativeChatSessionChoiceDescription({ description: 'Efficient for routine tasks' })).toBe(
+      '반복적인 작업에 효율적임'
+    )
+    // A host sends the phrase inside longer text.
+    expect(
+      nativeChatSessionChoiceDescription({
+        description: 'Sonnet 5.5 · Efficient for routine tasks · $2/$10 per Mtok'
+      })
+    ).toBe('Sonnet 5.5 · 반복적인 작업에 효율적임 · $2/$10 per Mtok')
+    expect(nativeChatSessionChoiceDescription({ description: 'From the host' })).toBe(
+      'From the host'
+    )
+    expect(nativeChatSessionChoiceDescription({})).toBeUndefined()
+    vi.mocked(translate).mockImplementation((_key: string, fallback: string) => fallback)
   })
 })

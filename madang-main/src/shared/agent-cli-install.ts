@@ -30,7 +30,16 @@ export const AGENT_CLI_INSTALL_COMMANDS = {
   'command-code': 'npm i -g command-code@latest',
   continue:
     'irm https://raw.githubusercontent.com/continuedev/continue/main/extensions/cli/scripts/install.ps1 | iex',
-  gemini: 'npm install -g @google/gemini-cli'
+  gemini: 'npm install -g @google/gemini-cli',
+  // Re-verified 2026-11-12 against vendor docs (docs/분석/28_에이전트_설치명령_재검토.md).
+  grok: 'irm https://x.ai/cli/install.ps1 | iex',
+  'mimo-code': 'irm https://mimo.xiaomi.com/install.ps1 | iex',
+  cursor: "irm 'https://cursor.com/install?win32=true' | iex",
+  trae: 'irm https://trae.cn/trae-cli/install_v2.ps1 | iex',
+  'qoder-cn': 'irm https://qoder.com.cn/install.ps1 | iex',
+  kiro: "irm 'https://cli.kiro.dev/install.ps1' | iex",
+  'qwen-code':
+    'irm https://qwen-code-assets.oss-cn-hangzhou.aliyuncs.com/installation/install-qwen-standalone.ps1 | iex'
 } as const
 
 /** Kept for existing imports; same table. */

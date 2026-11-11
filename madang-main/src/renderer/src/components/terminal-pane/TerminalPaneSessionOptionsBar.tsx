@@ -5,23 +5,34 @@ import { makePaneKey } from '../../../../shared/stable-pane-id'
 import { NativeChatSessionOptionPickers } from '../native-chat/NativeChatSessionOptionPickers'
 import { useNativeChatSessionOptionCommand } from '../native-chat/use-native-chat-session-option-command'
 import { useNativeChatSessionOptions } from '../native-chat/use-native-chat-session-options'
+import type { AgentType } from '../../../../shared/agent-status-types'
 import type { TerminalPaneController } from './use-terminal-pane-controller'
 
 /**
  * Model and effort pickers over a plain terminal that runs Claude. The terminal is the real Claude TUI, so a pick
  * types `/model` or `/effort` into it (after the terminal has gone quiet) exactly as the chat input already does.
  */
+// Only agents whose model switch is confirmed in their docs (/model; Grok also /effort). Others get no bar.
+const BAR_AGENTS: readonly AgentType[] = ['claude', 'codex', 'grok', 'gemini', 'cursor']
+
 export function TerminalPaneSessionOptionsBar({
   controller
 }: {
   controller: TerminalPaneController
 }): React.JSX.Element | null {
   const { activeAgentId, activePane, effectiveChatViewMode, isActive } = controller
-  if (effectiveChatViewMode || !isActive || activeAgentId !== 'claude' || !activePane?.container) {
+  if (
+    effectiveChatViewMode ||
+    !isActive ||
+    !activeAgentId ||
+    !BAR_AGENTS.includes(activeAgentId) ||
+    !activePane?.container
+  ) {
     return null
   }
   return createPortal(
     <SessionOptionsBarInner
+      agent={activeAgentId}
       controller={controller}
       paneId={activePane.id}
       leafId={activePane.leafId}
@@ -31,10 +42,12 @@ export function TerminalPaneSessionOptionsBar({
 }
 
 function SessionOptionsBarInner({
+  agent,
   controller,
   paneId,
   leafId
 }: {
+  agent: AgentType
   controller: TerminalPaneController
   paneId: number
   leafId: string
@@ -56,12 +69,12 @@ function SessionOptionsBarInner({
     [leafId, managerRef]
   )
   const { dispatch, isDispatching } = useNativeChatSessionOptionCommand({
-    agent: 'claude',
+    agent,
     disabled: false,
     resolveTarget
   })
   const { surface, snapshot } = useNativeChatSessionOptions({
-    agent: 'claude',
+    agent,
     terminalTabId: tabId,
     targetPtyId: ptyId,
     dispatchCommand: dispatch,

@@ -47,6 +47,8 @@ export function useNativeChatComposerSubmit(args: {
   consumeOrcaCommand?: (draft: string) => boolean
   /** Attached context cards, sent in front of the typed text. The PTY path gets it through its own draft. */
   contextText?: string
+  /** Appended after the typed text on send (the collaboration rules hint). */
+  draftSuffix?: string
   /** Called once a message with the cards was handed to a send path. */
   onContextSent?: () => void
   setDraft: (value: string) => void
@@ -54,7 +56,7 @@ export function useNativeChatComposerSubmit(args: {
 }): { send: () => void; goalMode: NativeChatComposerGoalMode } {
   const { caret, disabled, draft, draftScopeKey, imageAttachments, sendPty, sendStructured } = args
   const { consumeOrcaCommand, setCaret, setDraft, structuredTransport } = args
-  const { contextText = '', onContextSent } = args
+  const { contextText = '', draftSuffix = '', onContextSent } = args
   const threadGoal = structuredTransport?.threadGoal
   const [entered, setEntered] = useState(false)
   const active = entered && threadGoal !== undefined
@@ -140,7 +142,7 @@ export function useNativeChatComposerSubmit(args: {
         onContextSent?.()
       }
     } else if ((draft.trim() !== '' || contextText || imageAttachments.length > 0) && !disabled) {
-      sendStructured(contextText + draft, imageAttachments)
+      sendStructured(contextText + draft + draftSuffix, imageAttachments)
       if (contextText) {
         onContextSent?.()
       }
@@ -152,6 +154,7 @@ export function useNativeChatComposerSubmit(args: {
     disabled,
     draft,
     draftScopeKey,
+    draftSuffix,
     imageAttachments,
     onContextSent,
     sendPty,

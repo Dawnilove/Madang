@@ -11,6 +11,7 @@ import {
   type SessionOptionValue
 } from '../../../../shared/native-chat-session-options'
 import {
+  nativeChatSessionChoiceDescription,
   nativeChatSessionChoiceLabel,
   nativeChatSessionChoiceShortLabel,
   nativeChatSessionOptionActionLabel,
@@ -49,7 +50,8 @@ function LevelSegment(props: {
   const label = nativeChatSessionChoiceLabel(choice, optionId)
   const shortLabel = nativeChatSessionChoiceShortLabel(choice, optionId)
   // What the segment's text leaves out: the full name behind an abbreviation, and the description.
-  const detail = [label === shortLabel ? null : label, choice.description].filter(Boolean).join(' ')
+  const description = nativeChatSessionChoiceDescription(choice)
+  const detail = [label === shortLabel ? null : label, description].filter(Boolean).join(' ')
   if (!detail) {
     return <ToggleGroupItem value={choice.value}>{shortLabel}</ToggleGroupItem>
   }
@@ -69,7 +71,7 @@ function LevelSegment(props: {
       </TooltipTrigger>
       <TooltipContent side="top" sideOffset={4}>
         <div>{label}</div>
-        {choice.description ? <div>{choice.description}</div> : null}
+        {description ? <div>{description}</div> : null}
       </TooltipContent>
     </Tooltip>
   )

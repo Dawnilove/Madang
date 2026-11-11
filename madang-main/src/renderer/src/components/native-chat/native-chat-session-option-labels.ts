@@ -156,3 +156,34 @@ export function nativeChatOptionValuesLabel(
   }
   return labels.join(' · ')
 }
+
+// Known phrases of model descriptions. A host sends them inside longer text ("Opus 5.5 · Best for ... · $4/$20 per Mtok"),
+// so each phrase is replaced where it appears; text that is not in this list shows as received.
+const KNOWN_DESCRIPTION_PHRASES: [english: string, key: string][] = [
+  ['Most capable for the hardest, longest-running tasks', 'fable'],
+  ['Most capable for your hardest and longest-running tasks', 'fable'],
+  ['Best for everyday, complex tasks', 'opus'],
+  ['Efficient for routine tasks', 'sonnet'],
+  ['Fastest for quick answers', 'haiku'],
+  ["xAI's previous frontier model", 'grokPrevious'],
+  ['An earlier xAI frontier model', 'grokEarlier'],
+  ['per Mtok', 'perMtok'],
+  ['for prompts over 100k', 'over100k']
+]
+
+export function nativeChatSessionChoiceDescription(
+  choice: Pick<SessionOptionSelectChoice, 'description'>
+): string | undefined {
+  let text = choice.description
+  if (!text) {
+    return text
+  }
+  for (const [english, key] of KNOWN_DESCRIPTION_PHRASES) {
+    if (text.includes(english)) {
+      text = text.replaceAll(english, () =>
+        translate(`components.native-chat.composer.modelDescription.${key}`, english)
+      )
+    }
+  }
+  return text
+}

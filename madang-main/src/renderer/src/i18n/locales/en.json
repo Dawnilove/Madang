@@ -19427,6 +19427,16 @@
         "setWhenSessionStarts": "Set when the session starts.",
         "availableAfterSessionStarts": "Available after the session starts.",
         "optionUpdateFailed": "Could not update option",
+        "modelDescription": {
+          "fable": "Most capable for the hardest, longest-running tasks",
+          "opus": "Best for everyday, complex tasks",
+          "sonnet": "Efficient for routine tasks",
+          "haiku": "Fastest for quick answers",
+          "grokPrevious": "xAI's previous frontier model",
+          "grokEarlier": "An earlier xAI frontier model",
+          "perMtok": "per Mtok",
+          "over100k": "for prompts over 100k"
+        },
         "optionValue": {
           "fast": "Fast",
           "minimal": "Minimal",

@@ -3,6 +3,10 @@ import { useSyncExternalStore } from 'react'
 /** The collaboration skill starts only when a session's first input begins with this marker. */
 export const COLLABORATION_MARKER = '[협업] '
 
+/** Sent after the user's text, so the rules reach the agent even when the skill is not installed (the CLI serves them without it). Agent-facing, not UI text. */
+export const COLLABORATION_RULES_HINT =
+  '\n\n(Madang 협업 규칙: 먼저 `madang skills get collaboration` 명령을 실행한다. 출력된 규칙을 따라 총괄 세션으로 일한다.)'
+
 const STORAGE_KEY = 'madang.collaborationTabs'
 const listeners = new Set<() => void>()
 

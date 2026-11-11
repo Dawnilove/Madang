@@ -19127,6 +19127,16 @@
         "setWhenSessionStarts": "세션을 시작할 때 설정하세요.",
         "availableAfterSessionStarts": "세션이 시작된 후 사용할 수 있습니다.",
         "optionUpdateFailed": "옵션을 업데이트하지 못했습니다",
+        "modelDescription": {
+          "fable": "가장 어렵고 오래 걸리는 작업에 가장 강력함",
+          "opus": "복잡한 일상 작업에 가장 적합함",
+          "sonnet": "반복적인 작업에 효율적임",
+          "haiku": "빠른 답변에 가장 빠름",
+          "grokPrevious": "xAI의 이전 최상위 모델",
+          "grokEarlier": "xAI의 이전 세대 최상위 모델",
+          "perMtok": "100만 토큰당",
+          "over100k": "10만 토큰을 넘는 프롬프트"
+        },
         "optionValue": {
           "fast": "빠름",
           "minimal": "최소",

@@ -32,6 +32,7 @@ import { useNativeChatComposerSubmit } from './use-native-chat-composer-submit'
 import { useNativeChatBangCommand } from './use-native-chat-bang-command'
 import {
   COLLABORATION_MARKER,
+  COLLABORATION_RULES_HINT,
   markCollaborationTab,
   useIsCollaborationTab
 } from '@/lib/collaboration-sessions'
@@ -269,6 +270,14 @@ const NativeChatComposerPane = forwardRef<NativeChatComposerHandle, NativeChatCo
     const contextBlocks = useNativeChatContextBlocks(draftScopeKey)
     const contextText = contextBlocks.length > 0 ? nativeChatContextText(draftScopeKey) : ''
 
+    // Collaboration is opt-in per session: the switch puts a visible marker in the first input, and the skill keys off that marker.
+    const collaborationRulesOn = useAppStore((s) => s.settings?.experimentalCollaboration === true)
+    const isLeadSession = useIsCollaborationTab(terminalTabId)
+    const collaborationArmed = draft.startsWith(COLLABORATION_MARKER)
+    // The first armed send also carries a rules hint, so the agent gets the rules without the installed skill.
+    const collaborationSuffix =
+      collaborationRulesOn && !isLeadSession && collaborationArmed ? COLLABORATION_RULES_HINT : ''
+
     const sendStructured = useNativeChatStructuredComposerSend({
       agent,
       draftScopeKey,
@@ -299,7 +308,7 @@ const NativeChatComposerPane = forwardRef<NativeChatComposerHandle, NativeChatCo
     const sendPty = useNativeChatPtyComposerSend({
       draftScopeKey,
       ...ptyCommandRouting,
-      draft: contextText + draft,
+      draft: contextText + draft + collaborationSuffix,
       imageAttachments,
       launchDraft: launchSeed?.launchDraft,
       launchDraftResolved: launchSeed?.launchDraftResolved === true,
@@ -320,15 +329,12 @@ const NativeChatComposerPane = forwardRef<NativeChatComposerHandle, NativeChatCo
       sendStructured,
       consumeOrcaCommand: (value: string) => bang.consume(value) || resume.consume(value),
       contextText,
+      draftSuffix: collaborationSuffix,
       onContextSent: () => clearNativeChatContextBlocks(draftScopeKey),
       setDraft,
       setCaret
     })
 
-    // Collaboration is opt-in per session: the switch puts a visible marker in the first input, and the skill keys off that marker.
-    const collaborationRulesOn = useAppStore((s) => s.settings?.experimentalCollaboration === true)
-    const isLeadSession = useIsCollaborationTab(terminalTabId)
-    const collaborationArmed = draft.startsWith(COLLABORATION_MARKER)
     const collaborationSkill = useCollaborationSkillState()
     const collaboration =
       collaborationRulesOn && !isLeadSession
