@@ -371,6 +371,7 @@ describe('queued card image edit', () => {
       insertTypedText: () => true,
       acceptsText: () => true,
       appendText: vi.fn(),
+      attachContext: vi.fn(),
       handlePasteEvent: vi.fn(),
       pasteFromClipboard: vi.fn(),
       contains: () => false

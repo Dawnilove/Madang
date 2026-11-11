@@ -22,6 +22,7 @@ import type {
 } from '../../../../shared/native-chat-session-options'
 import type { NativeChatOptionPickerRequest } from './native-chat-composer-types'
 import { NativeChatImageAttachmentPreview } from './NativeChatImageAttachmentPreview'
+import { NativeChatContextBlocks } from './NativeChatContextBlocks'
 import type { NativeChatComposerGoalMode } from './use-native-chat-composer-submit'
 import { translate } from '@/i18n/i18n'
 import { useNativeChatComposerDraftUnsaved } from './use-native-chat-draft-unsaved'
@@ -251,6 +252,7 @@ export function NativeChatComposerField({
               '[contain:paint]'
             )}
           >
+            <NativeChatContextBlocks scope={draftScopeKey} />
             {imageAttachments.length > 0 ? (
               <div className="mb-2 flex flex-wrap gap-2 px-1 pt-1.5">
                 {imageAttachments.map((attachment, index) => (

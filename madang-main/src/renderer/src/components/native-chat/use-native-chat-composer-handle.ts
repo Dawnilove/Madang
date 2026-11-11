@@ -1,4 +1,4 @@
-import { useImperativeHandle, type ForwardedRef } from 'react'
+import { useCallback, useImperativeHandle, type ForwardedRef } from 'react'
 import type { ClipboardEventLike } from './native-chat-clipboard-payload'
 import type { NativeChatComposerHandle } from './native-chat-composer-types'
 import {
@@ -8,6 +8,7 @@ import {
 import { useNativeChatTypedInsertion } from './use-native-chat-typed-insertion'
 import { useNativeChatPastedTextFile } from './use-native-chat-pasted-text-file'
 import type { NativeChatComposerInput } from './native-chat-composer-input'
+import { addNativeChatContextBlock, type NativeChatContextBlock } from './native-chat-context-blocks'
 
 type UseNativeChatComposerHandleArgs = Parameters<typeof useNativeChatTypedInsertion>[0] &
   Omit<UseNativeChatComposerPasteArgs, 'insertTypedText'> & {
@@ -46,6 +47,20 @@ export function useNativeChatComposerHandle(
     insertTypedText: insertPastedTextOrFile
   })
 
+  const scope = args.attachmentScopeKey
+  const attachContext = useCallback(
+    (block: Omit<NativeChatContextBlock, 'id'>): void => {
+      if (!scope) {
+        // Without a draft scope there is nowhere to keep a card; fall back to plain text.
+        appendText(block.text)
+        return
+      }
+      addNativeChatContextBlock(scope, block)
+      focus()
+    },
+    [appendText, focus, scope]
+  )
+
   useImperativeHandle(
     ref,
     () => ({
@@ -53,6 +68,7 @@ export function useNativeChatComposerHandle(
       insertTypedText,
       acceptsText,
       appendText,
+      attachContext,
       handlePasteEvent,
       pasteFromClipboard,
       contains
@@ -62,6 +78,7 @@ export function useNativeChatComposerHandle(
       insertTypedText,
       acceptsText,
       appendText,
+      attachContext,
       handlePasteEvent,
       pasteFromClipboard,
       contains

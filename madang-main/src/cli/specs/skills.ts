@@ -35,11 +35,12 @@ export const SKILL_COMMAND_SPECS: CommandSpec[] = [
   {
     path: ['skills', 'list'],
     summary: 'List version-matched skill guides bundled with this Madang CLI',
-    usage: 'madang skills list [--json]',
-    allowedFlags: [...GLOBAL_FLAGS],
+    usage: 'madang skills list [--installed] [--json]',
+    allowedFlags: [...GLOBAL_FLAGS, 'installed'],
     notes: [
       'Reads bundled guide metadata locally without contacting the Madang runtime.',
-      'With --json, prints a topics array of canonical names and one-line descriptions.',
+      'This lists the skills Madang ships, not what is installed. Add --installed to check this machine: each skill gets installed, not-installed or needs-update for the detected agents.',
+      'With --json, prints a topics array of canonical names and one-line descriptions (plus `installed` with --installed).',
       'Use `madang skills get <name>` for the compact guide, `--full` for its full reference package, or `madang skills install` to install skills.'
     ]
   },

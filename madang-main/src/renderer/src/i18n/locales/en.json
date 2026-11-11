@@ -13257,6 +13257,11 @@
           "unavailableNotice": "This server is no longer saved, so nothing can be shown for it. Choose another host at the top of Settings."
         },
         "collaborationExperimental": {
+          "archiveLabel": "Archive finished worker terminals after",
+          "archiveOff": "Off",
+          "archiveMinutes": "{{value0}} min",
+          "archiveHint": "Closes a terminal worker tab after its task is done and it stays idle. Resume it from session history.",
+          "keywordArchive": "archive",
           "toggleLabel": "Toggle collaboration rules",
           "title": "Collaboration rules",
           "description": "When on, a collaboration switch appears beside the input box. A session whose first message is sent with the switch on follows the multi-agent collaboration rules: it becomes the lead, assigns roles to the connected agents, and sends work orders to worker sessions.",
@@ -13267,6 +13272,9 @@
           "guideBody": "Turn on the collaboration switch beside the input box and send the first message. Without the switch, collaboration rules do not apply. That session becomes the lead and splits the work among agents.",
           "guideNewSession": "The collaboration skill is installed when you turn this on. It applies from the next new session.",
           "installFailed": "Skill install failed: {{value0}}",
+          "retry": "Retry",
+          "checking": "Checking the collaboration skill…",
+          "installed": "Collaboration skill installed",
           "guideConfirm": "OK"
         },
         "wslHostsExperimental": {
@@ -19840,6 +19848,14 @@
         "orcaSessionIdTooltip": "Madang's ID for this chat, separate from the agent CLI's own session ID. Agents use it to refer to each other through Madang."
       },
       "dismissDeliveryNotice": "Dismiss",
+      "context": {
+        "reply": "Reply",
+        "quote": "Quote",
+        "command": "Command output",
+        "lines": "{{count}} lines",
+        "remove": "Remove",
+        "listLabel": "Attached context"
+      },
       "bang": {
         "running": "Running… {{command}}",
         "failed": "Could not run the command: {{error}}",
@@ -21867,6 +21883,10 @@
       "noProjects": "Add a project to start a workspace.",
       "noConversations": "No workspaces yet.",
       "needsInput": "Needs input",
+      "workerRack": {
+        "title": "Worker rack",
+        "terminal": "Terminal"
+      },
       "orchestrationWorker": "Orchestration worker"
     }
   }

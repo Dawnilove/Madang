@@ -3,6 +3,7 @@ import { translate } from '@/i18n/i18n'
 import { useAppStore } from '@/store'
 import { selectFolderWorkspaces, selectWorktreesByRepo } from '@/store/workspace-record-selectors'
 import type { RunChatCommandResult } from '../../../../shared/ai-vault-types'
+import { addNativeChatContextBlock } from './native-chat-context-blocks'
 
 /** `!npm test` on a single line: the command, or null for any other draft. */
 export function parseNativeChatBangDraft(draft: string): string | null {
@@ -46,16 +47,18 @@ function workspacePathFor(worktreeId: string): string | null {
 }
 
 /**
- * `!command` in the chat input runs the command in the chat's workspace folder and puts the command with its
- * output into the input (not sent), so the user can add a question and send it as context.
+ * `!command` in the chat input runs the command in the chat's workspace folder and attaches the command with its
+ * output as a folded card above the input (not sent), so the user can add a question and send it as context.
  */
 export function useNativeChatBangCommand(args: {
   worktreeId: string | undefined
+  /** Draft scope that keeps the output card. */
+  scopeKey: string
   setDraft: (value: string) => void
   setCaret: (caret: number) => void
   setNotice: (notice: string | null) => void
 }): { consume: (draft: string) => boolean } {
-  const { worktreeId, setCaret, setDraft, setNotice } = args
+  const { worktreeId, scopeKey, setCaret, setDraft, setNotice } = args
   const running = useRef(false)
   const consume = useCallback(
     (draft: string): boolean => {
@@ -89,9 +92,13 @@ export function useNativeChatBangCommand(args: {
             )
             return
           }
-          const text = formatNativeChatBangResult(command, result)
-          setDraft(text)
-          setCaret(text.length)
+          addNativeChatContextBlock(scopeKey, {
+            kind: 'command',
+            label: `$ ${command}`,
+            text: formatNativeChatBangResult(command, result)
+          })
+          setDraft('')
+          setCaret(0)
           setNotice(null)
         })
         .catch((error: unknown) =>
@@ -102,7 +109,7 @@ export function useNativeChatBangCommand(args: {
         })
       return true
     },
-    [setCaret, setDraft, setNotice, worktreeId]
+    [scopeKey, setCaret, setDraft, setNotice, worktreeId]
   )
   return { consume }
 }

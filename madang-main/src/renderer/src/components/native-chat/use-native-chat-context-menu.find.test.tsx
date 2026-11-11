@@ -26,6 +26,7 @@ function Chat(): React.JSX.Element {
     insertTypedText: () => true,
     acceptsText: () => true,
     appendText: () => {},
+    attachContext: () => {},
     handlePasteEvent: () => {},
     pasteFromClipboard: () => {},
     contains: () => false

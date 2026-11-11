@@ -72,6 +72,16 @@ export function bundledSkillPlanState(entry: BundledSkillPlanEntry): BundledSkil
   }, 'current')
 }
 
+export type BundledSkillInstalledState = 'installed' | 'not-installed' | 'needs-update'
+
+/** Plain installed state for list surfaces: nothing on disk, current everywhere, or anything in between. */
+export function bundledSkillInstalledState(entry: BundledSkillPlanEntry): BundledSkillInstalledState {
+  if (entry.ops.length > 0 && entry.ops.every((op) => op.observed.kind === 'absent')) {
+    return 'not-installed'
+  }
+  return bundledSkillPlanState(entry) === 'current' ? 'installed' : 'needs-update'
+}
+
 export type BundledSkillPlanSummary = {
   /** Badge: only global-scope rewrites; link-only work is "Install for <agent>", never an update. */
   badge: 'update' | 'repair' | null

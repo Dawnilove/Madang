@@ -26,6 +26,7 @@ import { buildConversationTree } from './conversation-tree'
 import { useVisibleConversations } from './use-visible-conversations'
 import { MadangConversationProject } from './MadangConversationProject'
 import { MadangSidebarDialogs } from './MadangSidebarDialogs'
+import { MadangWorkerRack } from './MadangWorkerRack'
 
 // Same limits as Orca's workspace sidebar so the persisted width carries over between shells.
 const MIN_WIDTH = 220
@@ -164,6 +165,7 @@ function MadangConversationSidebar(): React.JSX.Element {
               )}
             </div>
             <SetupScriptPromptCard />
+            <MadangWorkerRack />
             <div className="mt-auto flex shrink-0 items-center border-t border-worktree-sidebar-border px-2 py-1.5">
               <SidebarSettingsHelpMenu />
             </div>

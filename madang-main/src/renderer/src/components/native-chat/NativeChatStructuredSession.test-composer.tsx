@@ -20,6 +20,7 @@ export function createStructuredSessionComposerMock(mocks: {
           },
           insertTypedText: () => true,
           appendText: () => {},
+          attachContext: () => {},
           acceptsText: () => true,
           handlePasteEvent: mocks.handlePasteEvent,
           pasteFromClipboard: mocks.pasteFromClipboard,

@@ -28,6 +28,8 @@ import { useCodexSharedSettingsNotice } from '../components/terminal-pane/codex-
 import { useVisibleReviewRefreshReporting } from './use-visible-review-refresh-reporting'
 import { useVisibleHostedReviewRefresh } from './use-visible-hosted-review-refresh'
 import { useProfileStateSaveDelayNotice } from './use-profile-state-save-delay-notice'
+import { useBundledSkillSelfHeal } from './use-bundled-skill-self-heal'
+import { useFinishedWorkerAutoArchive } from './use-finished-worker-auto-archive'
 
 /** Keep subscriptions above surfaces that unmount or never appear on Landing. */
 export function useAppShellServices(): void {
@@ -65,4 +67,6 @@ export function useAppShellServices(): void {
   useBrowserClientHostedDownloadNotices()
   useCodexTerminalServerIsolationNotice()
   useCodexSharedSettingsNotice()
+  useBundledSkillSelfHeal()
+  useFinishedWorkerAutoArchive()
 }

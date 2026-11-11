@@ -11,11 +11,13 @@ import { NATIVE_CHAT_QUOTE_SOURCE_PROPS } from './native-chat-quote-selection'
 vi.mock('@/i18n/i18n', () => ({ translate: (_key: string, fallback: string) => fallback }))
 
 const appendText = vi.fn<(text: string) => void>()
+const attachContext = vi.fn<NativeChatComposerHandle['attachContext']>()
 const acceptsText = vi.fn(() => true)
 const composer: NativeChatComposerHandle = {
   focus: () => true,
   insertTypedText: () => true,
   appendText,
+  attachContext,
   acceptsText,
   handlePasteEvent: () => {},
   pasteFromClipboard: () => {},
@@ -74,6 +76,7 @@ describe('NativeChatSelectionQuote', () => {
     cleanup()
     window.getSelection()?.removeAllRanges()
     appendText.mockClear()
+    attachContext.mockClear()
     acceptsText.mockReset().mockReturnValue(true)
     vi.useRealTimers()
   })
@@ -86,7 +89,12 @@ describe('NativeChatSelectionQuote', () => {
     fireEvent.pointerDown(quote, { button: 0 })
     fireEvent.click(quote)
 
-    expect(appendText).toHaveBeenCalledWith('> Use the draft store.\n>\n> It already appends.\n\n')
+    expect(attachContext).toHaveBeenCalledWith({
+      kind: 'quote',
+      label: '',
+      text: '> Use the draft store.\n>\n> It already appends.\n\n'
+    })
+    expect(appendText).not.toHaveBeenCalled()
     expect(screen.queryByRole('button', { name: 'Add to chat' })).toBeNull()
   })
 

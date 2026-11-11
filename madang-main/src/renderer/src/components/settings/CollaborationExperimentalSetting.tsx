@@ -1,5 +1,5 @@
 import type { GlobalSettings } from '../../../../shared/global-settings-types'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { translate } from '@/i18n/i18n'
 import { Button } from '../ui/button'
 import {
@@ -12,16 +12,95 @@ import {
 } from '../ui/dialog'
 import { Label } from '../ui/label'
 import { SearchableSetting } from './SearchableSetting'
-import { SettingsSwitch } from './SettingsFormControls'
+import { SettingsSegmentedControl, SettingsSwitch } from './SettingsFormControls'
+import { DEFAULT_FINISHED_WORKER_ARCHIVE_MINUTES } from '@/lib/finished-worker-auto-archive'
 import { getCollaborationExperimentalSearchEntry } from './collaboration-experimental-search'
+import {
+  ensureCollaborationSkill,
+  useCollaborationSkillState,
+  type CollaborationSkillState
+} from '@/lib/collaboration-skill-install'
 
-const COLLABORATION_SKILL = ['collaboration']
+function CollaborationSkillStatus({
+  skill
+}: {
+  skill: CollaborationSkillState
+}): React.JSX.Element | null {
+  if (skill.kind === 'unknown') {
+    return null
+  }
+  if (skill.kind === 'failed') {
+    return (
+      <div role="alert" className="flex items-center gap-2 text-xs text-destructive">
+        <span className="min-w-0 break-words">
+          {translate(
+            'auto.components.settings.collaborationExperimental.installFailed',
+            'Skill install failed: {{value0}}',
+            { value0: skill.reason }
+          )}
+        </span>
+        <Button size="sm" variant="outline" onClick={() => void ensureCollaborationSkill()}>
+          {translate('auto.components.settings.collaborationExperimental.retry', 'Retry')}
+        </Button>
+      </div>
+    )
+  }
+  return (
+    <p className="text-xs text-muted-foreground">
+      {skill.kind === 'checking'
+        ? translate(
+            'auto.components.settings.collaborationExperimental.checking',
+            'Checking the collaboration skill…'
+          )
+        : translate(
+            'auto.components.settings.collaborationExperimental.installed',
+            'Collaboration skill installed'
+          )}
+    </p>
+  )
+}
 
-// Why: the rules are served by a bundled skill stub; the switch alone never installs it, so an agent could not discover them.
-async function installCollaborationSkill(): Promise<void> {
-  const request = { names: COLLABORATION_SKILL }
-  const plan = await window.api.skills.bundledPlan(request)
-  await window.api.skills.bundledExecute({ planDigest: plan.planDigest, request })
+const ARCHIVE_MINUTE_CHOICES = [0, 10, 30, 60] as const
+
+function FinishedWorkerArchiveSetting({
+  settings,
+  updateSettings
+}: {
+  settings: GlobalSettings
+  updateSettings: (updates: Partial<GlobalSettings>) => void
+}): React.JSX.Element {
+  const label = translate(
+    'auto.components.settings.collaborationExperimental.archiveLabel',
+    'Archive finished worker terminals after'
+  )
+  return (
+    <div className="space-y-1 pt-2">
+      <p className="text-xs">{label}</p>
+      <SettingsSegmentedControl
+        size="sm"
+        ariaLabel={label}
+        value={settings.finishedWorkerArchiveMinutes ?? DEFAULT_FINISHED_WORKER_ARCHIVE_MINUTES}
+        onChange={(minutes) => updateSettings({ finishedWorkerArchiveMinutes: minutes })}
+        options={ARCHIVE_MINUTE_CHOICES.map((minutes) => ({
+          value: minutes,
+          label:
+            minutes === 0
+              ? translate('auto.components.settings.collaborationExperimental.archiveOff', 'Off')
+              : translate(
+                  'auto.components.settings.collaborationExperimental.archiveMinutes',
+                  '{{value0}} min',
+                  { value0: minutes }
+                )
+        }))}
+      />
+      <p className="text-xs text-muted-foreground">
+        {translate(
+          'auto.components.settings.collaborationExperimental.archiveHint',
+          'Closes a terminal worker tab after its task is done and it stays idle. Resume it from session history.'
+        )}
+      </p>
+    </div>
+  )
 }
 
 export function CollaborationExperimentalSetting({
@@ -34,7 +113,13 @@ export function CollaborationExperimentalSetting({
   const entry = getCollaborationExperimentalSearchEntry()
   const enabled = settings.experimentalCollaboration === true
   const [guideOpen, setGuideOpen] = useState(false)
-  const [installError, setInstallError] = useState<string | null>(null)
+  const skill = useCollaborationSkillState()
+  // Why: the switch and the installed stub are separate facts; re-check whenever this setting is shown ON.
+  useEffect(() => {
+    if (enabled) {
+      void ensureCollaborationSkill()
+    }
+  }, [enabled])
   return (
     <SearchableSetting
       title={entry.title}
@@ -46,6 +131,8 @@ export function CollaborationExperimentalSetting({
       <div className="min-w-0 shrink space-y-0.5">
         <Label>{entry.title}</Label>
         <p className="text-xs text-muted-foreground">{entry.description}</p>
+        {enabled ? <CollaborationSkillStatus skill={skill} /> : null}
+        <FinishedWorkerArchiveSetting settings={settings} updateSettings={updateSettings} />
       </div>
       <SettingsSwitch
         checked={enabled}
@@ -57,11 +144,7 @@ export function CollaborationExperimentalSetting({
           updateSettings({ experimentalCollaboration: !enabled })
           // Show how to start a collaboration session each time the switch turns on.
           if (!enabled) {
-            setInstallError(null)
             setGuideOpen(true)
-            installCollaborationSkill().catch((error: unknown) =>
-              setInstallError(error instanceof Error ? error.message : String(error))
-            )
           }
         }}
       />
@@ -86,15 +169,7 @@ export function CollaborationExperimentalSetting({
                 'The collaboration skill is installed when you turn this on. It applies from the next new session.'
               )}
             </p>
-            {installError ? (
-              <p role="alert" className="text-xs text-destructive">
-                {translate(
-                  'auto.components.settings.collaborationExperimental.installFailed',
-                  'Skill install failed: {{value0}}',
-                  { value0: installError }
-                )}
-              </p>
-            ) : null}
+            <CollaborationSkillStatus skill={skill} />
           </DialogHeader>
           <DialogFooter>
             <Button onClick={() => setGuideOpen(false)}>

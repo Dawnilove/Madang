@@ -43,7 +43,7 @@ export type NativeChatComposerActionsProps = {
   /** The chat's agent, whose permission modes the picker describes. */
   agent?: string
   /** Present while the collaboration switch is on and this session is not yet a lead session. */
-  collaboration?: { armed: boolean; onToggle: () => void }
+  collaboration?: { armed: boolean; installProblem?: string | null; onToggle: () => void }
 }
 
 export function NativeChatComposerActions({
@@ -143,11 +143,21 @@ export function NativeChatComposerActions({
             size="icon-sm"
             aria-pressed={collaboration.armed}
             aria-label={translate('components.native-chat.composer.collaboration', 'Collaboration')}
-            title={translate('components.native-chat.composer.collaboration', 'Collaboration')}
+            title={
+              collaboration.installProblem
+                ? translate(
+                    'auto.components.settings.collaborationExperimental.installFailed',
+                    'Skill install failed: {{value0}}',
+                    { value0: collaboration.installProblem }
+                  )
+                : translate('components.native-chat.composer.collaboration', 'Collaboration')
+            }
             onMouseDown={(event) => event.preventDefault()}
             onClick={collaboration.onToggle}
           >
-            <Users className="size-4" />
+            <Users
+              className={collaboration.installProblem ? 'size-4 text-destructive' : 'size-4'}
+            />
           </Button>
         ) : null}
         {onExitGoalMode ? <NativeChatComposerGoalChip onExit={onExitGoalMode} /> : null}

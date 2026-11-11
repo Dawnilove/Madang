@@ -15,6 +15,7 @@ const composer: NativeChatComposerHandle = {
   focus: () => true,
   insertTypedText,
   appendText: () => {},
+  attachContext: () => {},
   acceptsText: () => true,
   handlePasteEvent: () => {},
   pasteFromClipboard: () => {},

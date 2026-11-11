@@ -275,6 +275,7 @@ export function buildDefaultSettings(args: {
     experimentalConnectors: false,
     experimentalWslHosts: false,
     experimentalCollaboration: false,
+    finishedWorkerArchiveMinutes: 10,
     compactWorktreeCards: false,
     // Why: local desktop stays the default until the user picks a saved runtime environment.
     activeRuntimeEnvironmentId: null,

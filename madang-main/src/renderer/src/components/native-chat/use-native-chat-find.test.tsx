@@ -39,6 +39,7 @@ function composerHandle(): Composer {
     }),
     insertTypedText: vi.fn(() => true),
     appendText: vi.fn(),
+    attachContext: vi.fn(),
     acceptsText: () => true,
     handlePasteEvent: vi.fn(),
     pasteFromClipboard: vi.fn(),

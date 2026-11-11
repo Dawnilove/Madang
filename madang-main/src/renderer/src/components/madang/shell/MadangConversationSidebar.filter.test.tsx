@@ -38,6 +38,7 @@ vi.mock('@/components/sidebar/SidebarFilter', () => ({
   default: () => <button type="button" data-testid="sidebar-filter" />
 }))
 vi.mock('@/components/sidebar/SidebarNav', () => ({ default: () => null }))
+vi.mock('./MadangWorkerRack', () => ({ MadangWorkerRack: () => null }))
 vi.mock('@/components/sidebar/SidebarSettingsHelpMenu', () => ({
   SidebarSettingsHelpMenu: () => null
 }))

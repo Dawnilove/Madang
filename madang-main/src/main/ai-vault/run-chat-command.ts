@@ -6,11 +6,21 @@ const TIMEOUT_MS = 60_000
 // Keep the tail: a build or test run puts what matters (the failure) last.
 const OUTPUT_LIMIT_BYTES = 40_000
 
+// Why: the output is read as UTF-8, but PowerShell writes the OEM code page (CP949 on Korean Windows), which turns Hangul into garbage.
+const POWERSHELL_UTF8_PREFIX =
+  '[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false); '
+
 function shellFor(command: string): { file: string; args: string[] } {
   return process.platform === 'win32'
     ? {
         file: 'powershell.exe',
-        args: ['-NoLogo', '-NoProfile', '-NonInteractive', '-Command', command]
+        args: [
+          '-NoLogo',
+          '-NoProfile',
+          '-NonInteractive',
+          '-Command',
+          POWERSHELL_UTF8_PREFIX + command
+        ]
       }
     : { file: '/bin/sh', args: ['-c', command] }
 }

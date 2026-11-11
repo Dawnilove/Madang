@@ -1,3 +1,4 @@
+import type { NativeChatContextBlock } from './native-chat-context-blocks'
 import type { CaptureStructuredAgentSessionPresentation } from './use-structured-agent-session-mutate'
 import type { StructuredAgentSessionSendRequest } from './structured-agent-session-send-slot'
 import type { NativeChatComposerNotice } from './native-chat-composer-notice'
@@ -148,6 +149,8 @@ export type NativeChatComposerHandle = {
   acceptsText: () => boolean
   /** Append deduplicated text after a blank line and place the caret at its end. */
   appendText: (text: string) => void
+  /** Attach a reply/quote/command output as a folded card above the input; it is sent before the typed text. */
+  attachContext: (block: Omit<NativeChatContextBlock, 'id'>) => void
   /** Routes pane-level paste events back to the composer field. */
   handlePasteEvent: (event: {
     clipboardData: DataTransfer | null

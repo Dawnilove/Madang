@@ -35,6 +35,15 @@ import {
   markCollaborationTab,
   useIsCollaborationTab
 } from '@/lib/collaboration-sessions'
+import {
+  ensureCollaborationSkill,
+  useCollaborationSkillState
+} from '@/lib/collaboration-skill-install'
+import {
+  clearNativeChatContextBlocks,
+  nativeChatContextText,
+  useNativeChatContextBlocks
+} from './native-chat-context-blocks'
 import { useAppStore } from '@/store'
 import { useNativeChatComposerCommandPicker } from './use-native-chat-composer-command-picker'
 
@@ -131,6 +140,7 @@ const NativeChatComposerPane = forwardRef<NativeChatComposerHandle, NativeChatCo
     })
     const bang = useNativeChatBangCommand({
       worktreeId: structuredTransport?.worktreeId,
+      scopeKey: draftScopeKey,
       setDraft,
       setCaret,
       setNotice
@@ -255,6 +265,10 @@ const NativeChatComposerPane = forwardRef<NativeChatComposerHandle, NativeChatCo
     const contextUsageSummary = useNativeChatContextUsageSummary(structuredTransport)
     const sessionOptionsSnapshot = structuredTransport?.optionSnapshot ?? ptySessionOptionsSnapshot
 
+    // Folded reply/quote/command cards ride in front of the typed text on every send path.
+    const contextBlocks = useNativeChatContextBlocks(draftScopeKey)
+    const contextText = contextBlocks.length > 0 ? nativeChatContextText(draftScopeKey) : ''
+
     const sendStructured = useNativeChatStructuredComposerSend({
       agent,
       draftScopeKey,
@@ -285,7 +299,7 @@ const NativeChatComposerPane = forwardRef<NativeChatComposerHandle, NativeChatCo
     const sendPty = useNativeChatPtyComposerSend({
       draftScopeKey,
       ...ptyCommandRouting,
-      draft,
+      draft: contextText + draft,
       imageAttachments,
       launchDraft: launchSeed?.launchDraft,
       launchDraftResolved: launchSeed?.launchDraftResolved === true,
@@ -305,6 +319,8 @@ const NativeChatComposerPane = forwardRef<NativeChatComposerHandle, NativeChatCo
       sendPty,
       sendStructured,
       consumeOrcaCommand: (value: string) => bang.consume(value) || resume.consume(value),
+      contextText,
+      onContextSent: () => clearNativeChatContextBlocks(draftScopeKey),
       setDraft,
       setCaret
     })
@@ -313,11 +329,18 @@ const NativeChatComposerPane = forwardRef<NativeChatComposerHandle, NativeChatCo
     const collaborationRulesOn = useAppStore((s) => s.settings?.experimentalCollaboration === true)
     const isLeadSession = useIsCollaborationTab(terminalTabId)
     const collaborationArmed = draft.startsWith(COLLABORATION_MARKER)
+    const collaborationSkill = useCollaborationSkillState()
     const collaboration =
       collaborationRulesOn && !isLeadSession
         ? {
             armed: collaborationArmed,
+            installProblem:
+              collaborationSkill.kind === 'failed' ? collaborationSkill.reason : null,
             onToggle: () => {
+              if (!collaborationArmed) {
+                // The agent finds the rules only through the installed stub; repair it before the first send.
+                void ensureCollaborationSkill()
+              }
               setDraft(
                 collaborationArmed
                   ? draft.slice(COLLABORATION_MARKER.length)

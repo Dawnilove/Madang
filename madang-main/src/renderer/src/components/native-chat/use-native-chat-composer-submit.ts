@@ -45,11 +45,16 @@ export function useNativeChatComposerSubmit(args: {
   sendStructured: (text: string, attachments: readonly NativeChatComposerImageAttachment[]) => void
   /** Runs a command Orca owns, like `/resume`; true means the draft never reaches the agent. */
   consumeOrcaCommand?: (draft: string) => boolean
+  /** Attached context cards, sent in front of the typed text. The PTY path gets it through its own draft. */
+  contextText?: string
+  /** Called once a message with the cards was handed to a send path. */
+  onContextSent?: () => void
   setDraft: (value: string) => void
   setCaret: (caret: number) => void
 }): { send: () => void; goalMode: NativeChatComposerGoalMode } {
   const { caret, disabled, draft, draftScopeKey, imageAttachments, sendPty, sendStructured } = args
   const { consumeOrcaCommand, setCaret, setDraft, structuredTransport } = args
+  const { contextText = '', onContextSent } = args
   const threadGoal = structuredTransport?.threadGoal
   const [entered, setEntered] = useState(false)
   const active = entered && threadGoal !== undefined
@@ -131,16 +136,24 @@ export function useNativeChatComposerSubmit(args: {
       }
     } else if (!structuredTransport) {
       sendPty()
-    } else if ((draft.trim() !== '' || imageAttachments.length > 0) && !disabled) {
-      sendStructured(draft, imageAttachments)
+      if (contextText) {
+        onContextSent?.()
+      }
+    } else if ((draft.trim() !== '' || contextText || imageAttachments.length > 0) && !disabled) {
+      sendStructured(contextText + draft, imageAttachments)
+      if (contextText) {
+        onContextSent?.()
+      }
     }
   }, [
     active,
     consumeOrcaCommand,
+    contextText,
     disabled,
     draft,
     draftScopeKey,
     imageAttachments,
+    onContextSent,
     sendPty,
     sendStructured,
     setCaret,

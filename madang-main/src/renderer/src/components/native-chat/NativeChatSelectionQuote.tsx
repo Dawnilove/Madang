@@ -146,7 +146,7 @@ export function NativeChatSelectionQuote({
               size="xs"
               onClick={() => {
                 // Taken or not (the composer may have locked since), the offer is spent.
-                composerRef.current?.appendText(formatNativeChatQuote(request.text))
+                composerRef.current?.attachContext({ kind: 'quote', label: '', text: formatNativeChatQuote(request.text) })
                 setRequest(null)
               }}
             >

@@ -20,7 +20,8 @@ const mocks = vi.hoisted(() => ({
   openDetectedFilePath: vi.fn(),
   writeClipboardText: vi.fn(),
   confirm: vi.fn(),
-  appendText: vi.fn()
+  appendText: vi.fn(),
+  attachContext: vi.fn()
 }))
 
 vi.mock('@/lib/http-link-destinations', async (importOriginal) => ({
@@ -58,6 +59,7 @@ function Chat({
     insertTypedText: () => true,
     acceptsText: () => acceptsText,
     appendText: mocks.appendText,
+    attachContext: mocks.attachContext,
     handlePasteEvent: () => {},
     pasteFromClipboard: () => {},
     contains: () => false
@@ -149,7 +151,11 @@ describe('native chat right-click targets', () => {
     await rightClick('Agent reply words')
 
     fireEvent.click(screen.getByRole('menuitem', { name: 'Add to chat' }))
-    expect(mocks.appendText).toHaveBeenCalledWith('> Agent reply words\n\n')
+    expect(mocks.attachContext).toHaveBeenCalledWith({
+      kind: 'quote',
+      label: '',
+      text: '> Agent reply words\n\n'
+    })
 
     view.unmount()
     render(<Chat acceptsText={false} onFind={vi.fn()} />)

@@ -12,10 +12,12 @@ vi.mock('../../store', () => ({
 }))
 
 describe('CollaborationExperimentalSetting', () => {
-  it('installs the collaboration skill when the switch turns on', async () => {
-    const bundledPlan = vi.fn().mockResolvedValue({ planDigest: 'digest' })
+  it('installs the collaboration skill once the switch is on', async () => {
+    const bundledPlan = vi.fn().mockResolvedValue({ planDigest: 'digest', skills: [] })
     const bundledExecute = vi.fn().mockResolvedValue({ scope: 'global', skills: [] })
-    ;(window as unknown as { api: unknown }).api = { skills: { bundledPlan, bundledExecute } }
+    ;(window as unknown as { api: unknown }).api = {
+      skills: { bundledPlan, bundledExecute }
+    }
     const updateSettings = vi.fn()
     const host = document.createElement('div')
     document.body.append(host)
@@ -23,7 +25,10 @@ describe('CollaborationExperimentalSetting', () => {
     await act(async () => {
       root.render(
         <CollaborationExperimentalSetting
-          settings={{ ...getDefaultSettings('/home'), experimentalCollaboration: false }}
+          settings={{
+            ...getDefaultSettings('/home'),
+            experimentalCollaboration: false
+          }}
           updateSettings={updateSettings}
         />
       )
@@ -31,7 +36,21 @@ describe('CollaborationExperimentalSetting', () => {
     await act(async () => {
       host.querySelector<HTMLElement>('[role="switch"]')?.click()
     })
-    expect(updateSettings).toHaveBeenCalledWith({ experimentalCollaboration: true })
+    expect(updateSettings).toHaveBeenCalledWith({
+      experimentalCollaboration: true
+    })
+    // Why: the install follows the saved setting, not the click, so it also repairs a stub removed later.
+    await act(async () => {
+      root.render(
+        <CollaborationExperimentalSetting
+          settings={{
+            ...getDefaultSettings('/home'),
+            experimentalCollaboration: true
+          }}
+          updateSettings={updateSettings}
+        />
+      )
+    })
     expect(bundledPlan).toHaveBeenCalledWith({ names: ['collaboration'] })
     expect(bundledExecute).toHaveBeenCalledWith({
       planDigest: 'digest',

@@ -12,6 +12,11 @@ describe('runChatCommand', () => {
     expect(result.timedOut).toBe(false)
   })
 
+  it('keeps Hangul in the output intact', async () => {
+    const result = await runChatCommand({ cwd: process.cwd(), command: echoCommand('한글-확인') })
+    expect(result.output).toContain('한글-확인')
+  })
+
   it('reports a failing command through its exit code', async () => {
     const result = await runChatCommand({ cwd: process.cwd(), command: 'exit 3' })
     expect(result.exitCode).toBe(3)

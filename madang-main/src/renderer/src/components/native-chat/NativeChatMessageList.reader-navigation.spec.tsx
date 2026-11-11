@@ -366,6 +366,7 @@ describe('reader navigation', () => {
         insertTypedText,
         acceptsText: () => true,
         appendText: vi.fn(),
+        attachContext: vi.fn(),
         handlePasteEvent: vi.fn(),
         pasteFromClipboard: vi.fn(),
         contains: () => false

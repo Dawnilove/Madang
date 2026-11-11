@@ -464,6 +464,8 @@ export type GlobalSettings = GlobalSettingsCore & {
   experimentalWslHosts?: boolean
   /** Experimental: serve the multi-agent collaboration rules (the `collaboration` skill) to agents. */
   experimentalCollaboration?: boolean
+  /** Minutes a finished terminal-view worker tab stays idle before it is closed (archived to session history). 0 turns it off. */
+  finishedWorkerArchiveMinutes?: number
   /** Compact worktree cards: hide the metadata row when title and branch say the same thing. */
   compactWorktreeCards: boolean
   /** Legacy persisted key from the Experimental rollout; new writes use compactWorktreeCards. */

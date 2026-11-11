@@ -2,6 +2,9 @@
 
 !include "${__FILEDIR__}\madang-process-check.nsh"
 
+; Inside a macro, __FILEDIR__ resolves where the macro is used (the builder template), so capture this folder now.
+!define MADANG_NSIS_DIR "${__FILEDIR__}"
+
 ; #10138/#23225: electron-builder’s APP_ASSOCIATE overwrites the extension’s default without backup,
 ; and APP_UNASSOCIATE never restores it. Register only additive ProgID/OpenWithProgids/SupportedTypes
 ; entries; never write the extension’s default handler. Sync extensions with isOsOpenedDocumentName().
@@ -25,7 +28,21 @@
   WriteRegStr SHELL_CONTEXT "Software\Classes\${PROGID}\shell\open\command" "" '"$appExe" "%1"'
 !macroend
 
+; Put resources\bin on the user PATH so `madang` works in new terminals. Failure is not fatal:
+; Settings can still register it. The script keeps the PATH value type and never duplicates the
+; entry; it stays in $INSTDIR so the uninstaller can reuse it.
+!macro MADANG_PATH_ACTION ACTION
+  Push $0
+  nsExec::Exec 'powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "$INSTDIR\resources\bin\madang-path.ps1" -Action ${ACTION} -Dir "$INSTDIR\resources\bin"'
+  Pop $0
+  ; Tell running programs the environment changed.
+  System::Call 'user32::SendMessageTimeoutW(i 0xffff, i 0x1A, i 0, w "Environment", i 2, i 5000, *i .r0)'
+  Pop $0
+!macroend
+
 !macro customInstall
+  File "/oname=$INSTDIR\resources\bin\madang-path.ps1" "${MADANG_NSIS_DIR}\madang-path.ps1"
+  !insertmacro MADANG_PATH_ACTION add
   !insertmacro ORCA_REGISTER_DOCUMENT_PROGID "${MARKDOWN_PROGID}" "Markdown Document"
   !insertmacro ORCA_REGISTER_DOCUMENT_PROGID "${TABULAR_PROGID}" "Tabular Document"
   !insertmacro ORCA_REGISTER_DOCUMENT_OPEN_WITH ".md" "${MARKDOWN_PROGID}"
@@ -43,6 +60,7 @@
 ; see docs/reference/windows-daemon-host-relocation.md.
 !macro customUnInstall
   ${ifNot} ${isUpdated}
+    !insertmacro MADANG_PATH_ACTION remove
     Push $0
     Push $1
     Push $2

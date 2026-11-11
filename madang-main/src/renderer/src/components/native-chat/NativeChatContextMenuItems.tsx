@@ -32,7 +32,7 @@ export function NativeChatContextMenuTargetItems({
     <>
       {quoteText ? (
         <DropdownMenuItem
-          onSelect={() => composerRef.current?.appendText(formatNativeChatQuote(quoteText))}
+          onSelect={() => composerRef.current?.attachContext({ kind: 'quote', label: '', text: formatNativeChatQuote(quoteText) })}
         >
           <Quote />
           {translate('components.native-chat.addSelectionToChat', 'Add to chat')}
@@ -65,7 +65,7 @@ export function NativeChatContextMenuTargetItems({
       ) : null}
       {messageText ? (
         <DropdownMenuItem
-          onSelect={() => composerRef.current?.appendText(formatNativeChatReply(messageText))}
+          onSelect={() => composerRef.current?.attachContext({ kind: 'reply', label: '', text: formatNativeChatReply(messageText) })}
         >
           <Reply />
           {translate('components.native-chat.replyToMessage', 'Reply')}

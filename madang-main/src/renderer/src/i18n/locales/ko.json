@@ -12971,6 +12971,11 @@
           "unavailableNotice": "이 서버는 더 이상 저장되어 있지 않아 정보를 표시할 수 없습니다. 설정 상단에서 다른 호스트를 선택하세요."
         },
         "collaborationExperimental": {
+          "archiveLabel": "끝난 워커 터미널 자동 보관",
+          "archiveOff": "끄기",
+          "archiveMinutes": "{{value0}}분",
+          "archiveHint": "작업이 끝나고 쓰지 않는 워커 터미널 탭을 닫습니다. 세션 기록에서 다시 불러올 수 있습니다.",
+          "keywordArchive": "보관",
           "toggleLabel": "협업 규칙 켜기/끄기",
           "title": "협업 규칙",
           "description": "켜면 입력칸 옆에 협업 토글이 나타납니다. 토글을 켜고 보낸 첫 입력의 세션이 협업 규칙을 따릅니다. 그 세션이 총괄이 되어 연결된 에이전트에 역할을 나누고 워커 세션에 작업 지시서를 보냅니다.",
@@ -12981,6 +12986,9 @@
           "guideBody": "세션 입력칸 옆의 협업 토글을 켜고 첫 입력을 보내세요. 토글을 켜지 않으면 협업 규칙은 적용되지 않습니다. 그 세션이 총괄이 되어 에이전트에게 일을 나눕니다.",
           "guideNewSession": "켜면 협업 스킬이 설치됩니다. 새 세션부터 적용됩니다.",
           "installFailed": "스킬 설치 실패: {{value0}}",
+          "retry": "다시 시도",
+          "checking": "협업 스킬을 확인하는 중…",
+          "installed": "협업 스킬이 설치되어 있습니다",
           "guideConfirm": "확인"
         },
         "wslHostsExperimental": {
@@ -19582,6 +19590,14 @@
         "estimated": "마지막 응답 기준 추정치입니다."
       },
       "dismissDeliveryNotice": "닫기",
+      "context": {
+        "reply": "답글",
+        "quote": "인용",
+        "command": "명령 결과",
+        "lines": "{{count}}줄",
+        "remove": "빼기",
+        "listLabel": "첨부한 내용"
+      },
       "bang": {
         "running": "실행 중… {{command}}",
         "failed": "명령을 실행하지 못했습니다: {{error}}",
@@ -21840,6 +21856,10 @@
       "noProjects": "프로젝트를 추가하면 작업을 시작할 수 있습니다.",
       "noConversations": "아직 작업이 없습니다.",
       "needsInput": "답변 필요",
+      "workerRack": {
+        "title": "워커 랙",
+        "terminal": "터미널"
+      },
       "orchestrationWorker": "오케스트레이션 작업자"
     }
   }

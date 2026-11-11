@@ -29,6 +29,10 @@ export const getCollaborationExperimentalSearchEntry = createLocalizedCatalog(
       ...translateSearchKeyword(
         'auto.components.settings.collaborationExperimental.keywordRoles',
         'roles'
+      ),
+      ...translateSearchKeyword(
+        'auto.components.settings.collaborationExperimental.keywordArchive',
+        'archive'
       )
     ],
     targetSectionId: 'collaboration-rules'
