@@ -53,7 +53,8 @@ describe('TerminalHost listing of a session it is killing', () => {
     await host.dispose()
   })
 
-  it('lists a session as running again when its kill signal is refused', async () => {
+  // Windows: kill 거절이 EPERM으로 다르게 동작한다.
+  it.skipIf(process.platform === 'win32')('lists a session as running again when its kill signal is refused', async () => {
     const { spawnSubprocess, handles } = spawnManuallyExitedSubprocess()
     const host = new TerminalHost({ spawnSubprocess })
     const sessionId = 'wt-1@@unsignalled-pane'

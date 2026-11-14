@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { join, sep } from 'node:path'
+import { join, resolve, sep } from 'node:path'
 import type { GlobalSettings } from '../../shared/global-settings-types'
 import type { Repo } from '../../shared/repo-types'
 import type {
@@ -58,10 +58,11 @@ type PollerCallback = (events: WorktreeBasePollEvent[]) => void
 const watcherCallbacks = new Map<string, PollerCallback>()
 const unsubscribeMocks = new Map<string, ReturnType<typeof vi.fn>>()
 const pollerOptions = new Map<string, WorktreeBasePollerOptions>()
-const absolutePath = (...parts: string[]): string => join(sep, ...parts)
+const absolutePath = (...parts: string[]): string => resolve(sep, ...parts)
 const WORKTREE_ROOT = absolutePath('workspace', 'worktrees')
 const PROJECT_ROOT = absolutePath('workspace', 'projects', 'project')
-const PROJECT_GIT_COMMON_DIR = join(PROJECT_ROOT, '.git')
+// The runtime path helper returns forward slashes on Windows too.
+const PROJECT_GIT_COMMON_DIR = `${PROJECT_ROOT.split(sep).join('/')}/.git`
 // The test cache never resolves admin dirs, so status signals carry no attribution.
 const UNATTRIBUTED_STATUS = [expect.anything(), 'repo-1', null] as const
 
@@ -234,7 +235,7 @@ describe('worktree base directory watcher', () => {
     )
     await syncWorktreeBaseDirectoryWatchers(makeStore([makeRepo()]) as never, makeWindow() as never)
     const getPaths = pollerOptions.get(PROJECT_GIT_COMMON_DIR)?.getGitStatusRefPaths
-    expect(getPaths?.()).toEqual([join(PROJECT_GIT_COMMON_DIR, 'refs/remotes/origin/first')])
+    expect(getPaths?.()).toEqual([`${PROJECT_GIT_COMMON_DIR}/refs/remotes/origin/first`])
 
     await setWorktreeGitStatusRefWatch(
       {
@@ -254,7 +255,7 @@ describe('worktree base directory watcher', () => {
       },
       async () => undefined
     )
-    expect(getPaths?.()).toEqual([join(PROJECT_GIT_COMMON_DIR, 'refs/remotes/origin/next')])
+    expect(getPaths?.()).toEqual([`${PROJECT_GIT_COMMON_DIR}/refs/remotes/origin/next`])
 
     await setWorktreeGitStatusRefWatch(
       {

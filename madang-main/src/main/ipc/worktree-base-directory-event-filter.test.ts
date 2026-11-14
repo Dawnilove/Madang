@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { join, win32 } from 'node:path'
+import { join, resolve, win32 } from 'node:path'
 import {
   classifyWorktreeBaseChange,
   matchingWorktreeBaseRepoIds,
@@ -13,7 +13,7 @@ import {
   PRIMARY_HEAD_IDENTITY_SCOPE
 } from './worktree-head-identity-scope'
 
-const COMMON_DIR = join('/repos', 'project', '.git')
+const COMMON_DIR = resolve('/repos', 'project', '.git')
 
 function makeGitCommonTarget(): WorktreeBaseWatchTarget {
   return {
@@ -359,7 +359,7 @@ describe('matchingWorktreeBaseRepoIds (git-common)', () => {
     expect(
       matchingWorktreeBaseRepoIds(target, {
         type: 'update',
-        path: join('/repos', 'project', 'HEAD')
+        path: resolve('/repos', 'project', 'HEAD')
       })
     ).toEqual([])
   })

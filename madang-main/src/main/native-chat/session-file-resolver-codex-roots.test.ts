@@ -50,7 +50,8 @@ describe('codex sessions roots', () => {
     expect(vi.mocked(getOrcaManagedCodexHomePath)).not.toHaveBeenCalled()
   })
 
-  it('scans per-account homes after the default roots, leaving WSL shares to their tier', async () => {
+  // Windows: 시험의 POSIX 경로(/home/u/...)가 Windows 경로 판정과 안 맞는다.
+  it.skipIf(process.platform === 'win32')('scans per-account homes after the default roots, leaving WSL shares to their tier', async () => {
     const accountHome = '/home/u/.local/share/orca/codex-accounts/a1/home'
     configureHostReadableTranscriptPathSources({
       getAdditionalCodexHomePaths: () => [accountHome, '\\\\wsl.localhost\\Ubuntu\\home\\u\\.codex']
@@ -76,7 +77,7 @@ describe('codex sessions roots', () => {
     expect(getAdditionalCodexHomePaths).not.toHaveBeenCalled()
   })
 
-  it('still answers when the account homes cannot be listed', async () => {
+  it.skipIf(process.platform === 'win32')('still answers when the account homes cannot be listed', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     configureHostReadableTranscriptPathSources({
       getAdditionalCodexHomePaths: () => {

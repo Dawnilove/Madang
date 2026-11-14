@@ -4,6 +4,7 @@
 import { existsSync } from 'node:fs'
 import { journalDatabasePath } from '../native-chat/agent-session-journal/journal-host-database'
 import { journalDatabaseHoldsAgentSessions } from '../native-chat/agent-session-journal/journal-database'
+import { scheduleRetentionDryRun } from '../native-chat/agent-session-journal/journal-retention-dry-run'
 import { AgentSessionRecordStore } from './agent-session-record-store'
 import type { JournalHostDatabase } from '../native-chat/agent-session-journal/journal-host-database'
 import { openStructuredAgentSessionJournalDatabase } from './structured-agent-session-journal-open'
@@ -68,10 +69,9 @@ async function openRecordStore(
 ): Promise<OpenedAgentSessionRecordStore> {
   const journalDatabase = openStructuredAgentSessionJournalDatabase(location)
   try {
-    return {
-      journalDatabase,
-      store: AgentSessionRecordStore.open({ journalDatabase, hostId: location.hostId })
-    }
+    const store = AgentSessionRecordStore.open({ journalDatabase, hostId: location.hostId })
+    scheduleRetentionDryRun(journalDatabase, location.logger)
+    return { journalDatabase, store }
   } catch (error) {
     journalDatabase.close()
     throw error

@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { join } from 'node:path'
+import { join, resolve } from 'node:path'
 import { collectLocalWorktreeBaseChanges } from './worktree-base-directory-change-collector'
 import type { WorktreeBaseWatchTarget } from './worktree-base-directory-event-filter'
 import { EMPTY_HEAD_IDENTITY_SCOPE, FULL_HEAD_IDENTITY_SCOPE } from './worktree-head-identity-scope'
 
-const COMMON_DIR = join('/repos', 'project', '.git')
+const COMMON_DIR = resolve('/repos', 'project', '.git')
 
 function makeTarget(): WorktreeBaseWatchTarget {
   return {

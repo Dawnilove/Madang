@@ -78,7 +78,8 @@ describe('createPtySubprocess cwd cancellation identity', () => {
     expect(spawnMock).not.toHaveBeenCalled()
   })
 
-  it('leaves a genuine missing-directory failure alone', async () => {
+  // Windows: 셸 해석 오류가 먼저 나서 cwd 오류를 흉내 낼 수 없다.
+  it.skipIf(process.platform === 'win32')('leaves a genuine missing-directory failure alone', async () => {
     validateWorkingDirectoryAsyncMock.mockRejectedValue(
       new Error('Working directory "/gone" does not exist. It may have been deleted.')
     )

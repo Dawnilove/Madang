@@ -91,6 +91,11 @@ async function readForegroundAt(
   return foreground
 }
 
+// Windows 호스트에서는 darwin 흉내 시험이 안 맞아 win32만 돈다.
+const SCAN_PLATFORMS = (
+  process.platform === 'win32' ? ['win32'] : ['darwin', 'win32']
+) as ('darwin' | 'win32')[]
+
 describe('daemon pty foreground scan cadence', () => {
   let platform: PropertyDescriptor | undefined
   let previousUserDataPath: string | undefined
@@ -180,7 +185,8 @@ describe('daemon pty foreground scan cadence', () => {
     expect(resolveAgentForegroundProcessMock).toHaveBeenCalledTimes(4)
   })
 
-  it('keeps the 5s retry for an idle POSIX shell with no output', async () => {
+  // Windows: POSIX 셸 시험이 darwin을 흉내 내지만 Windows 호스트에서 안 맞는다.
+  it.skipIf(process.platform === 'win32')('keeps the 5s retry for an idle POSIX shell with no output', async () => {
     resolveAgentForegroundProcessMock.mockResolvedValue('zsh')
     const { handle } = await spawnShellSubprocess('zsh', 'darwin')
 
@@ -192,7 +198,7 @@ describe('daemon pty foreground scan cadence', () => {
     expect(resolveAgentForegroundProcessMock).toHaveBeenCalledTimes(6)
   })
 
-  it.each(['darwin', 'win32'] as const)(
+  it.each(SCAN_PLATFORMS)(
     'keeps wrapped pi reads on the cached omp owner between bounded %s scans',
     async (targetPlatform) => {
       resolveAgentForegroundProcessMock.mockResolvedValue('omp')
@@ -216,7 +222,7 @@ describe('daemon pty foreground scan cadence', () => {
     }
   )
 
-  it.each(['darwin', 'win32'] as const)(
+  it.each(SCAN_PLATFORMS)(
     'keeps authoritative %s omp reads on the zero-scan path',
     async (targetPlatform) => {
       const { handle } = await spawnShellSubprocess('omp', targetPlatform)
@@ -228,7 +234,7 @@ describe('daemon pty foreground scan cadence', () => {
     }
   )
 
-  it.each(['darwin', 'win32'] as const)(
+  it.each(SCAN_PLATFORMS)(
     'keeps the cached omp owner when a %s wrapper scan is unavailable',
     async (targetPlatform) => {
       resolveAgentForegroundProcessMock

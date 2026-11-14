@@ -114,7 +114,8 @@ describe('resetFolderAccessForDaemon rejects cases it cannot remedy', () => {
 })
 
 describe('resetFolderAccessForDaemon runs the remedy', () => {
-  it.each([
+  // Windows: 시험이 macOS 경로(/Applications/Madang.app)를 가정한다.
+  it.skipIf(process.platform === 'win32').each([
     ['documents', 'SystemPolicyDocumentsFolder'],
     ['desktop', 'SystemPolicyDesktopFolder'],
     ['downloads', 'SystemPolicyDownloadsFolder']

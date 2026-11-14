@@ -221,7 +221,8 @@ it.each([false, true])(
   }
 )
 
-it('looks up OMP history under the configured launch XDG and profile root', async () => {
+// Windows: 홈 경로가 HOME/USERPROFILE로 갈려 시험의 HOME 기대가 안 맞는다.
+it.skipIf(process.platform === 'win32')('looks up OMP history under the configured launch XDG and profile root', async () => {
   root = await createAdoptionTestDirectory(join(tmpdir(), 'orca-omp-adopt-env-'))
   const ambientData = join(root, 'ambient-data')
   const launchData = join(root, 'launch-data')
@@ -257,7 +258,7 @@ it('looks up OMP history under the configured launch XDG and profile root', asyn
   ).toBe(launchFile)
 })
 
-it('uses the configured OMP profile when the ambient profile names another session', async () => {
+it.skipIf(process.platform === 'win32')('uses the configured OMP profile when the ambient profile names another session', async () => {
   root = await createAdoptionTestDirectory(join(tmpdir(), 'orca-omp-adopt-profile-'))
   const xdgData = join(root, 'data')
   const ambientProfile = 'ambient'

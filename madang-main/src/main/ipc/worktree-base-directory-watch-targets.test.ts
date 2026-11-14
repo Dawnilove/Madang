@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { join, sep } from 'node:path'
+import { join, resolve, sep } from 'node:path'
 import type { GlobalSettings } from '../../shared/global-settings-types'
 import type { Repo } from '../../shared/repo-types'
 
@@ -29,7 +29,9 @@ import {
   WORKTREE_BASE_TARGET_RESOLUTION_CONCURRENCY
 } from './worktree-base-directory-watch-targets'
 
-const absolutePath = (...parts: string[]): string => join(sep, ...parts)
+const absolutePath = (...parts: string[]): string => resolve(sep, ...parts)
+// The runtime path helper returns forward slashes on Windows too.
+const gitDirOf = (repoPath: string): string => `${repoPath.split(sep).join('/')}/.git`
 const WORKTREE_ROOT = absolutePath('workspace', 'worktrees')
 const PROJECT_ROOT = absolutePath('workspace', 'projects')
 const localDirectoryStat = { isDirectory: () => true }
@@ -117,7 +119,7 @@ describe('worktree base directory watch target resolution', () => {
     const gitStatStarted = new Set<number>()
     const completionOrder: number[] = []
     statMock.mockImplementation(async (path: string) => {
-      const index = repos.findIndex((repo) => path === join(repo.path, '.git'))
+      const index = repos.findIndex((repo) => path === gitDirOf(repo.path))
       if (index !== -1) {
         gitStatStarted.add(index)
         await gates[index].promise
@@ -137,7 +139,7 @@ describe('worktree base directory watch target resolution', () => {
     expect(completionOrder).toEqual([3, 2, 1, 0])
     expect([...targets.values()].map((target) => [target.kind, target.path])).toEqual([
       ['base', WORKTREE_ROOT],
-      ...repos.map((repo) => ['git-common', join(repo.path, '.git')])
+      ...repos.map((repo) => ['git-common', gitDirOf(repo.path)])
     ])
     expect([...([...targets.values()][0]?.repos.keys() ?? [])]).toEqual(
       repos.map((repo) => repo.id)
@@ -150,7 +152,7 @@ describe('worktree base directory watch target resolution', () => {
     const unavailable = makeRepo(1, { worktreeBasePath: absolutePath('worktrees', 'missing') })
     const goodAfter = makeRepo(2, { worktreeBasePath: absolutePath('worktrees', 'after') })
     statMock.mockImplementation(async (path: string) => {
-      if (path === unavailable.worktreeBasePath || path === join(unavailable.path, '.git')) {
+      if (path === unavailable.worktreeBasePath || path === gitDirOf(unavailable.path)) {
         throw missing
       }
       return localDirectoryStat

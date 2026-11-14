@@ -113,7 +113,8 @@ describe('classifyDaemonAdoptionOrigin', () => {
     expect(codeIdentityMock).toHaveBeenLastCalledWith(undefined)
   })
 
-  it('reports a daemon started from the private stable copy', async () => {
+  // Windows: 시험이 macOS 경로(/Users/...)를 가정한다.
+  it.skipIf(process.platform === 'win32')('reports a daemon started from the private stable copy', async () => {
     const copies = '/Users/alice/Library/Application Support/Madang/daemon-host/macos'
     const stableCopy = {
       ...stalePidRecord,

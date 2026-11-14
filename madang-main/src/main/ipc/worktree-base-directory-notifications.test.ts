@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { join } from 'node:path'
+import { join, resolve } from 'node:path'
 import { collectLocalWorktreeBaseChanges } from './worktree-base-directory-change-collector'
 import {
   scheduleWorktreeBaseNotification,
@@ -18,11 +18,11 @@ vi.mock('./watched-worktree-catalog-notification', () => ({
   notifyWatchedWorktreeCatalogChanged: vi.fn()
 }))
 
-const COMMON_DIR = join('/repos', 'project', '.git')
-const PRIMARY_PATH = join('/repos', 'project')
+const COMMON_DIR = resolve('/repos', 'project', '.git')
+const PRIMARY_PATH = resolve('/repos', 'project')
 // The admin dir name need not match the checkout folder name.
-const ACTIVE_PATH = join('/work', 'feature')
-const SIBLING_PATH = join('/work', 'other')
+const ACTIVE_PATH = resolve('/work', 'feature')
+const SIBLING_PATH = resolve('/work', 'other')
 const HEAD = 'a'.repeat(40)
 
 function makeWatch(): WorktreeBaseNotificationWatch {

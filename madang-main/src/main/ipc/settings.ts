@@ -41,6 +41,7 @@ import {
   normalizeComputerAwakeMode
 } from '../../shared/computer-awake-mode'
 import { resolveAiVaultSearchSettings } from '../../shared/ai-vault-search-settings'
+import { normalizeSessionRetentionDays } from '../../shared/session-retention-settings'
 import { applySessionSearchSettingsChange } from '../ai-vault-search/session-search-enablement'
 
 const SETTINGS_CHANGED_WHITELIST_SET = new Set<string>(SETTINGS_CHANGED_WHITELIST)
@@ -149,6 +150,9 @@ export function registerSettingsHandlers(
     }
     if ('aiVaultSearch' in args) {
       sanitizedArgs.aiVaultSearch = resolveAiVaultSearchSettings(args)
+    }
+    if ('sessionRetentionDays' in args) {
+      sanitizedArgs.sessionRetentionDays = normalizeSessionRetentionDays(args.sessionRetentionDays)
     }
     if ('terminalCustomThemes' in args) {
       sanitizedArgs.terminalCustomThemes = normalizeTerminalCustomThemes(args.terminalCustomThemes)

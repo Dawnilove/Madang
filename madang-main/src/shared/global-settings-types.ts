@@ -489,6 +489,8 @@ export type GlobalSettings = GlobalSettingsCore & {
   voice?: VoiceSettings
   /** Transcript full-text search consent + retention. Absent means off; nothing indexes until the user opts in. */
   aiVaultSearch?: AiVaultSearchSettings
+  /** Company edition only: delete Madang's chat copies idle longer than this many days. Absent/null = keep. */
+  sessionRetentionDays?: number | null
 }
 
 // Retain one import entry point while keeping feature shapes separate from the max-lines-limited settings module.

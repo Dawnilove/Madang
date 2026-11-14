@@ -106,7 +106,8 @@ function pluginServiceWithRecipes(
   }
 }
 
-describe('registerEphemeralVmHandlers', () => {
+// Skipped on Windows: the handlers spawn /bin/sh.
+describe.skipIf(process.platform === 'win32')('registerEphemeralVmHandlers', () => {
   const originalPlatform = Object.getOwnPropertyDescriptor(process, 'platform')
 
   beforeEach(() => {

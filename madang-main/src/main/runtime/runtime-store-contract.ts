@@ -181,6 +181,7 @@ export type RuntimeStore = {
     nativeChatInheritShellEnvironment?: GlobalSettings['nativeChatInheritShellEnvironment']
     nativeChatShellEnvironmentVariables?: GlobalSettings['nativeChatShellEnvironmentVariables']
     aiVaultSearch?: GlobalSettings['aiVaultSearch']
+    sessionRetentionDays?: GlobalSettings['sessionRetentionDays']
     sourceControlAi?: GlobalSettings['sourceControlAi']
     commitMessageAi?: GlobalSettings['commitMessageAi']
   }

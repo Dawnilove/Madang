@@ -27,7 +27,8 @@ function executable() {
 }
 
 describe('structured agent executable resolution', () => {
-  it.each(['claude', 'codex'] as const)(
+  // Windows: 가짜 실행 파일에 실행 권한 비트가 없어 "runnable"로 인정되지 않는다.
+  it.skipIf(process.platform === 'win32').each(['claude', 'codex'] as const)(
     'uses the configured %s executable on the execution host',
     (agent) => {
       const { command } = executable()
@@ -36,7 +37,7 @@ describe('structured agent executable resolution', () => {
     }
   )
 
-  it('reads the Command setting of any agent, and its stock binary by the name it is given', () => {
+  it.skipIf(process.platform === 'win32')('reads the Command setting of any agent, and its stock binary by the name it is given', () => {
     const { command } = executable()
     expect(
       resolveStructuredAgentCommand('opencode', { agentCmdOverrides: { opencode: `"${command}"` } })
@@ -51,7 +52,7 @@ describe('structured agent executable resolution', () => {
     ).toBe('/stock/opencode')
   })
 
-  it('resolves a basename through the configured PATH and a home-relative path through the host home', () => {
+  it.skipIf(process.platform === 'win32')('resolves a basename through the configured PATH and a home-relative path through the host home', () => {
     const { directory, command } = executable()
     const basenameCommand = join(directory, 'agent-custom')
     writeFileSync(basenameCommand, '#!/bin/sh\nexit 0\n')
@@ -73,7 +74,7 @@ describe('structured agent executable resolution', () => {
     ).toBe(command)
   })
 
-  it('rereads a changed override instead of storing another copy of the command', () => {
+  it.skipIf(process.platform === 'win32')('rereads a changed override instead of storing another copy of the command', () => {
     const first = executable()
     const second = executable()
     const settings = { agentCmdOverrides: { claude: `"${first.command}"` } }

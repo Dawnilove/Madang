@@ -11,6 +11,7 @@ import {
   rmSync,
   writeFileSync
 } from 'node:fs'
+import { randomBytes } from 'node:crypto'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import type { GlobalSettings } from '../../shared/global-settings-types'
@@ -174,6 +175,8 @@ export function setupRuntimeHomeTest(): void {
       throw new Error('no registry in runtime-home tests')
     }
   }))
+  // Seed OpenSSL's RNG first: on Windows it fails ("entropy source strength too weak") once SystemRoot points at a fake dir.
+  randomBytes(1)
   vi.stubEnv('USERPROFILE', testState.fakeHomeDir)
   vi.stubEnv('SystemRoot', join(testState.fakeHomeDir, 'Windows'))
   vi.stubEnv('ProgramFiles', join(testState.fakeHomeDir, 'Program Files'))

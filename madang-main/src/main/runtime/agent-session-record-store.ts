@@ -153,6 +153,26 @@ export class AgentSessionRecordStore {
   forgetExitedRecord = (sessionId: string) =>
     this.transact((draft) => forgetExitedAgentSessionRecord(draft, sessionId))
 
+  /** Retention: forget the listed chats that `shouldPurge` still approves against current state.
+   *  `beforePurge` clears their journal rows first. Returns the forgotten ids. */
+  purgeRecordsWhere = (
+    sessionIds: readonly string[],
+    shouldPurge: (record: AgentSessionRecord, draft: AgentSessionStoreState) => boolean,
+    beforePurge: (sessionId: string) => void
+  ): Promise<string[]> =>
+    this.transact((draft) => {
+      const purged: string[] = []
+      for (const sessionId of sessionIds) {
+        const record = draft.records.get(sessionId)
+        if (record && shouldPurge(record, draft)) {
+          beforePurge(sessionId)
+          draft.records.delete(sessionId)
+          purged.push(sessionId)
+        }
+      }
+      return purged
+    })
+
   /** Publish the complete tab index in one write; a partial index would drop remaining chats on restart. */
   showSessionTabs(sessionIds: readonly string[]): Promise<void> {
     return this.transact((draft) => showAgentSessionTabs(draft, sessionIds))

@@ -15,6 +15,8 @@ import { isWebClientLocation } from '@/lib/web-client-location'
 import { translate } from '@/i18n/i18n'
 import { useAppStore } from '@/store'
 import { SettingsRow } from './SettingsFormControls'
+import { isCompanyEdition } from '../../../../shared/madang-edition'
+import { SessionRetentionSettingsRow } from './SessionRetentionSettingsRow'
 import { SessionSearchAdvancedSection } from './SessionSearchAdvancedSection'
 import { SessionHistoryComputerRow } from './SessionHistoryComputerRow'
 import { SessionHistoryServerRow } from './SessionHistoryServerRow'
@@ -259,6 +261,9 @@ export function SessionHistorySettingsPane({
         onError={setError}
         onCleared={() => setRefresh((value) => value + 1)}
       />
+      {isCompanyEdition() ? (
+        <SessionRetentionSettingsRow settings={settings} updateSettings={updateSettings} />
+      ) : null}
       {error ? (
         <p role="alert" className="pt-3 text-xs text-destructive">
           {error}

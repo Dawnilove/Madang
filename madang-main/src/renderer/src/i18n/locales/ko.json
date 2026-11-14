@@ -20742,6 +20742,13 @@
     },
     "settings": {
       "saveError": "저장할 수 없습니다. 다시 시도해 보세요.",
+      "retentionLabel": "오래된 대화 복사본 삭제",
+      "retentionCopy": "정해진 기간 동안 쓰지 않은 대화의 Madang 복사본을 지웁니다. Claude Code가 따로 보관하는 기록은 지워지지 않습니다. 복구할 수 없습니다.",
+      "retentionOff": "끄기",
+      "retentionDays": "{{days}}일",
+      "retentionConfirmTitle": "{{days}}일보다 오래된 대화 복사본을 삭제할까요?",
+      "retentionConfirmBody": "Madang을 다음에 시작하면 {{days}}일 넘게 쓰지 않은 대화의 Madang 복사본이 삭제됩니다. 복구할 수 없습니다. Claude Code의 원본 기록은 지워지지 않습니다.",
+      "retentionConfirmLabel": "켜기",
       "advanced": "고급",
       "deleteIndexCopy": "검색 데이터 지우기",
       "deleteTitle": "이 컴퓨터에서 검색 데이터를 삭제하시겠습니까?",

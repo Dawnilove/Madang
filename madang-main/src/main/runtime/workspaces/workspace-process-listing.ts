@@ -31,6 +31,7 @@ import {
   neverThrowingStructuredAgentSessionLogger
 } from '../../native-chat/agent-session-wire/structured-agent-session-logger'
 import { openAgentSessionRecordStoreOnce } from '../agent-session-record-store-slot'
+import { scheduleRetentionCleanup } from '../../native-chat/agent-session-journal/journal-retention-cleanup'
 import type { AgentSessionRecordStore } from '../agent-session-record-store'
 import { maybeAutoRenameWorkspaceOnFirstStructuredTurn } from '../../agent-hooks/first-work-structured-session-rename'
 import { firstWorkRenameDeps } from '../../agent-hooks/first-work-rename-runtime'
@@ -211,10 +212,17 @@ export abstract class OrcaRuntimeWithGetWorktreePs extends OrcaRuntimeWithWorktr
 
   /** Admission needs only the ledger; a later chat host must reuse this store. */
   async openAgentSessionRecordStore(): Promise<AgentSessionRecordStore> {
-    const { store } = await openAgentSessionRecordStoreOnce({
+    const logger = neverThrowingStructuredAgentSessionLogger(createStructuredAgentSessionLogger())
+    const { store, journalDatabase } = await openAgentSessionRecordStoreOnce({
       stateDirectory: getProfileUserDataPath(),
       hostId: LOCAL_EXECUTION_HOST_ID,
-      logger: neverThrowingStructuredAgentSessionLogger(createStructuredAgentSessionLogger())
+      logger
+    })
+    scheduleRetentionCleanup({
+      store,
+      database: journalDatabase,
+      readDays: () => this.store?.getSettings?.().sessionRetentionDays,
+      logger
     })
     return store
   }
@@ -304,6 +312,8 @@ export abstract class OrcaRuntimeWithGetWorktreePs extends OrcaRuntimeWithWorktr
       hasOpenDispatch: (record) =>
         structuredWorkerOwesWork(this.getOrchestrationDbIfAvailable?.() ?? null, record)
     })
+    // The host install opens the record store without launch admission; this schedules retention once.
+    await this.openAgentSessionRecordStore()
   }
 
   /** A chat worker whose request settled failed tells the Run that dispatched it. */

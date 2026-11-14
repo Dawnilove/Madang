@@ -249,7 +249,8 @@ describe('createPtySubprocess', () => {
     expect(spawnMock.mock.calls.at(-1)?.[2].env.HISTFILE).toBe(expected)
   })
 
-  it.each([
+  // Windows: POSIX 경로(/fake/..., zsh) 기대가 Windows 경로 처리와 안 맞는다.
+  it.skipIf(process.platform === 'win32').each([
     // Inherited MADANG_HISTFILE can select another pane’s history and enable unwanted shell wrapping.
     ['drops an inherited Madang MADANG_HISTFILE', undefined, undefined],
     [

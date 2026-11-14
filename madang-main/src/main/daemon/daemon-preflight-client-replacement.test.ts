@@ -66,7 +66,8 @@ describe('daemon preflight client replacement', () => {
     return { control: await connectRole('control'), stream: await connectRole('stream') }
   }
 
-  it('cancels preparation when a reconnect replaces the owning control socket', async () => {
+  // Windows: unix 소켓 파일 listen이 EACCES. Windows는 named pipe를 쓴다.
+  it.skipIf(process.platform === 'win32')('cancels preparation when a reconnect replaces the owning control socket', async () => {
     let finishPreparation!: () => void
     const preparation = new Promise<void>((resolve) => {
       finishPreparation = resolve
@@ -105,7 +106,7 @@ describe('daemon preflight client replacement', () => {
     original.disconnect()
   })
 
-  it('cancels only the preparation whose client loses its stream socket', async () => {
+  it.skipIf(process.platform === 'win32')('cancels only the preparation whose client loses its stream socket', async () => {
     let finishPreparation!: () => void
     const preparation = new Promise<void>((resolve) => {
       finishPreparation = resolve

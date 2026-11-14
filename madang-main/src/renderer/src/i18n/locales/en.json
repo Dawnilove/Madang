@@ -20778,6 +20778,13 @@
     },
     "settings": {
       "saveError": "Could not save. Try again.",
+      "retentionLabel": "Delete old chat copies",
+      "retentionCopy": "Madang deletes its own copy of chats that were idle longer than this. Claude Code's own records are not deleted. This cannot be undone.",
+      "retentionOff": "Off",
+      "retentionDays": "{{days}} days",
+      "retentionConfirmTitle": "Delete chat copies older than {{days}} days?",
+      "retentionConfirmBody": "After the next start of Madang, Madang's copies of chats idle for more than {{days}} days are deleted. This cannot be undone. Claude Code's own records are not deleted.",
+      "retentionConfirmLabel": "Turn on",
       "advanced": "Advanced",
       "deleteIndexCopy": "Clear search data",
       "deleteTitle": "Clear search data on this computer?",
