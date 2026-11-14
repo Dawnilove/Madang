@@ -21,6 +21,8 @@ import { registerWorktreeChangeInvalidator } from '../ipc/worktree-change-invali
 import type { AgentSessionRecordStore } from './agent-session-record-store'
 import { peekOpenedAgentSessionRecordStore } from './agent-session-record-store-slot'
 import { createAgentLaunchRecordWarmupGate } from './agent-launch-record-warmup-gate'
+import { isCompanyEdition } from '../../shared/madang-edition'
+import { normalizeSessionRetentionDays } from '../../shared/session-retention-settings'
 import { WorkspaceLayoutStream, type WorkspaceLayoutReads } from './workspace-layout-stream'
 import type { RemoteLayoutSnapshot } from '../../shared/remote-layout-snapshot'
 import { registerDetectedWorktreeScanInvalidation } from '../ipc/worktrees/listing/register-detected-worktree-scan-invalidation'
@@ -207,6 +209,15 @@ class OrcaRuntimeService extends OrcaRuntimeSidebarBase {
   /** Startup settled; opening still waits for a launch-capable client. */
   noteAgentLaunchStartupSettled(): void {
     this.agentLaunchRecordWarmup.startupSettled()
+    // Retention must not wait for a chat to open: with the setting on, open the record store now (it schedules the cleanup).
+    if (
+      isCompanyEdition() &&
+      normalizeSessionRetentionDays(this.store?.getSettings?.().sessionRetentionDays) !== null
+    ) {
+      this.openAgentSessionRecordStore().catch((error: unknown) => {
+        console.warn('[retention] could not open the chat record store', error)
+      })
+    }
   }
 
   /** Warm up before the first client launch so that launch does not open the record. */

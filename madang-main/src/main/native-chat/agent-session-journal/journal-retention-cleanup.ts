@@ -1,6 +1,8 @@
 // Company-edition retention, stage 1 (docs/분석/27): delete chat copies idle longer than the chosen days.
 // Runs once after startup. Irreversible, so every session is re-checked against live state first.
 
+import { rm } from 'node:fs/promises'
+import { nativeChatScratchFolderFor } from '../native-chat-scratch-folder'
 import type { AgentSessionRecordStore } from '../../runtime/agent-session-record-store'
 import { isCompanyEdition } from '../../../shared/madang-edition'
 import { normalizeSessionRetentionDays } from '../../../shared/session-retention-settings'
@@ -15,6 +17,7 @@ import {
 
 const DAY_MS = 24 * 60 * 60 * 1000
 const START_DELAY_MS = 60_000
+export const RETENTION_INTERVAL_MS = DAY_MS
 /** Short DB lock per run; the rest waits for the next run. */
 export const RETENTION_BATCH_LIMIT = 50
 
@@ -72,6 +75,13 @@ export async function runRetentionCleanup(args: {
       })
     }
   )
+  // The scratch-folder sweep only runs once a chat host is installed; do not wait for it.
+  for (const sessionId of purged) {
+    await rm(nativeChatScratchFolderFor(database.stateDirectory, sessionId), {
+      recursive: true,
+      force: true
+    }).catch(() => {})
+  }
   if (purged.length > 0) {
     database.db.exec('PRAGMA incremental_vacuum')
   }
@@ -92,7 +102,12 @@ function hasQueuedMessages(database: JournalHostDatabase, sessionId: string): bo
 
 let scheduled = false
 
-/** Company edition only; `readDays` is read when the timer fires so a late settings load still counts. */
+/** Test hook: lets each test schedule again. */
+export function resetRetentionScheduleForTests(): void {
+  scheduled = false
+}
+
+/** Company edition only. First run after startup, then daily; `readDays` is read on every run, so turning the setting off stops deletion at once. */
 export function scheduleRetentionCleanup(args: {
   store: AgentSessionRecordStore
   database: JournalHostDatabase
@@ -103,21 +118,36 @@ export function scheduleRetentionCleanup(args: {
     return
   }
   scheduled = true
-  setTimeout(() => {
-    const retentionDays = normalizeSessionRetentionDays(args.readDays())
-    if (retentionDays === null || args.database.isClosed) {
+  let running = false
+  let interval: ReturnType<typeof setInterval> | undefined
+  const run = (): void => {
+    if (args.database.isClosed) {
+      clearInterval(interval)
       return
     }
-    runRetentionCleanup({ ...args, retentionDays, now: Date.now() }).then(
-      ({ sessions, journalRows }) =>
-        // Counts only; no conversation content.
-        args.logger.warn('retention cleanup done', {
-          scope: 'retention-cleanup',
-          retentionDays,
-          sessions,
-          journalRows
-        }),
-      (error) => args.logger.warn('retention cleanup failed', { scope: 'retention-cleanup', error })
-    )
-  }, START_DELAY_MS).unref()
+    const retentionDays = normalizeSessionRetentionDays(args.readDays())
+    if (retentionDays === null || running) {
+      return
+    }
+    running = true
+    runRetentionCleanup({ ...args, retentionDays, now: Date.now() })
+      .then(
+        ({ sessions, journalRows }) =>
+          // Counts only; no conversation content.
+          args.logger.warn('retention cleanup done', {
+            scope: 'retention-cleanup',
+            retentionDays,
+            sessions,
+            journalRows
+          }),
+        (error) =>
+          args.logger.warn('retention cleanup failed', { scope: 'retention-cleanup', error })
+      )
+      .finally(() => {
+        running = false
+      })
+  }
+  setTimeout(run, START_DELAY_MS).unref()
+  interval = setInterval(run, RETENTION_INTERVAL_MS)
+  interval.unref()
 }

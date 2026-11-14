@@ -1,7 +1,9 @@
-import { mkdtemp, rm } from 'node:fs/promises'
+import { existsSync } from 'node:fs'
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
+import { nativeChatScratchFolderFor } from '../native-chat-scratch-folder'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   agentSessionLeaseFixture,
   agentSessionRecordFixture
@@ -15,7 +17,12 @@ import {
   closeTestJournalHostDatabase,
   openTestJournalHostDatabase
 } from './journal-host-database-test-support'
-import { runRetentionCleanup } from './journal-retention-cleanup'
+import {
+  resetRetentionScheduleForTests,
+  RETENTION_INTERVAL_MS,
+  runRetentionCleanup,
+  scheduleRetentionCleanup
+} from './journal-retention-cleanup'
 
 const DAY = 24 * 60 * 60 * 1000
 const NOW = 1_800_000_000_000
@@ -142,6 +149,23 @@ describe('runRetentionCleanup', () => {
     expect(rowCount(database, 'journal_rows')).toBe(0)
   })
 
+  it('removes the scratch folder of a deleted chat and keeps the others', async () => {
+    const { database, store } = await setup([
+      session('session-old'),
+      session('session-recent', { createdAt: RECENT })
+    ])
+    const folders = ['session-old', 'session-recent'].map((id) =>
+      nativeChatScratchFolderFor(directory, id)
+    )
+    for (const folder of folders) {
+      await mkdir(folder, { recursive: true })
+      await writeFile(join(folder, 'note.txt'), 'x')
+    }
+    await runRetentionCleanup({ store, database, retentionDays: 90, now: NOW })
+    expect(existsSync(folders[0]!)).toBe(false)
+    expect(existsSync(folders[1]!)).toBe(true)
+  })
+
   it('stays deleted after the store reopens', async () => {
     const { database, store } = await setup([
       session('session-old'),
@@ -160,5 +184,51 @@ describe('runRetentionCleanup', () => {
       journalRows: 0
     })
     expect(rowCount(database, 'journal_rows')).toBe(2)
+  })
+})
+
+describe('scheduleRetentionCleanup', () => {
+  beforeEach(() => {
+    vi.useFakeTimers()
+    vi.stubGlobal('MADANG_EDITION', 'company')
+    resetRetentionScheduleForTests()
+  })
+  afterEach(() => {
+    vi.useRealTimers()
+    vi.unstubAllGlobals()
+  })
+
+  it('runs after startup, then daily, and stops deleting when the setting is turned off', async () => {
+    vi.setSystemTime(NOW)
+    const { database, store } = await setup([session('session-a')])
+    let days: number | null = 90
+    const logger = { warn: vi.fn(), error: vi.fn() }
+    scheduleRetentionCleanup({ store, database, readDays: () => days, logger })
+
+    await vi.advanceTimersByTimeAsync(60_000)
+    expect(store.getRecord('session-a')).toBeNull()
+    // The folder removal uses real file I/O, which fake timers do not advance.
+    await vi.waitFor(() => expect(logger.warn).toHaveBeenCalledTimes(1))
+
+    // A chat that turns old later is caught by the next daily run, unless the setting is off.
+    database.transaction((db) => {
+      db.prepare('INSERT INTO journal_rows VALUES (?, ?, ?, ?, ?)').run('late', 'e', 1, OLD, '{}')
+    })
+    days = null
+    await vi.advanceTimersByTimeAsync(RETENTION_INTERVAL_MS)
+    expect(logger.warn).toHaveBeenCalledTimes(1)
+    days = 90
+    await vi.advanceTimersByTimeAsync(RETENTION_INTERVAL_MS)
+    await vi.waitFor(() => expect(logger.warn).toHaveBeenCalledTimes(2))
+  })
+
+  it('does nothing outside the company edition', async () => {
+    vi.stubGlobal('MADANG_EDITION', 'standard')
+    const { database, store } = await setup([session('session-a')])
+    const logger = { warn: vi.fn(), error: vi.fn() }
+    scheduleRetentionCleanup({ store, database, readDays: () => 90, logger })
+    await vi.advanceTimersByTimeAsync(RETENTION_INTERVAL_MS)
+    expect(store.getRecord('session-a')).not.toBeNull()
+    expect(logger.warn).not.toHaveBeenCalled()
   })
 })
