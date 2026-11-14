@@ -25,6 +25,7 @@ import {
 import { buildConversationTree } from './conversation-tree'
 import { useVisibleConversations } from './use-visible-conversations'
 import { MadangConversationProject } from './MadangConversationProject'
+import { MadangNeedsInputSection } from './MadangNeedsInputSection'
 import { MadangSidebarDialogs } from './MadangSidebarDialogs'
 import { MadangWorkerRack } from './MadangWorkerRack'
 
@@ -156,12 +157,15 @@ function MadangConversationSidebar(): React.JSX.Element {
                   {translate('madang.shell.noProjects', 'Add a project to start a conversation.')}
                 </p>
               ) : (
-                projects.map((project) => (
-                  <MadangConversationProject
-                    key={project.repo?.id ?? `group:${project.group?.id}`}
-                    project={project}
-                  />
-                ))
+                <>
+                  <MadangNeedsInputSection projects={projects} />
+                  {projects.map((project) => (
+                    <MadangConversationProject
+                      key={project.repo?.id ?? `group:${project.group?.id}`}
+                      project={project}
+                    />
+                  ))}
+                </>
               )}
             </div>
             <SetupScriptPromptCard />

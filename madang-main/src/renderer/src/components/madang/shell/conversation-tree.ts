@@ -180,6 +180,29 @@ export function getConversationStatusTone(status: WorktreeStatus): ConversationS
   }
 }
 
+export type FlatConversation = {
+  /** The conversation without its children, so a flat list shows each one once. */
+  node: ConversationNode
+  repo: Repo | undefined
+}
+
+/** Every conversation of every project in list order, children included, for the "needs input" section. */
+export function flattenConversations(
+  projects: readonly ProjectConversations[]
+): FlatConversation[] {
+  const flat: FlatConversation[] = []
+  const visit = (nodes: readonly ConversationNode[], repo: Repo | undefined): void => {
+    for (const node of nodes) {
+      flat.push({ node: { ...node, children: [] }, repo })
+      visit(node.children, repo)
+    }
+  }
+  for (const project of projects) {
+    visit(project.conversations, project.repo)
+  }
+  return flat
+}
+
 export function countConversationNodes(nodes: readonly ConversationNode[]): number {
   return nodes.reduce((total, node) => total + 1 + countConversationNodes(node.children), 0)
 }

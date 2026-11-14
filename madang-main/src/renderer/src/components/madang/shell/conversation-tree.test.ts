@@ -8,6 +8,7 @@ import { getWorktreeHostIdentity } from '../../../../../shared/worktree/host-qua
 import {
   buildConversationTree,
   countConversationNodes,
+  flattenConversations,
   getConversationStatusTone
 } from './conversation-tree'
 
@@ -238,5 +239,21 @@ describe('getConversationStatusTone', () => {
     expect(getConversationStatusTone('failed')).toBe('failed')
     expect(getConversationStatusTone('active')).toBe('idle')
     expect(getConversationStatusTone('inactive')).toBe('idle')
+  })
+})
+
+describe('flattenConversations', () => {
+  it('lists every conversation once, children included and stripped of their own children', () => {
+    const parent = worktree('parent', { createdAt: 1 })
+    const worker = worktree('worker-a', { createdAt: 2 })
+    const projects = buildConversationTree(
+      [repo('repo-1')],
+      { 'repo-1': [parent, worker] },
+      { [worker.id]: lineage(worker, parent, 'orchestration') }
+    )
+    const flat = flattenConversations(projects)
+    expect(flat.map((c) => c.node.worktree.displayName)).toEqual(['parent', 'worker-a'])
+    expect(flat.every((c) => c.node.children.length === 0 && c.repo?.id === 'repo-1')).toBe(true)
+    expect(flat[1].node.createdByOrchestration).toBe(true)
   })
 })

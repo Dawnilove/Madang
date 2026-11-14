@@ -21001,6 +21001,15 @@
     "removePath": "Remove {{name}}"
   },
   "accounts": {
+    "autoSwitch": {
+      "switched": "{{value0}} was near its usage limit. Switched to another account.",
+      "resetCreditUsed": "No Codex account had room, so a rate-limit reset credit was used.",
+      "failed": "Automatic account switch for {{value0}} failed. Switch accounts by hand in Settings → AI Provider Accounts.",
+      "label": "Switch accounts automatically near the limit",
+      "description": "When the active Claude or Codex account reaches 90% of its 5-hour or weekly limit, Madang switches to the least-used account below 85%. Needs usage display turned on. Works while the Madang window is in use.",
+      "resetCreditLabel": "Use a reset credit when no account has room",
+      "resetCreditDescription": "Codex only. Needs automatic switching turned on. Spends one of your rate-limit reset credits without asking."
+    },
     "wslAccountNotApplied": {
       "title": "Account selection not applied in {{distro}}",
       "description": "Agents there use the distro's default Claude and Codex accounts until Madang in WSL is updated."
@@ -21900,6 +21909,7 @@
       "noProjects": "Add a project to start a workspace.",
       "noConversations": "No workspaces yet.",
       "needsInput": "Needs input",
+      "needsInputSection": "Waiting for you",
       "workerRack": {
         "title": "Worker rack",
         "terminal": "Terminal"

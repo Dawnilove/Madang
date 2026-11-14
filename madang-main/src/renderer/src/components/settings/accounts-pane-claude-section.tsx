@@ -1,6 +1,7 @@
 import { Loader2, Plus, RefreshCw, Trash2, X } from 'lucide-react'
 import { translate } from '@/i18n/i18n'
 import { UsageOptInSwitch } from './UsageOptInSwitch'
+import { AccountAutoSwitchSetting } from './AccountAutoSwitchSetting'
 import { selectClaudeProviderAccount } from '@/runtime/runtime-provider-accounts-client'
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
@@ -93,6 +94,12 @@ export function renderClaudeAccountsSection(model: AccountsPaneSectionModel): Re
       <UsageOptInSwitch
         settingKey="claudeUsageEnabled"
         provider="Claude"
+        settings={settings}
+        updateSettings={updateSettings}
+      />
+
+      <AccountAutoSwitchSetting
+        settingKey="accountAutoSwitch"
         settings={settings}
         updateSettings={updateSettings}
       />

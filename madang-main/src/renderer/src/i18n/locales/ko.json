@@ -14142,7 +14142,7 @@
             "864111caa2": "활동 표시줄 위치",
             "e8e2e4ce74": "오른쪽 사이드바 표시/숨기기",
             "441733b630": "포트",
-            "83a10e3c44": "체크",
+            "83a10e3c44": "검사",
             "0314901467": "소스 제어",
             "06219e4cb1": "검색",
             "8bc2bbc3a0": "탐색기",
@@ -14154,7 +14154,7 @@
             "6306b48afd": "source-control",
             "ef182dcb12": "검색",
             "fc3095d2ed": "탐색기",
-            "aiVaultSessionHistory": "에이전트",
+            "aiVaultSessionHistory": "에이전트 기록",
             "folderWorkspaces": "연결된 작업",
             "parentPrChecks": "PR 검사"
           },
@@ -20860,6 +20860,15 @@
     "removePath": "{{name}} 제거"
   },
   "accounts": {
+    "autoSwitch": {
+      "switched": "{{value0}} 계정이 사용 한도에 가까워져 다른 계정으로 전환했습니다.",
+      "resetCreditUsed": "여유 있는 Codex 계정이 없어 한도 리셋 크레딧을 사용했습니다.",
+      "failed": "자동 계정 전환에 실패했습니다({{value0}}). 설정 → AI 공급자 계정에서 직접 전환하세요.",
+      "label": "한도에 가까워지면 계정 자동 전환",
+      "description": "사용 중인 Claude 또는 Codex 계정이 5시간 한도나 주간 한도의 90%에 이르면, 사용률이 85% 미만인 계정 중 가장 여유 있는 계정으로 전환합니다. 사용량 표시가 켜져 있어야 합니다. Madang 창을 사용하는 동안 동작합니다.",
+      "resetCreditLabel": "여유 있는 계정이 없으면 리셋 크레딧 사용",
+      "resetCreditDescription": "Codex 전용입니다. 자동 전환이 켜져 있어야 합니다. 한도 리셋 크레딧 1개를 묻지 않고 사용합니다."
+    },
     "wslAccountNotApplied": {
       "title": "{{distro}}에서 계정 선택이 적용되지 않았습니다",
       "description": "WSL의 Madang이 업데이트될 때까지 해당 에이전트는 배포판의 기본 Claude 및 Codex 계정을 사용합니다."
@@ -21873,6 +21882,7 @@
       "noProjects": "프로젝트를 추가하면 작업을 시작할 수 있습니다.",
       "noConversations": "아직 작업이 없습니다.",
       "needsInput": "답변 필요",
+      "needsInputSection": "답변 기다리는 작업",
       "workerRack": {
         "title": "워커 랙",
         "terminal": "터미널"

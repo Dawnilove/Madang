@@ -62,6 +62,7 @@ vi.mock('./use-visible-conversations', () => ({
   useVisibleConversations: () => ({ visibleHostIdentities: undefined, filterRepoIds: undefined })
 }))
 vi.mock('./MadangConversationProject', () => ({ MadangConversationProject: () => null }))
+vi.mock('./MadangNeedsInputSection', () => ({ MadangNeedsInputSection: () => null }))
 vi.mock('./MadangSidebarDialogs', () => ({ MadangSidebarDialogs: () => null }))
 
 import MadangConversationSidebar from './MadangConversationSidebar'

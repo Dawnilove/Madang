@@ -1,5 +1,6 @@
 import type { RateLimitState } from '../../../../shared/rate-limit-types'
 import { useAppStore } from '../../store'
+import { maybeAutoSwitchAccounts } from '@/lib/account-auto-switch'
 
 export function registerRateLimitIpcBridge(unsubs: (() => void)[]): void {
   let initialSnapshotPending = true
@@ -10,6 +11,7 @@ export function registerRateLimitIpcBridge(unsubs: (() => void)[]): void {
         receivedPushBeforeInitialSnapshot = true
       }
       useAppStore.getState().setRateLimitsFromPush(state as RateLimitState)
+      maybeAutoSwitchAccounts(state as RateLimitState)
     })
   )
   // The startup get is a fallback: a push before resolution permanently wins.

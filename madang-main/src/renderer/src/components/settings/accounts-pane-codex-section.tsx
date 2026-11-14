@@ -1,6 +1,7 @@
 import { AlertTriangle, Loader2, Plus, X } from 'lucide-react'
 import { translate } from '@/i18n/i18n'
 import { UsageOptInSwitch } from './UsageOptInSwitch'
+import { AccountAutoSwitchSetting } from './AccountAutoSwitchSetting'
 import { selectCodexProviderAccount } from '@/runtime/runtime-provider-accounts-client'
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
@@ -73,6 +74,12 @@ export function renderCodexAccountsSection(model: AccountsPaneSectionModel): Rea
       <UsageOptInSwitch
         settingKey="codexUsageEnabled"
         provider="Codex"
+        settings={settings}
+        updateSettings={updateSettings}
+      />
+
+      <AccountAutoSwitchSetting
+        settingKey="accountAutoSwitchUseResetCredit"
         settings={settings}
         updateSettings={updateSettings}
       />
